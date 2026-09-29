@@ -1058,11 +1058,13 @@ export function App() {
                   {authTab === 'login' ? 'SoundMarshall Sign In' : 'Exclusive VIP Registration'}
                 </h3>
                 <button
-                  className="ctrl-btn"
+                  type="button"
+                  className="modal-close-btn ctrl-btn"
                   onClick={() => setAuthModalOpen(false)}
                   title="Close"
+                  aria-label="Close"
                 >
-                  <X size={20} />
+                  <X size={18} />
                 </button>
               </div>
 
@@ -3681,11 +3683,13 @@ export function App() {
                 {authTab === 'login' ? 'SoundMarshall Sign In' : 'Exclusive VIP Registration'}
               </h3>
               <button
-                className="ctrl-btn"
+                type="button"
+                className="modal-close-btn ctrl-btn"
                 onClick={() => setAuthModalOpen(false)}
                 title="Close"
+                aria-label="Close"
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 

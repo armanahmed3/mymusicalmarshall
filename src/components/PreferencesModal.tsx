@@ -38,31 +38,35 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
   };
 
   return (
-    <div className="auth-overlay">
-      <div className="auth-modal" style={{ maxWidth: '480px' }}>
-        <button
-          className="modal-close-btn"
-          onClick={onClose}
-          aria-label="Close preferences"
-        >
-          <X size={20} />
-        </button>
+    <div className="auth-overlay" onClick={onClose}>
+      <div className="auth-modal" style={{ maxWidth: '500px' }} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ background: 'rgba(0, 210, 255, 0.15)', border: '1px solid rgba(0, 210, 255, 0.3)', padding: '8px', borderRadius: '10px', color: '#00d2ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Volume2 size={20} />
+            </div>
+            <div>
+              <h2 className="modal-title" style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
+                Playback & Alerts
+              </h2>
+              <p style={{ fontSize: '0.75rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                Personalize studio session {userRole === 'admin' ? '(Admin Mode)' : ''}
+              </p>
+            </div>
+          </div>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <div style={{ background: 'rgba(0, 210, 255, 0.15)', border: '1px solid rgba(0, 210, 255, 0.3)', padding: '10px', borderRadius: '10px', color: '#00d2ff' }}>
-            <Volume2 size={22} />
-          </div>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-              Playback & Alert Preferences
-            </h2>
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
-              Personalize your SoundMarshall studio session {userRole === 'admin' ? '(Admin Mode)' : ''}
-            </p>
-          </div>
+          <button
+            type="button"
+            className="modal-close-btn"
+            onClick={onClose}
+            aria-label="Close preferences"
+          >
+            <X size={18} />
+          </button>
         </div>
 
-        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="modal-body">
+          <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Preference 1: Repeat Mix Selected (Loop) */}
           <div
             style={{
@@ -248,6 +252,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

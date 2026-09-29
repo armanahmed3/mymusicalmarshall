@@ -351,28 +351,30 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
           CREATE PLAYLIST MODAL
           ====================================================================== */}
       {createModalOpen && (
-        <div className="auth-overlay">
-          <div className="auth-modal" style={{ maxWidth: '580px', maxHeight: '90vh', overflowY: 'auto' }}>
-            <button className="modal-close-btn" onClick={onCloseCreateModal} aria-label="Close modal">
-              <X size={20} />
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div style={{ background: 'rgba(0, 245, 155, 0.15)', border: '1px solid rgba(0, 245, 155, 0.3)', padding: '10px', borderRadius: '10px', color: '#00f59b' }}>
-                <FolderPlus size={22} />
+        <div className="auth-overlay" onClick={onCloseCreateModal}>
+          <div className="auth-modal" style={{ maxWidth: '600px' }} onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ background: 'rgba(0, 245, 155, 0.15)', border: '1px solid rgba(0, 245, 155, 0.3)', padding: '8px', borderRadius: '10px', color: '#00f59b', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <FolderPlus size={20} />
+                </div>
+                <div>
+                  <h2 className="modal-title" style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
+                    Create New Playlist
+                  </h2>
+                  <p style={{ fontSize: '0.76rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                    Assemble continuous music mixes & studio masters
+                  </p>
+                </div>
               </div>
-              <div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                  Create New Playlist
-                </h2>
-                <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
-                  Select from the list of continuous music mixes and studio masters to build your playlist.
-                </p>
-              </div>
+              <button type="button" className="modal-close-btn" onClick={onCloseCreateModal} aria-label="Close modal">
+                <X size={18} />
+              </button>
             </div>
 
-            <form onSubmit={handleCreateSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div className="form-group">
+            <div className="modal-body">
+              <form onSubmit={handleCreateSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <div className="form-group">
                 <label>Playlist Name</label>
                 <input
                   type="text"
@@ -480,6 +482,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}

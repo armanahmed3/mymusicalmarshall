@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mail, ShieldCheck, RefreshCw, KeyRound, CheckCircle2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { Mail, ShieldCheck, RefreshCw, KeyRound, CheckCircle2, AlertCircle, ArrowLeft, X } from 'lucide-react';
 
 interface EmailVerificationModalProps {
   isOpen: boolean;
@@ -211,8 +211,8 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
               <p className="modal-subtitle">{subtitleText}</p>
             </div>
           </div>
-          <button className="modal-close-btn" onClick={onClose} aria-label="Close">
-            &times;
+          <button className="modal-close-btn" onClick={onClose} aria-label="Close" type="button">
+            <X size={18} />
           </button>
         </div>
 

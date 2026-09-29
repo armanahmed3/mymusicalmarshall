@@ -75,6 +75,37 @@ html, body, #root {
   text-rendering: optimizeLegibility;
 }
 
+/* ==========================================================================
+   GLOBAL SLIM STUDIO SCROLLBAR
+   ========================================================================== */
+html, * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 245, 155, 0.35) rgba(10, 15, 26, 0.7);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(8, 12, 22, 0.6);
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 155, 0.35);
+  border-radius: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 245, 155, 0.75);
+  box-shadow: 0 0 10px rgba(0, 245, 155, 0.5);
+}
+
+
 h1, h2, h3, h4, .section-title, .landing-hero-title, .sidebar-logo-title, .hero-title, .modal-title {
   font-family: var(--font-display);
   letter-spacing: -0.025em;
@@ -1381,41 +1412,67 @@ select:disabled {
 }
 
 /* ==========================================================================
-   MODAL / POPUPS (AUTH & GUEST PLAY ALERT)
+   MODAL & POPUP DIALOGS (RESPONSIVE, STICKY HEADER, SHORT VIEWPORT SUPPORT)
    ========================================================================== */
-.modal-overlay {
+.modal-overlay,
+.auth-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100vw;
   height: 100vh;
-  background-color: var(--bg-overlay);
+  background: rgba(4, 7, 15, 0.86);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 16px;
-  backdrop-filter: blur(4px);
+  z-index: 12000;
+  padding: 20px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  overflow-y: auto;
+  box-sizing: border-box;
+  animation: modalBackdropFade 0.2s ease-out;
 }
 
-.modal-card {
-  background: #0d121f;
+@keyframes modalBackdropFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: transparent;
+  cursor: pointer;
+}
+
+.modal-card,
+.auth-modal {
+  position: relative;
+  z-index: 2;
+  background: #0c111e;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: var(--radius-lg);
+  border-radius: 18px;
   width: 100%;
-  max-width: 460px;
-  max-height: 90vh;
+  max-width: 520px;
+  max-height: min(90vh, 760px);
+  max-height: min(90dvh, 760px);
   display: flex;
   flex-direction: column;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(0, 245, 155, 0.1);
+  box-shadow: 0 28px 75px rgba(0, 0, 0, 0.9), 0 0 45px rgba(0, 245, 155, 0.1);
   overflow: hidden;
-  animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: modalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 @keyframes modalPop {
   from {
     opacity: 0;
-    transform: scale(0.96) translateY(8px);
+    transform: scale(0.96) translateY(10px);
   }
   to {
     opacity: 1;
@@ -1424,24 +1481,225 @@ select:disabled {
 }
 
 .modal-header {
-  padding: 18px 24px;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  padding: 16px 22px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 17, 30, 0.98);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   flex-shrink: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-title {
   font-size: 1.15rem;
   font-weight: 800;
   color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
 }
 
+.modal-subtitle {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin: 2px 0 0 0;
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.verification-badge-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 245, 155, 0.12);
+  color: #00f59b;
+  border: 1px solid rgba(0, 245, 155, 0.28);
+  flex-shrink: 0;
+}
+
+.verification-badge-icon.admin {
+  background: rgba(255, 170, 0, 0.12);
+  color: #fbbf24;
+  border-color: rgba(255, 170, 0, 0.28);
+}
+
+/* ==========================================================================
+   CROSS CLOSE BUTTON (LUXURY CIRCULAR FROSTED DESIGN WITH RED GLOW HOVER)
+   ========================================================================== */
+.modal-close-btn,
+.ctrl-btn {
+  width: 36px;
+  height: 36px;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #94a3b8;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0;
+  padding: 0;
+  outline: none;
+  margin: 0;
+  line-height: 1;
+  user-select: none;
+}
+
+.modal-close-btn:hover,
+.ctrl-btn:hover {
+  background: rgba(239, 68, 68, 0.18);
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+  transform: rotate(90deg) scale(1.08);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.35);
+}
+
+.modal-close-btn:active,
+.ctrl-btn:active {
+  transform: rotate(90deg) scale(0.94);
+}
+
+.modal-close-btn:focus-visible,
+.ctrl-btn:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   MODAL BODY & DEDICATED SLIM SCROLLBARS
+   ========================================================================== */
 .modal-body {
-  padding: 24px;
+  padding: 22px 24px;
   overflow-y: auto;
-  flex: 1;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  flex: 1 1 auto;
+  width: 100%;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 245, 155, 0.45) rgba(0, 0, 0, 0.25);
+}
+
+.modal-body::-webkit-scrollbar,
+.auth-modal::-webkit-scrollbar,
+.modal-card::-webkit-scrollbar,
+.modal-overlay::-webkit-scrollbar,
+.auth-overlay::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.modal-body::-webkit-scrollbar-track,
+.auth-modal::-webkit-scrollbar-track,
+.modal-card::-webkit-scrollbar-track,
+.modal-overlay::-webkit-scrollbar-track,
+.auth-overlay::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+}
+
+.modal-body::-webkit-scrollbar-thumb,
+.auth-modal::-webkit-scrollbar-thumb,
+.modal-card::-webkit-scrollbar-thumb,
+.modal-overlay::-webkit-scrollbar-thumb,
+.auth-overlay::-webkit-scrollbar-thumb {
+  background: rgba(0, 245, 155, 0.4);
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.modal-body::-webkit-scrollbar-thumb:hover,
+.auth-modal::-webkit-scrollbar-thumb:hover,
+.modal-card::-webkit-scrollbar-thumb:hover,
+.modal-overlay::-webkit-scrollbar-thumb:hover,
+.auth-overlay::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 245, 155, 0.8);
+  box-shadow: 0 0 10px rgba(0, 245, 155, 0.5);
+}
+
+/* ==========================================================================
+   SHORT WINDOW & VIEWPORT ADAPTIVITY (Laptops, short browser windows, mobile)
+   ========================================================================== */
+@media (max-height: 720px) {
+  .modal-overlay,
+  .auth-overlay {
+    padding: 12px;
+    align-items: flex-start;
+  }
+  .modal-card,
+  .auth-modal {
+    max-height: calc(100dvh - 24px);
+    margin: auto 0;
+    border-radius: 14px;
+  }
+  .modal-header {
+    padding: 12px 18px;
+  }
+  .modal-body {
+    padding: 16px 18px;
+  }
+  .modal-close-btn,
+  .ctrl-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+
+@media (max-height: 520px) {
+  .modal-overlay,
+  .auth-overlay {
+    padding: 6px;
+    align-items: flex-start;
+  }
+  .modal-card,
+  .auth-modal {
+    max-height: calc(100dvh - 12px);
+    border-radius: 10px;
+  }
+  .modal-header {
+    padding: 8px 14px;
+  }
+  .modal-body {
+    padding: 10px 14px;
+  }
+}
+
+@media (max-width: 640px) {
+  .modal-overlay,
+  .auth-overlay {
+    padding: 12px;
+  }
+  .modal-card,
+  .auth-modal {
+    max-height: calc(100dvh - 24px);
+    border-radius: 14px;
+  }
+  .modal-header {
+    padding: 14px 18px;
+  }
+  .modal-body {
+    padding: 16px 18px;
+  }
 }
 
 /* File Upload Zone */

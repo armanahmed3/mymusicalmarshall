@@ -51,27 +51,29 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
   };
 
   return (
-    <div className="auth-overlay">
-      <div className="auth-modal" style={{ maxWidth: '520px', maxHeight: '90vh', overflowY: 'auto' }}>
-        <button className="modal-close-btn" onClick={onClose} aria-label="Close modal">
-          <X size={20} />
-        </button>
-
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <div style={{ background: 'rgba(255, 170, 0, 0.15)', border: '1px solid rgba(255, 170, 0, 0.3)', padding: '10px', borderRadius: '10px', color: '#fbbf24' }}>
-            <Edit3 size={22} />
+    <div className="auth-overlay" onClick={onClose}>
+      <div className="auth-modal" style={{ maxWidth: '540px' }} onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ background: 'rgba(255, 170, 0, 0.15)', border: '1px solid rgba(255, 170, 0, 0.3)', padding: '8px', borderRadius: '10px', color: '#fbbf24', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Edit3 size={20} />
+            </div>
+            <div>
+              <h2 className="modal-title" style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
+                Edit User & Loyalty
+              </h2>
+              <p style={{ fontSize: '0.76rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                ID: {user.id} • Registered {user.createdAt}
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-              Edit User & Loyalty Account
-            </h2>
-            <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
-              ID: {user.id} • Registered {user.createdAt}
-            </p>
-          </div>
+          <button type="button" className="modal-close-btn" onClick={onClose} aria-label="Close modal">
+            <X size={18} />
+          </button>
         </div>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <div className="modal-body">
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Account Activation / Deactivation Status Banner */}
           <div
             style={{
@@ -233,6 +235,7 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );
