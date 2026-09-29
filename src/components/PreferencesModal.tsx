@@ -49,25 +49,25 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-          <div style={{ background: '#0f172a', padding: '10px', borderRadius: '10px', color: '#38bdf8' }}>
+          <div style={{ background: 'rgba(0, 210, 255, 0.15)', border: '1px solid rgba(0, 210, 255, 0.3)', padding: '10px', borderRadius: '10px', color: '#00d2ff' }}>
             <Volume2 size={22} />
           </div>
           <div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+            <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
               Playback & Alert Preferences
             </h2>
-            <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '2px 0 0 0' }}>
+            <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
               Personalize your SoundMarshall studio session {userRole === 'admin' ? '(Admin Mode)' : ''}
             </p>
           </div>
         </div>
 
-        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+        <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {/* Preference 1: Repeat Mix Selected (Loop) */}
           <div
             style={{
-              background: '#f8fafc',
-              border: repeatMixLoop ? '2px solid #16a34a' : '1px solid #e2e8f0',
+              background: repeatMixLoop ? 'rgba(0, 245, 155, 0.08)' : 'rgba(15, 20, 36, 0.75)',
+              border: repeatMixLoop ? '1.5px solid #00f59b' : '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '12px',
               padding: '16px',
               transition: 'all 0.2s ease'
@@ -75,14 +75,14 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', gap: '12px' }}>
-                <div style={{ color: repeatMixLoop ? '#16a34a' : '#64748b', marginTop: '2px' }}>
+                <div style={{ color: repeatMixLoop ? '#00f59b' : '#64748b', marginTop: '2px' }}>
                   <Repeat size={20} />
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
                     Repeat Mix Selected (Loop Playback)
                   </div>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '4px 0 0 0' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
                     When enabled, the music mix or track currently playing will seamlessly repeat from the beginning when it finishes.
                   </p>
                 </div>
@@ -102,7 +102,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: repeatMixLoop ? '#16a34a' : '#cbd5e1',
+                    backgroundColor: repeatMixLoop ? '#00f59b' : 'rgba(255, 255, 255, 0.15)',
                     borderRadius: '24px',
                     transition: '0.3s'
                   }}
@@ -115,7 +115,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
                       width: '18px',
                       left: repeatMixLoop ? '22px' : '3px',
                       bottom: '3px',
-                      backgroundColor: 'white',
+                      backgroundColor: repeatMixLoop ? '#07090e' : 'white',
                       borderRadius: '50%',
                       transition: '0.3s'
                     }}
@@ -124,7 +124,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
               </label>
             </div>
             {repeatMixLoop && (
-              <div style={{ marginTop: '10px', fontSize: '0.74rem', color: '#16a34a', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ marginTop: '10px', fontSize: '0.74rem', color: '#00f59b', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Check size={14} /> Loop mode active for all mixes and tracks
               </div>
             )}
@@ -133,8 +133,8 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
           {/* Preference 2: Stop Receiving Alerts when New Mixes are Uploaded */}
           <div
             style={{
-              background: '#f8fafc',
-              border: stopNewMixAlerts ? '2px solid #e11d48' : '1px solid #e2e8f0',
+              background: stopNewMixAlerts ? 'rgba(239, 68, 68, 0.08)' : 'rgba(15, 20, 36, 0.75)',
+              border: stopNewMixAlerts ? '1.5px solid #f87171' : '1px solid rgba(255, 255, 255, 0.08)',
               borderRadius: '12px',
               padding: '16px',
               transition: 'all 0.2s ease'
@@ -142,14 +142,14 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
               <div style={{ display: 'flex', gap: '12px' }}>
-                <div style={{ color: stopNewMixAlerts ? '#e11d48' : '#64748b', marginTop: '2px' }}>
+                <div style={{ color: stopNewMixAlerts ? '#f87171' : '#64748b', marginTop: '2px' }}>
                   {stopNewMixAlerts ? <BellOff size={20} /> : <Bell size={20} />}
                 </div>
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#0f172a' }}>
+                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
                     Stop Receiving Alerts for New Mixes
                   </div>
-                  <p style={{ fontSize: '0.78rem', color: '#64748b', margin: '4px 0 0 0' }}>
+                  <p style={{ fontSize: '0.78rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
                     Mute email and on-screen notification alerts whenever fresh studio music mixes or juggling sets are published.
                   </p>
                 </div>
@@ -169,7 +169,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    backgroundColor: stopNewMixAlerts ? '#e11d48' : '#cbd5e1',
+                    backgroundColor: stopNewMixAlerts ? '#ef4444' : 'rgba(255, 255, 255, 0.15)',
                     borderRadius: '24px',
                     transition: '0.3s'
                   }}
@@ -191,15 +191,15 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
               </label>
             </div>
             {stopNewMixAlerts && (
-              <div style={{ marginTop: '10px', fontSize: '0.74rem', color: '#e11d48', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <div style={{ marginTop: '10px', fontSize: '0.74rem', color: '#f87171', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                 🔕 New mix upload alerts are muted for your account
               </div>
             )}
           </div>
 
           {/* Master Audio Stream Quality */}
-          <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 16px' }}>
-            <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#0f172a', display: 'block', marginBottom: '8px' }}>
+          <div style={{ background: 'rgba(15, 20, 36, 0.75)', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '14px 16px' }}>
+            <label style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff', display: 'block', marginBottom: '8px' }}>
               Streaming Audio Bitrate
             </label>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
@@ -215,11 +215,12 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
                   style={{
                     padding: '8px 4px',
                     borderRadius: '8px',
-                    border: audioBitrate === tier.id ? '2px solid #0f172a' : '1px solid #cbd5e1',
-                    background: audioBitrate === tier.id ? '#0f172a' : '#ffffff',
-                    color: audioBitrate === tier.id ? '#ffffff' : '#0f172a',
+                    border: audioBitrate === tier.id ? '1.5px solid #00f59b' : '1px solid rgba(255, 255, 255, 0.1)',
+                    background: audioBitrate === tier.id ? 'rgba(0, 245, 155, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+                    color: audioBitrate === tier.id ? '#00f59b' : '#94a3b8',
                     cursor: 'pointer',
-                    textAlign: 'center'
+                    textAlign: 'center',
+                    transition: 'all 0.15s ease'
                   }}
                 >
                   <div style={{ fontSize: '0.78rem', fontWeight: 800 }}>{tier.label}</div>
@@ -241,7 +242,7 @@ export const PreferencesModal: React.FC<PreferencesModalProps> = ({
             <button
               type="submit"
               className="btn btn-primary"
-              style={{ flex: 1.5, background: '#16a34a', borderColor: '#16a34a' }}
+              style={{ flex: 1.5 }}
             >
               Save Preferences
             </button>

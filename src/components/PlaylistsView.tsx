@@ -112,15 +112,15 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
       <div style={{ display: 'grid', gridTemplateColumns: selectedPlaylist ? '340px 1fr' : '1fr', gap: '24px', marginTop: '20px' }}>
         {/* Left column: Playlist cards */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <div style={{ fontSize: '0.82rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Your Playlists ({playlists.length})
           </div>
 
           {playlists.length === 0 ? (
-            <div style={{ background: '#f8fafc', border: '1px dashed #cbd5e1', borderRadius: '12px', padding: '32px 16px', textAlign: 'center' }}>
-              <ListMusic size={32} color="#94a3b8" style={{ margin: '0 auto 8px' }} />
-              <div style={{ fontWeight: 700, color: '#0f172a', marginBottom: '4px' }}>No playlists yet</div>
-              <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '0 0 12px 0' }}>
+            <div style={{ background: 'rgba(15, 20, 36, 0.75)', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '14px', padding: '32px 16px', textAlign: 'center' }}>
+              <ListMusic size={32} color="#00f59b" style={{ margin: '0 auto 8px' }} />
+              <div style={{ fontWeight: 800, color: '#ffffff', marginBottom: '4px' }}>No playlists yet</div>
+              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '0 0 14px 0' }}>
                 Create your first playlist from the list of music mixes.
               </p>
               <button className="btn btn-primary btn-sm" onClick={onOpenCreateModal}>
@@ -138,13 +138,13 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                   key={pl.id}
                   onClick={() => setSelectedPlaylist(pl)}
                   style={{
-                    background: isSelected ? '#ffffff' : '#f8fafc',
-                    border: isSelected ? '2px solid #16a34a' : '1px solid #e2e8f0',
-                    borderRadius: '12px',
+                    background: isSelected ? 'rgba(0, 245, 155, 0.12)' : 'rgba(15, 20, 36, 0.75)',
+                    border: isSelected ? '1.5px solid #00f59b' : '1px solid rgba(255, 255, 255, 0.08)',
+                    borderRadius: '14px',
                     padding: '14px',
                     cursor: 'pointer',
-                    boxShadow: isSelected ? '0 8px 20px -4px rgba(22, 163, 74, 0.15)' : 'none',
-                    transition: 'all 0.15s ease'
+                    boxShadow: isSelected ? '0 8px 24px -4px rgba(0, 245, 155, 0.25)' : 'none',
+                    transition: 'all 0.18s ease'
                   }}
                 >
                   <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
@@ -152,10 +152,11 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                       style={{
                         width: '54px',
                         height: '54px',
-                        borderRadius: '8px',
+                        borderRadius: '10px',
                         overflow: 'hidden',
-                        background: '#0f172a',
-                        flexShrink: 0
+                        background: '#070a12',
+                        flexShrink: 0,
+                        border: '1px solid rgba(255, 255, 255, 0.1)'
                       }}
                     >
                       <img
@@ -169,7 +170,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                         style={{
                           fontWeight: 800,
                           fontSize: '0.92rem',
-                          color: '#0f172a',
+                          color: '#ffffff',
                           whiteSpace: 'nowrap',
                           overflow: 'hidden',
                           textOverflow: 'ellipsis'
@@ -177,10 +178,10 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                       >
                         {pl.name}
                       </div>
-                      <div style={{ fontSize: '0.74rem', color: '#64748b', marginTop: '2px' }}>
+                      <div style={{ fontSize: '0.74rem', color: '#94a3b8', marginTop: '2px' }}>
                         {pl.songIds.length} tracks • {Math.round(totalSecs / 60)} min
                       </div>
-                      <div style={{ fontSize: '0.68rem', color: '#94a3b8', marginTop: '2px' }}>
+                      <div style={{ fontSize: '0.68rem', color: '#64748b', marginTop: '2px' }}>
                         By {pl.createdBy}
                       </div>
                     </div>
@@ -193,10 +194,10 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
 
         {/* Right column: Selected Playlist Inspector / Track Viewer */}
         {selectedPlaylist && (
-          <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px' }}>
+          <div style={{ background: 'rgba(15, 20, 36, 0.85)', border: '1px solid rgba(255, 255, 255, 0.1)', borderRadius: '16px', padding: '24px', backdropFilter: 'blur(16px)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-                <div style={{ width: '80px', height: '80px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}>
+                <div style={{ width: '80px', height: '80px', borderRadius: '12px', overflow: 'hidden', boxShadow: '0 4px 16px rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}>
                   <img
                     src={selectedPlaylist.coverUrl || '/mm_banner.png'}
                     alt={selectedPlaylist.name}
@@ -204,16 +205,16 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                   />
                 </div>
                 <div>
-                  <span style={{ fontSize: '0.72rem', background: '#dcfce7', color: '#15803d', fontWeight: 800, padding: '2px 8px', borderRadius: '9999px' }}>
+                  <span style={{ fontSize: '0.72rem', background: 'rgba(0, 245, 155, 0.15)', color: '#00f59b', border: '1px solid rgba(0, 245, 155, 0.3)', fontWeight: 800, padding: '2px 8px', borderRadius: '9999px' }}>
                     PLAYLIST
                   </span>
-                  <h3 style={{ fontSize: '1.4rem', fontWeight: 900, margin: '4px 0 2px 0', color: '#0f172a' }}>
+                  <h3 style={{ fontSize: '1.4rem', fontWeight: 900, margin: '4px 0 2px 0', color: '#ffffff' }}>
                     {selectedPlaylist.name}
                   </h3>
-                  <p style={{ fontSize: '0.82rem', color: '#64748b', margin: '0 0 4px 0' }}>
+                  <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 4px 0' }}>
                     {selectedPlaylist.description || 'Custom mix playlist.'}
                   </p>
-                  <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
                     {selectedPlaylist.songIds.length} mixes/tracks • Created {selectedPlaylist.createdAt}
                   </div>
                 </div>
@@ -223,7 +224,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                 {getPlaylistSongs(selectedPlaylist).length > 0 && (
                   <button
                     className="btn btn-primary btn-sm"
-                    style={{ background: '#16a34a', borderColor: '#16a34a' }}
+                    style={{ background: '#00f59b', color: '#07090e', borderColor: '#00f59b', fontWeight: 800 }}
                     onClick={() => {
                       const first = getPlaylistSongs(selectedPlaylist)[0];
                       if (first) onPlaySong(first);
@@ -234,7 +235,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                 )}
                 <button
                   className="btn btn-outline btn-sm"
-                  style={{ color: '#dc2626', borderColor: '#fca5a5' }}
+                  style={{ color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.35)' }}
                   onClick={() => {
                     if (confirm(`Delete playlist "${selectedPlaylist.name}"?`)) {
                       onDeletePlaylist(selectedPlaylist.id);
@@ -250,7 +251,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
 
             {/* Song Table inside Playlist */}
             {getPlaylistSongs(selectedPlaylist).length === 0 ? (
-              <div style={{ background: '#f8fafc', padding: '24px', borderRadius: '10px', textAlign: 'center', color: '#64748b', fontSize: '0.85rem' }}>
+              <div style={{ background: 'rgba(255, 255, 255, 0.04)', padding: '28px', borderRadius: '12px', textAlign: 'center', color: '#94a3b8', fontSize: '0.85rem', border: '1px dashed rgba(255,255,255,0.1)' }}>
                 This playlist is currently empty. Go to <strong>Master Mixes</strong> and click "+ Playlist" to add mixes!
               </div>
             ) : (
@@ -274,8 +275,8 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             className="play-btn-circle"
                             onClick={() => onPlaySong(song)}
                             style={{
-                              background: currentSong?.id === song.id ? '#16a34a' : '#0f172a',
-                              color: '#fff',
+                              background: currentSong?.id === song.id ? '#00f59b' : 'rgba(255,255,255,0.1)',
+                              color: currentSong?.id === song.id ? '#07090e' : '#fff',
                               border: 'none',
                               width: '28px',
                               height: '28px',
@@ -297,18 +298,18 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                               style={{ width: '36px', height: '36px', borderRadius: '6px', objectFit: 'cover' }}
                             />
                             <div>
-                              <div style={{ fontWeight: 700, color: '#0f172a' }}>{song.title}</div>
-                              <div style={{ fontSize: '0.74rem', color: '#64748b' }}>{song.artist}</div>
+                              <div style={{ fontWeight: 700, color: '#ffffff' }}>{song.title}</div>
+                              <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{song.artist}</div>
                             </div>
                           </div>
                         </td>
                         <td>
-                          <span style={{ fontSize: '0.78rem', color: '#475569' }}>
+                          <span style={{ fontSize: '0.78rem', color: '#cbd5e1' }}>
                             {song.genre} • {song.bpm} BPM
                           </span>
                         </td>
                         <td>
-                          <span style={{ fontSize: '0.8rem', color: '#64748b' }}>
+                          <span style={{ fontSize: '0.8rem', color: '#94a3b8' }}>
                             {formatDuration(song.duration)}
                           </span>
                         </td>
@@ -319,7 +320,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                                 href={song.audioUrl}
                                 download={`${song.title} - ${song.artist}.mp3`}
                                 className="btn btn-outline btn-sm"
-                                style={{ padding: '4px 8px', color: '#16a34a', borderColor: '#86efac' }}
+                                style={{ padding: '4px 8px', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
                                 title="Download audio mix"
                               >
                                 <Download size={12} />
@@ -328,7 +329,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             <button
                               type="button"
                               className="btn btn-outline btn-sm"
-                              style={{ padding: '4px 8px', color: '#dc2626', borderColor: '#fca5a5' }}
+                              style={{ padding: '4px 8px', color: '#f87171', borderColor: 'rgba(239, 68, 68, 0.4)' }}
                               onClick={() => onRemoveSongFromPlaylist(selectedPlaylist.id, song.id)}
                               title="Remove from playlist"
                             >
@@ -357,14 +358,14 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
             </button>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
-              <div style={{ background: '#16a34a', padding: '10px', borderRadius: '10px', color: '#fff' }}>
+              <div style={{ background: 'rgba(0, 245, 155, 0.15)', border: '1px solid rgba(0, 245, 155, 0.3)', padding: '10px', borderRadius: '10px', color: '#00f59b' }}>
                 <FolderPlus size={22} />
               </div>
               <div>
-                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
+                <h2 style={{ fontSize: '1.25rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
                   Create New Playlist
                 </h2>
-                <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '2px 0 0 0' }}>
+                <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
                   Select from the list of continuous music mixes and studio masters to build your playlist.
                 </p>
               </div>
@@ -399,7 +400,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                   <label style={{ margin: 0 }}>Select Music Mixes to Include ({selectedSongIds.length} selected)</label>
                   <button
                     type="button"
-                    style={{ background: 'none', border: 'none', color: '#16a34a', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' }}
+                    style={{ background: 'none', border: 'none', color: '#00f59b', fontSize: '0.76rem', fontWeight: 700, cursor: 'pointer' }}
                     onClick={() => {
                       if (selectedSongIds.length === mixesAndSongs.length) {
                         setSelectedSongIds([]);
@@ -416,9 +417,10 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                   style={{
                     maxHeight: '260px',
                     overflowY: 'auto',
-                    border: '1px solid #e2e8f0',
-                    borderRadius: '8px',
-                    padding: '6px'
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: '10px',
+                    padding: '6px',
+                    background: 'rgba(11, 15, 26, 0.7)'
                   }}
                 >
                   {mixesAndSongs.map((mix) => {
@@ -432,28 +434,29 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                           alignItems: 'center',
                           gap: '10px',
                           padding: '8px 10px',
-                          borderRadius: '6px',
+                          borderRadius: '8px',
                           cursor: 'pointer',
-                          background: isChecked ? '#f0fdf4' : 'transparent',
-                          borderBottom: '1px solid #f8fafc'
+                          background: isChecked ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
+                          borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+                          transition: 'background 0.15s ease'
                         }}
                       >
                         <input
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => {}} // handled by parent div
-                          style={{ accentColor: '#16a34a' }}
+                          style={{ accentColor: '#00f59b' }}
                         />
                         <img
                           src={mix.coverUrl || '/mm_logo.jpg'}
                           alt={mix.title}
-                          style={{ width: '32px', height: '32px', borderRadius: '4px', objectFit: 'cover' }}
+                          style={{ width: '32px', height: '32px', borderRadius: '6px', objectFit: 'cover' }}
                         />
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontWeight: 700, fontSize: '0.84rem', color: '#0f172a' }}>
+                          <div style={{ fontWeight: 700, fontSize: '0.84rem', color: '#ffffff' }}>
                             {mix.title} {mix.isMix ? '🔥 (Mix)' : ''}
                           </div>
-                          <div style={{ fontSize: '0.72rem', color: '#64748b' }}>
+                          <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                             {mix.artist} • {formatDuration(mix.duration)} • {mix.genre}
                           </div>
                         </div>
@@ -470,7 +473,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  style={{ flex: 1.5, background: '#16a34a', borderColor: '#16a34a' }}
+                  style={{ flex: 1.5 }}
                   disabled={!newPlName.trim()}
                 >
                   Create Playlist

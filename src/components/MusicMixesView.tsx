@@ -8,7 +8,8 @@ import {
   Clock,
   ListPlus,
   Repeat,
-  CheckCircle2
+  CheckCircle2,
+  FolderPlus
 } from 'lucide-react';
 import type { Song, Playlist, User } from '../types';
 
@@ -348,78 +349,56 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                   {/* Playlist Dropdown */}
                   {playlistDropdownMixId === mix.id && (
                     <div
+                      className="luxury-dropdown-menu"
                       style={{
-                        position: 'absolute',
-                        bottom: '100%',
+                        bottom: 'calc(100% + 8px)',
                         right: 0,
-                        marginBottom: '6px',
-                        background: '#ffffff',
-                        border: '1px solid #cbd5e1',
-                        borderRadius: '8px',
-                        boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                        zIndex: 50,
-                        minWidth: '180px',
-                        padding: '6px 0'
+                        minWidth: '220px',
+                        transformOrigin: 'bottom right'
                       }}
                     >
-                      <div style={{ padding: '4px 10px', fontSize: '0.7rem', fontWeight: 800, color: '#64748b', textTransform: 'uppercase' }}>
-                        Add to Playlist
+                      <div className="luxury-dropdown-header" style={{ padding: '6px 10px 8px' }}>
+                        <div className="luxury-dropdown-title">
+                          <FolderPlus size={13} />
+                          <span>Add to Playlist</span>
+                        </div>
                       </div>
-                      {playlists.map((pl) => {
-                        const alreadyIn = pl.songIds.includes(mix.id);
-                        return (
-                          <button
-                            key={pl.id}
-                            type="button"
-                            onClick={() => {
-                              onAddToPlaylist(mix.id, pl.id);
-                              setPlaylistDropdownMixId(null);
-                            }}
-                            style={{
-                              width: '100%',
-                              textAlign: 'left',
-                              padding: '6px 12px',
-                              background: 'none',
-                              border: 'none',
-                              fontSize: '0.8rem',
-                              color: '#0f172a',
-                              cursor: 'pointer',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between'
-                            }}
-                          >
-                            <span>{pl.name}</span>
-                            {alreadyIn && <CheckCircle2 size={12} color="#16a34a" />}
-                          </button>
-                        );
-                      })}
-                      <div style={{ borderTop: '1px solid #f1f5f9', marginTop: '4px', paddingTop: '4px' }}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setPlaylistDropdownMixId(null);
-                            onOpenCreatePlaylist(mix.id);
-                          }}
-                          style={{
-                            width: '100%',
-                            textAlign: 'left',
-                            padding: '6px 12px',
-                            background: 'none',
-                            border: 'none',
-                            fontSize: '0.8rem',
-                            color: '#16a34a',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '4px'
-                          }}
-                        >
-                          <Plus size={13} />
+                      <div style={{ maxHeight: '180px', overflowY: 'auto' }}>
+                        {playlists.map((pl) => {
+                          const alreadyIn = pl.songIds.includes(mix.id);
+                          return (
+                            <button
+                              key={pl.id}
+                              type="button"
+                              className="luxury-dropdown-item"
+                              onClick={() => {
+                                onAddToPlaylist(mix.id, pl.id);
+                                setPlaylistDropdownMixId(null);
+                              }}
+                            >
+                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {pl.name}
+                              </span>
+                              {alreadyIn && <CheckCircle2 size={14} color="#00f59b" style={{ flexShrink: 0 }} />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <div className="luxury-dropdown-divider" />
+                      <button
+                        type="button"
+                        className="luxury-dropdown-item"
+                        style={{ color: '#00f59b', fontWeight: 800 }}
+                        onClick={() => {
+                          setPlaylistDropdownMixId(null);
+                          onOpenCreatePlaylist(mix.id);
+                        }}
+                      >
+                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <Plus size={14} />
                           <span>New Playlist</span>
-                        </button>
-                      </div>
+                        </span>
+                      </button>
                     </div>
                   )}
                 </div>

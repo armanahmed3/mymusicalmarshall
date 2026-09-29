@@ -55,21 +55,21 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
       </div>
 
       {/* Notice Board Notice Note for members */}
-      <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '12px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', margin: '16px 0 24px 0' }}>
-        <Info size={20} color="#3b82f6" style={{ flexShrink: 0 }} />
-        <div style={{ fontSize: '0.84rem', color: '#475569', lineHeight: 1.4 }}>
-          <strong>Notice Board Guidelines:</strong> Official event flyers and studio notices are posted directly by Music Marshall Studio Administrators. Check back regularly for verified event schedules and sound system appearances.
+      <div style={{ background: 'rgba(0, 210, 255, 0.06)', border: '1px solid rgba(0, 210, 255, 0.25)', borderRadius: '14px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '12px', margin: '16px 0 24px 0' }}>
+        <Info size={20} color="#00d2ff" style={{ flexShrink: 0 }} />
+        <div style={{ fontSize: '0.84rem', color: '#cbd5e1', lineHeight: 1.4 }}>
+          <strong style={{ color: '#00d2ff' }}>Notice Board Guidelines:</strong> Official event flyers and studio notices are posted directly by Music Marshall Studio Administrators. Check back regularly for verified event schedules and sound system appearances.
         </div>
       </div>
 
       {/* Flyers Grid */}
       {flyers.length === 0 ? (
-        <div style={{ background: '#ffffff', border: '1px dashed #cbd5e1', borderRadius: '16px', padding: '48px 20px', textAlign: 'center' }}>
-          <Calendar size={40} color="#94a3b8" style={{ margin: '0 auto 12px' }} />
-          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#0f172a', margin: '0 0 6px 0' }}>
+        <div style={{ background: 'rgba(15, 20, 36, 0.75)', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '16px', padding: '48px 20px', textAlign: 'center' }}>
+          <Calendar size={40} color="#00f59b" style={{ margin: '0 auto 12px' }} />
+          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 6px 0' }}>
             No Event Flyers Currently Active
           </h3>
-          <p style={{ color: '#64748b', fontSize: '0.85rem', margin: 0 }}>
+          <p style={{ color: '#94a3b8', fontSize: '0.85rem', margin: 0 }}>
             Stay tuned! Upcoming sound system dates and album releases will appear here.
           </p>
         </div>
@@ -79,14 +79,15 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
             <div
               key={flyer.id}
               style={{
-                background: '#ffffff',
-                border: '1px solid #e2e8f0',
+                background: 'rgba(15, 20, 36, 0.8)',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
                 borderRadius: '16px',
                 overflow: 'hidden',
-                boxShadow: '0 10px 25px -5px rgba(0,0,0,0.05)',
+                boxShadow: '0 12px 30px rgba(0,0,0,0.4)',
                 display: 'flex',
                 flexDirection: 'column',
-                transition: 'transform 0.2s ease'
+                transition: 'transform 0.2s ease, border-color 0.2s ease',
+                backdropFilter: 'blur(16px)'
               }}
             >
               {/* Flyer Artwork */}
@@ -101,8 +102,8 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                     position: 'absolute',
                     top: '12px',
                     left: '12px',
-                    background: 'rgba(15, 23, 42, 0.85)',
-                    backdropFilter: 'blur(6px)',
+                    background: 'rgba(11, 15, 26, 0.9)',
+                    backdropFilter: 'blur(8px)',
                     color: '#fff',
                     padding: '4px 10px',
                     borderRadius: '9999px',
@@ -110,10 +111,11 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                     fontWeight: 800,
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '5px'
+                    gap: '5px',
+                    border: '1px solid rgba(0, 245, 155, 0.3)'
                   }}
                 >
-                  <Shield size={12} color="#22c55e" /> Verified Official Event
+                  <Shield size={12} color="#00f59b" /> Verified Official Event
                 </div>
 
                 {isAdmin && onDeleteFlyer && (
@@ -128,7 +130,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                       position: 'absolute',
                       top: '12px',
                       right: '12px',
-                      background: 'rgba(220, 38, 38, 0.9)',
+                      background: 'rgba(239, 68, 68, 0.9)',
                       color: '#fff',
                       border: 'none',
                       borderRadius: '50%',
@@ -149,28 +151,28 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
               {/* Flyer Content */}
               <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between' }}>
                 <div>
-                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#0f172a', margin: '0 0 10px 0', lineHeight: 1.3 }}>
+                  <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#ffffff', margin: '0 0 10px 0', lineHeight: 1.3 }}>
                     {flyer.title}
                   </h3>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px', fontSize: '0.82rem', color: '#475569' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '14px', fontSize: '0.82rem', color: '#cbd5e1' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Calendar size={15} color="#16a34a" />
-                      <strong>{flyer.eventDate}</strong>
+                      <Calendar size={15} color="#00f59b" />
+                      <strong style={{ color: '#ffffff' }}>{flyer.eventDate}</strong>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <MapPin size={15} color="#ea580c" />
+                      <MapPin size={15} color="#fb923c" />
                       <span>{flyer.location}</span>
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '0.84rem', color: '#64748b', margin: '0 0 16px 0', lineHeight: 1.5 }}>
+                  <p style={{ fontSize: '0.84rem', color: '#94a3b8', margin: '0 0 16px 0', lineHeight: 1.5 }}>
                     {flyer.description}
                   </p>
                 </div>
 
-                <div style={{ borderTop: '1px solid #f1f5f9', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
+                <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.08)', paddingTop: '14px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '0.74rem', color: '#64748b' }}>
                     Posted by {flyer.postedBy} • {flyer.createdAt}
                   </span>
 
@@ -180,13 +182,13 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-outline btn-sm"
-                      style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.76rem' }}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.76rem', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
                     >
                       <span>Event Info</span>
                       <ExternalLink size={12} />
                     </a>
                   ) : (
-                    <span style={{ fontSize: '0.74rem', color: '#16a34a', fontWeight: 700 }}>
+                    <span style={{ fontSize: '0.74rem', color: '#00f59b', fontWeight: 700 }}>
                       ✓ Studio Confirmed
                     </span>
                   )}

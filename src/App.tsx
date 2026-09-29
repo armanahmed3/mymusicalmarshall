@@ -39,7 +39,8 @@ import {
   Users,
   Mail,
   Bell,
-  Check
+  Check,
+  ChevronDown
 } from 'lucide-react';
 import type { Song, User, ReferralCode, ActiveTab, AppMode, Playlist, EventFlyer, SupportTicket, UserPreferences } from './types';
 import {
@@ -209,6 +210,7 @@ export function App() {
     return { repeatMixLoop: true, stopNewMixAlerts: false };
   });
   const [preferencesModalOpen, setPreferencesModalOpen] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   // Admin User Editing & Loyalty Modal
   const [editingUser, setEditingUser] = useState<User | null>(null);
@@ -1558,25 +1560,176 @@ export function App() {
                 <span>96kHz / 24-bit Hi-Res</span>
               </div>
               {currentUser ? (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div className="user-profile-chip">
-                    <UserIcon size={14} />
+                <div className="user-dropdown-wrapper">
+                  <button
+                    type="button"
+                    className={`user-profile-trigger ${userDropdownOpen ? 'is-active' : ''}`}
+                    onClick={() => setUserDropdownOpen((prev) => !prev)}
+                    title="Open user profile & actions menu"
+                    aria-expanded={userDropdownOpen}
+                  >
+                    <div style={{
+                      width: '26px',
+                      height: '26px',
+                      borderRadius: '50%',
+                      background: currentUser.role === 'admin' ? 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)' : 'rgba(255, 255, 255, 0.15)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: currentUser.role === 'admin' ? '#07090e' : '#ffffff',
+                      fontWeight: 800,
+                      fontSize: '0.78rem'
+                    }}>
+                      {currentUser.username.charAt(0).toUpperCase()}
+                    </div>
                     <span>{currentUser.username}</span>
                     <span className="user-role-tag">{currentUser.role}</span>
                     {currentUser.isEmailVerified && (
                       <span className={`user-verified-badge ${currentUser.role === 'admin' ? 'admin' : ''}`}>
-                        {currentUser.role === 'admin' ? 'Admin 2FA 🛡️' : 'Verified ✓'}
+                        {currentUser.role === 'admin' ? 'Admin 🛡️' : 'Verified ✓'}
                       </span>
                     )}
-                  </div>
-                  <button
-                    className="btn btn-outline btn-sm header-logout-btn"
-                    onClick={handleLogout}
-                    title="Logout & Return to Home Page"
-                  >
-                    <LogOut size={15} />
-                    <span>Logout</span>
+                    <ChevronDown size={14} className="chevron-icon" />
                   </button>
+
+                  {userDropdownOpen && (
+                    <div
+                      className="luxury-dropdown-menu user-dropdown-popover"
+                      style={{ position: 'absolute' }}
+                    >
+                      <div className="luxury-dropdown-header">
+                        <div className="luxury-dropdown-title">
+                          <UserIcon size={13} />
+                          <span>{currentUser.username}</span>
+                          <span className="user-role-tag" style={{ marginLeft: 'auto' }}>{currentUser.role}</span>
+                        </div>
+                        <div className="luxury-dropdown-subtitle" style={{ fontSize: '0.74rem' }}>
+                          {currentUser.email}
+                        </div>
+                        <div style={{ marginTop: '6px', display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                          <span style={{ fontSize: '0.68rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(255,255,255,0.06)', color: '#94a3b8' }}>
+                            Ref: <strong>{currentUser.referralCode}</strong>
+                          </span>
+                          {currentUser.isLoyaltyEnrolled && (
+                            <span style={{ fontSize: '0.68rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(245, 158, 11, 0.15)', color: '#fbbf24', fontWeight: 700 }}>
+                              {currentUser.loyaltyTier || 'VIP Member'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item"
+                          onClick={() => {
+                            setAppMode('landing');
+                            setUserDropdownOpen(false);
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Home size={14} />
+                            <span>Return to Home Page</span>
+                          </span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item"
+                          onClick={() => {
+                            setActiveTab('releases');
+                            setUserDropdownOpen(false);
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Disc3 size={14} />
+                            <span>My MM Releases</span>
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: '#00f59b', fontWeight: 800 }}>Free</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item"
+                          onClick={() => {
+                            setActiveTab('mixes');
+                            setUserDropdownOpen(false);
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <ListMusic size={14} />
+                            <span>Master Mixes & Vault</span>
+                          </span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item"
+                          onClick={() => {
+                            setActiveTab('support');
+                            setUserDropdownOpen(false);
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <HelpCircle size={14} />
+                            <span>Support & Helpdesk</span>
+                          </span>
+                        </button>
+
+                        {currentUser.role === 'admin' && (
+                          <button
+                            type="button"
+                            className="luxury-dropdown-item"
+                            style={{ color: '#00d2ff', fontWeight: 700 }}
+                            onClick={() => {
+                              setActiveTab('admin');
+                              setUserDropdownOpen(false);
+                            }}
+                          >
+                            <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <Shield size={14} />
+                              <span>Admin Control Panel</span>
+                            </span>
+                          </button>
+                        )}
+
+                        <div className="luxury-dropdown-divider" />
+
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item"
+                          onClick={() => {
+                            setPreferencesModalOpen(true);
+                            setUserDropdownOpen(false);
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Settings size={14} />
+                            <span>Studio Preferences</span>
+                          </span>
+                          <span style={{ fontSize: '0.7rem', color: preferences.repeatMixLoop ? '#00f59b' : '#94a3b8', fontWeight: 700 }}>
+                            {preferences.repeatMixLoop ? 'Loop: ON' : 'Loop: OFF'}
+                          </span>
+                        </button>
+
+                        <div className="luxury-dropdown-divider" />
+
+                        <button
+                          type="button"
+                          className="luxury-dropdown-item danger"
+                          onClick={() => {
+                            setUserDropdownOpen(false);
+                            handleLogout();
+                          }}
+                        >
+                          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <LogOut size={14} />
+                            <span>Sign Out / Logout</span>
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -2244,6 +2397,32 @@ export function App() {
                       <div className="admin-metric-hint">
                         {songs.filter((s) => s.isDownloadable).length} tagged as downloadable
                       </div>
+                    </div>
+                  </div>
+
+                  {/* Admin Module Selector Dropdown & Quick Sub-Nav */}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                        Admin Section:
+                      </span>
+                      <select
+                        className="form-control"
+                        value={adminSubTab}
+                        onChange={(e) => setAdminSubTab(e.target.value as any)}
+                        style={{ minWidth: '240px', padding: '9px 40px 9px 14px', fontSize: '0.86rem', fontWeight: 700 }}
+                        aria-label="Select admin dashboard module"
+                      >
+                        <option value="all">📋 All Modules Overview</option>
+                        <option value="pending">🔔 Pending Approvals ({users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length})</option>
+                        <option value="upload">📤 Upload & Add Song</option>
+                        <option value="users">👥 Member Directory & Loyalty ({users.length})</option>
+                        <option value="branding">🖼️ Branding & Banners</option>
+                        <option value="flyers">📅 Notice Board Flyers ({flyers.length})</option>
+                        <option value="blast">✉️ VIP Member Email Blast</option>
+                        <option value="promos">🎟️ Promo Codes ({referralCodes.length})</option>
+                        <option value="catalog">🎵 Catalog Tracks ({songs.length})</option>
+                      </select>
                     </div>
                   </div>
 
