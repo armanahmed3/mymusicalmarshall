@@ -280,6 +280,9 @@ export function App() {
     const audio = audioRef.current;
     if (!audio) return;
 
+    const handlePlayEvent = () => setIsPlaying(true);
+    const handlePauseEvent = () => setIsPlaying(false);
+
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
     };
@@ -302,11 +305,15 @@ export function App() {
       }
     };
 
+    audio.addEventListener('play', handlePlayEvent);
+    audio.addEventListener('pause', handlePauseEvent);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
 
     return () => {
+      audio.removeEventListener('play', handlePlayEvent);
+      audio.removeEventListener('pause', handlePauseEvent);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
@@ -346,20 +353,20 @@ export function App() {
     }
 
     if (currentSong?.id === song.id) {
-      if (isPlaying) {
-        audioRef.current?.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current?.play().catch(() => {});
-        setIsPlaying(true);
+      if (audioRef.current) {
+        if (audioRef.current.paused) {
+          audioRef.current.play().catch((err) => console.warn('Play error:', err));
+        } else {
+          audioRef.current.pause();
+        }
       }
     } else {
       setCurrentSong(song);
       setCurrentTime(0);
-      setIsPlaying(true);
       if (audioRef.current) {
         audioRef.current.src = song.audioUrl;
-        audioRef.current.play().catch(() => {});
+        audioRef.current.load();
+        audioRef.current.play().catch((err) => console.warn('Play error:', err));
       }
     }
   };
@@ -376,12 +383,12 @@ export function App() {
       return;
     }
 
-    if (isPlaying) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current?.play().catch(() => {});
-      setIsPlaying(true);
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch((err) => console.warn('Play error:', err));
+      } else {
+        audioRef.current.pause();
+      }
     }
   };
 
@@ -1059,7 +1066,7 @@ export function App() {
                 </h3>
                 <button
                   type="button"
-                  className="modal-close-btn ctrl-btn"
+                  className="modal-close-btn"
                   onClick={() => setAuthModalOpen(false)}
                   title="Close"
                   aria-label="Close"
@@ -3684,7 +3691,7 @@ export function App() {
               </h3>
               <button
                 type="button"
-                className="modal-close-btn ctrl-btn"
+                className="modal-close-btn"
                 onClick={() => setAuthModalOpen(false)}
                 title="Close"
                 aria-label="Close"

@@ -107,6 +107,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     const audio = audioRef.current;
     if (!audio) return;
 
+    const handlePlayEvent = () => setIsPlaying(true);
+    const handlePauseEvent = () => setIsPlaying(false);
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => {
       if (audio.duration && !isNaN(audio.duration)) {
@@ -120,11 +122,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       handleSelectRelease(mmReleases[nextIndex]);
     };
 
+    audio.addEventListener('play', handlePlayEvent);
+    audio.addEventListener('pause', handlePauseEvent);
     audio.addEventListener('timeupdate', handleTimeUpdate);
     audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
 
     return () => {
+      audio.removeEventListener('play', handlePlayEvent);
+      audio.removeEventListener('pause', handlePauseEvent);
       audio.removeEventListener('timeupdate', handleTimeUpdate);
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
@@ -139,20 +145,20 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   const handleSelectRelease = (song: Song) => {
     if (activeRelease?.id === song.id) {
-      if (isPlaying) {
-        audioRef.current?.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current?.play().catch(() => {});
-        setIsPlaying(true);
+      if (audioRef.current) {
+        if (audioRef.current.paused) {
+          audioRef.current.play().catch((err) => console.warn('Play error:', err));
+        } else {
+          audioRef.current.pause();
+        }
       }
     } else {
       setActiveRelease(song);
       setCurrentTime(0);
-      setIsPlaying(true);
       if (audioRef.current) {
         audioRef.current.src = song.audioUrl;
-        audioRef.current.play().catch(() => {});
+        audioRef.current.load();
+        audioRef.current.play().catch((err) => console.warn('Play error:', err));
       }
     }
   };
@@ -163,12 +169,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       return;
     }
 
-    if (isPlaying) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
-    } else {
-      audioRef.current?.play().catch(() => {});
-      setIsPlaying(true);
+    if (audioRef.current) {
+      if (audioRef.current.paused) {
+        audioRef.current.play().catch((err) => console.warn('Play error:', err));
+      } else {
+        audioRef.current.pause();
+      }
     }
   };
 
@@ -368,7 +374,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </h1>
 
           <div className="hero-actions-row">
-            <a href="#mm-releases" className="btn btn-accent btn-lg">
+            <a
+              href="#mm-releases"
+              className="btn btn-accent btn-lg"
+              onClick={() => {
+                if (!isPlaying && mmReleases.length > 0) {
+                  handleSelectRelease(mmReleases[0]);
+                }
+              }}
+            >
               <Play size={18} fill="white" />
               <span>Play MM Releases (No Login Needed)</span>
             </a>
