@@ -22,29 +22,37 @@ import {
   HelpCircle,
   MapPin,
   Send,
-  CheckCircle2
+  CheckCircle2,
+  Download,
+  LogOut,
+  Layers
 } from 'lucide-react';
 import type { Song, User, EventFlyer, SupportTicket } from '../types';
 
 interface LandingPageProps {
   mmReleases: Song[];
+  allMixes?: Song[];
   currentUser: User | null;
   landingFeatureImage?: string;
   flyers?: EventFlyer[];
   supportTickets?: SupportTicket[];
   onSubmitTicket?: (ticket: Omit<SupportTicket, 'id' | 'createdAt' | 'status'>) => void;
-  onOpenApp: (tab?: string) => void;
+  onOpenApp?: (tab?: string) => void;
   onOpenAuth: (mode?: 'login' | 'register') => void;
+  onLogout?: () => void;
+  onOpenAdmin?: () => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   mmReleases,
+  allMixes = [],
   currentUser,
   landingFeatureImage,
   flyers = [],
   onSubmitTicket,
-  onOpenApp,
-  onOpenAuth
+  onOpenAuth,
+  onLogout,
+  onOpenAdmin
 }) => {
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -83,24 +91,24 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     setTimeout(() => setTktSuccess(null), 6000);
   };
 
-  // Launch Music Lab strictly requires login
-  const handleLaunchMusicLab = (tab = 'releases') => {
-    if (!currentUser) {
-      onOpenAuth('login');
-      return;
-    }
-    onOpenApp(tab);
-  };
+  // Compile full mixes list
+  const availableMixes = allMixes.length > 0
+    ? allMixes
+    : mmReleases.filter(s => s.isMix || s.title.toLowerCase().includes('mix') || s.title.toLowerCase().includes('juggling') || s.title.toLowerCase().includes('medley'));
 
-  // Free public audio player state for My MM Releases
-  const [activeRelease, setActiveRelease] = useState<Song>(mmReleases[0]);
+  // Active audio player state
+  const [activeTrack, setActiveTrack] = useState<Song>(mmReleases[0] || null);
+  const [activeMix, setActiveMix] = useState<Song>(availableMixes[0] || mmReleases[0] || null);
+  const [playerType, setPlayerType] = useState<'track' | 'mix'>('track');
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(mmReleases[0]?.duration || 240);
+  const [duration, setDuration] = useState<number>(240);
   const [volume, setVolume] = useState<number>(0.85);
   const [isMuted, setIsMuted] = useState<boolean>(false);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const currentPlayingItem = playerType === 'mix' ? activeMix : activeTrack;
 
   // Audio element listeners
   useEffect(() => {
@@ -116,10 +124,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       }
     };
     const handleEnded = () => {
-      // Auto play next in releases
-      const currentIndex = mmReleases.findIndex(r => r.id === activeRelease?.id);
-      const nextIndex = (currentIndex + 1) % mmReleases.length;
-      handleSelectRelease(mmReleases[nextIndex]);
+      if (playerType === 'track') {
+        const currentIndex = mmReleases.findIndex(r => r.id === activeTrack?.id);
+        const nextIndex = (currentIndex + 1) % mmReleases.length;
+        handleSelectRelease(mmReleases[nextIndex]);
+      } else {
+        setIsPlaying(false);
+      }
     };
 
     audio.addEventListener('play', handlePlayEvent);
@@ -135,7 +146,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [activeRelease, mmReleases]);
+  }, [activeTrack, activeMix, playerType, mmReleases]);
 
   useEffect(() => {
     if (audioRef.current) {
@@ -144,34 +155,51 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }, [volume, isMuted]);
 
   const handleSelectRelease = (song: Song) => {
-    if (activeRelease?.id === song.id) {
+    setPlayerType('track');
+    if (activeTrack?.id === song.id && playerType === 'track') {
       if (audioRef.current) {
         if (audioRef.current.paused) {
-          audioRef.current.play().catch((err) => console.warn('Play error:', err));
+          audioRef.current.play().catch(err => console.warn('Play error:', err));
         } else {
           audioRef.current.pause();
         }
       }
     } else {
-      setActiveRelease(song);
+      setActiveTrack(song);
       setCurrentTime(0);
+      setDuration(song.duration || 240);
       if (audioRef.current) {
         audioRef.current.src = song.audioUrl;
         audioRef.current.load();
-        audioRef.current.play().catch((err) => console.warn('Play error:', err));
+        audioRef.current.play().catch(err => console.warn('Play error:', err));
+      }
+    }
+  };
+
+  const handleSelectMix = (mix: Song, autoPlay = true) => {
+    setPlayerType('mix');
+    setActiveMix(mix);
+    setCurrentTime(0);
+    setDuration(mix.duration || 1800);
+    if (audioRef.current) {
+      audioRef.current.src = mix.audioUrl;
+      audioRef.current.load();
+      if (autoPlay) {
+        audioRef.current.play().catch(err => console.warn('Mix play error:', err));
       }
     }
   };
 
   const handleTogglePlayPause = () => {
-    if (!activeRelease && mmReleases.length > 0) {
+    const item = playerType === 'mix' ? activeMix : activeTrack;
+    if (!item && mmReleases.length > 0) {
       handleSelectRelease(mmReleases[0]);
       return;
     }
 
     if (audioRef.current) {
       if (audioRef.current.paused) {
-        audioRef.current.play().catch((err) => console.warn('Play error:', err));
+        audioRef.current.play().catch(err => console.warn('Play error:', err));
       } else {
         audioRef.current.pause();
       }
@@ -198,52 +226,65 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       {/* Hidden public audio element */}
       <audio
         ref={audioRef}
-        src={activeRelease?.audioUrl}
+        src={currentPlayingItem?.audioUrl}
         preload="metadata"
       />
 
-
       {/* ==========================================================================
-          STICKY PUBLIC NAVBAR
+          ANCHORED NAVIGATION BAR (Sticky, always visible)
           ========================================================================== */}
-      <header className="landing-nav">
+      <header className="landing-nav" id="top-nav">
         <div className="landing-nav-inner">
+          {/* Logo with Animated Headphone and Authentic Audio in italics */}
           <div className="landing-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img src="/mm_logo.jpg" alt="Music Marshall" />
+            <img
+              src="/headphone_logo.png"
+              alt="Music Marshall Headphone Logo"
+              className="headphone-logo-animated"
+            />
             <div className="landing-logo-meta">
               <span className="landing-logo-title">Music Marshall</span>
-              <span className="landing-logo-sub">Sound System & Studio</span>
+              <span className="landing-logo-sub">Authentic Audio</span>
             </div>
           </div>
 
+          {/* Navigation Links using current button style */}
           <nav className="landing-links">
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
               Home
             </a>
+            <a href="#listen-music">Listen to Music</a>
             <a href="#mm-releases">My MM Releases</a>
             <a href="#notice-board">Notice Board</a>
-            <a href="#support-desk">Support & Tickets</a>
-            <a href="#about-us">About Us</a>
             <a href="#contact-us">Contact Us</a>
           </nav>
 
+          {/* Nav Right Action: Login / Logout */}
           <div className="landing-nav-actions">
-            {!currentUser && (
+            {!currentUser ? (
               <button className="btn btn-outline btn-sm" onClick={() => onOpenAuth('login')}>
-                Sign In
-              </button>
-            )}
-            {currentUser ? (
-              <button className="btn btn-primary btn-sm" onClick={() => handleLaunchMusicLab('home')}>
-                <span>Launch Music Lab</span>
-                <ArrowRight size={14} />
+                Login
               </button>
             ) : (
-              <button className="btn btn-primary btn-sm" onClick={() => onOpenAuth('register')}>
-                <Lock size={13} />
-                <span>Sign Up to Launch Lab</span>
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {currentUser.role === 'admin' && onOpenAdmin && (
+                  <button className="btn btn-outline btn-sm" onClick={onOpenAdmin} title="Open Administrator Control Center">
+                    <ShieldCheck size={14} color="#00f59b" />
+                    <span>Admin Panel</span>
+                  </button>
+                )}
+                <button
+                  className="btn btn-primary btn-sm"
+                  onClick={onLogout}
+                  title={`Signed in as ${currentUser.username}. Click to log out.`}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <LogOut size={13} />
+                  <span>Logout ({currentUser.username})</span>
+                </button>
+              </div>
             )}
+
             <button
               className="landing-mobile-menu-btn"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
@@ -269,6 +310,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <span>Home</span>
             </a>
             <a
+              href="#listen-music"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Headphones size={18} />
+              <span>Listen to Music</span>
+            </a>
+            <a
               href="#mm-releases"
               onClick={() => setMobileMenuOpen(false)}
             >
@@ -280,21 +328,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               onClick={() => setMobileMenuOpen(false)}
             >
               <Calendar size={18} />
-              <span>Notice Board & Flyers</span>
-            </a>
-            <a
-              href="#support-desk"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <HelpCircle size={18} />
-              <span>Support & Tickets</span>
-            </a>
-            <a
-              href="#about-us"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Music2 size={18} />
-              <span>About Us</span>
+              <span>Notice Board</span>
             </a>
             <a
               href="#contact-us"
@@ -303,43 +337,46 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Phone size={18} />
               <span>Contact Us</span>
             </a>
+
             <div className="mobile-menu-actions">
               {!currentUser ? (
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', marginTop: '8px' }}>
-                  <button
-                    className="btn btn-primary"
-                    style={{ width: '100%' }}
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onOpenAuth('register');
-                    }}
-                  >
-                    <Lock size={15} />
-                    <span>Sign Up to Launch Lab</span>
-                  </button>
-                  <button
-                    className="btn btn-outline"
-                    style={{ width: '100%' }}
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onOpenAuth('login');
-                    }}
-                  >
-                    <span>Sign In</span>
-                  </button>
-                </div>
-              ) : (
                 <button
                   className="btn btn-primary"
                   style={{ width: '100%', marginTop: '8px' }}
                   onClick={() => {
                     setMobileMenuOpen(false);
-                    handleLaunchMusicLab('home');
+                    onOpenAuth('login');
                   }}
                 >
-                  <span>Launch Music Lab</span>
-                  <ArrowRight size={15} />
+                  <span>Login</span>
                 </button>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', marginTop: '8px' }}>
+                  {currentUser.role === 'admin' && onOpenAdmin && (
+                    <button
+                      className="btn btn-outline"
+                      style={{ width: '100%' }}
+                      onClick={() => {
+                        setMobileMenuOpen(false);
+                        onOpenAdmin();
+                      }}
+                    >
+                      <ShieldCheck size={15} color="#00f59b" />
+                      <span>Admin Panel</span>
+                    </button>
+                  )}
+                  <button
+                    className="btn btn-primary"
+                    style={{ width: '100%' }}
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      if (onLogout) onLogout();
+                    }}
+                  >
+                    <LogOut size={15} />
+                    <span>Logout ({currentUser.username})</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -347,7 +384,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </header>
 
       {/* ==========================================================================
-          HERO SECTION (ANIMATED)
+          HERO SECTION (Simplified, attractive, uncluttered)
           ========================================================================== */}
       <section className="landing-hero">
         <div className="landing-hero-backdrop">
@@ -364,16 +401,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         <div className="landing-hero-content">
+          {/* Note 1 (Handwritten): Remove ARCHIVES from "Official High Definition Audio" */}
           <div className="hero-badge-pill">
             <Radio size={14} className="pulse-icon" />
-            <span>Official High-Definition Audio Archives</span>
+            <span>Official High Definition Audio</span>
           </div>
 
           <h1 className="landing-hero-title">
             The Authentic Sound of <span className="highlight-text">Music Marshall</span>
           </h1>
 
+          <p style={{ fontSize: '1.05rem', color: '#94a3b8', maxWidth: '520px', lineHeight: 1.6, marginBottom: '24px' }}>
+            Experience original roots reggae, lovers rock, and exclusive studio soundclash masters directly from Jamaica and London.
+          </p>
+
           <div className="hero-actions-row">
+            {/* Note 2 (Handwritten): Change to "Play MY MM Releases (No login needed)" */}
             <a
               href="#mm-releases"
               className="btn btn-accent btn-lg"
@@ -384,40 +427,31 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               }}
             >
               <Play size={18} fill="white" />
-              <span>Play MM Releases (No Login Needed)</span>
+              <span>Play MY MM Releases (No login needed)</span>
             </a>
-            {currentUser ? (
-              <button className="btn btn-primary btn-lg" onClick={() => handleLaunchMusicLab('home')}>
-                <span>Launch Music Lab & Studio</span>
-                <ArrowRight size={18} />
+
+            {/* Note 3 (Handwritten): Sign up (100% free) to listen to Audio Mixes */}
+            {!currentUser ? (
+              <button className="btn btn-primary btn-lg" onClick={() => onOpenAuth('register')}>
+                <span>Sign up (100% free) to listen to Audio Mixes</span>
               </button>
             ) : (
-              <button className="btn btn-primary btn-lg" onClick={() => onOpenAuth('register')}>
-                <Lock size={18} />
-                <span>Sign Up to Launch Music Lab</span>
-              </button>
+              <a href="#listen-music" className="btn btn-primary btn-lg">
+                <Headphones size={18} />
+                <span>Stream Free Audio Mixes</span>
+              </a>
             )}
           </div>
-
-          <div className="hero-feature-tags">
-            <div className="feature-tag">
-              <Headphones size={15} />
-              <span>Free Unrestricted MM Releases</span>
-            </div>
-            <div className="feature-tag">
-              <Disc3 size={15} />
-              <span>16 Downloaded Studio Masters</span>
-            </div>
-            <div className="feature-tag">
-              <ShieldCheck size={15} />
-              <span>Compulsory Referral VIP Club</span>
-            </div>
-          </div>
+          {/* Note 7 (Handwritten): "Remove 3 lines under Sign up" -> hero-feature-tags removed! */}
         </div>
 
         <div className="landing-hero-visual">
           <div className="hero-album-stack">
-            <img src={landingFeatureImage || "/mm_banner.png"} alt="Music Marshall Banner" className="hero-visual-banner" />
+            <img
+              src={landingFeatureImage || "/mm_banner.png"}
+              alt="Music Marshall Banner"
+              className="hero-visual-banner"
+            />
             <div className="hero-floating-card">
               <div className={`floating-card-icon ${isPlaying ? 'pulse-icon' : ''}`}>
                 {isPlaying ? (
@@ -431,8 +465,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 )}
               </div>
               <div className="floating-card-text">
-                <strong>{activeRelease?.title}</strong>
-                <span>{activeRelease?.artist}</span>
+                <strong>{currentPlayingItem?.title || 'What Will Be'}</strong>
+                <span>{currentPlayingItem?.artist || 'Stevie Malekuu'}</span>
               </div>
               <button
                 className="btn-play-table"
@@ -447,43 +481,89 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ==========================================================================
-          SECTION 1: MY MM RELEASES (PLAYABLE WITHOUT LOGIN!)
+          SECTION: MUSIC MARSHALL FEATURED MIX & AUDIO MIXES
+          (PDF Note 5 & Handwritten Note 8:
+           "Music Marshall Featured Mix - Stream Free Without Login"
+           "My MM Mixes - Stream Free Without Login - Start Streaming")
           ========================================================================== */}
-      <section id="mm-releases" className="landing-section bg-secondary">
+      <section id="listen-music" className="landing-section bg-secondary">
         <div className="section-container">
           <div className="section-title-wrap">
             <div className="section-kicker">
               <Sparkles size={14} />
-              <span>Public Audio Catalog</span>
+              <span>Studio DJ Session</span>
             </div>
-            <h2 className="landing-section-h2">My MM Releases — Stream Free Without Login</h2>
+            <h2 className="landing-section-h2">
+              Music Marshall Featured Mix - Stream Free Without Login
+            </h2>
             <p className="landing-section-desc">
-              All 16 official releases from <em>mymusicmarshall.com</em> are available right here for instant, unrestricted playback. 
-              No login required. Click any song to listen immediately!
+              My MM Mixes — Stream Free Without Login. Continuous high-definition soundclash and tribute sets recorded directly from master soundboards.
             </p>
           </div>
 
-          {/* Interactive Public Player Card */}
-          <div className="public-player-card">
-            <div className="public-player-left">
-              <div className={`public-player-cover-wrap ${isPlaying ? 'is-playing' : ''}`}>
+          <div className="featured-mix-card">
+            <div className="featured-mix-header">
+              <div className="featured-mix-badge">
+                <Radio size={14} className="pulse-icon" />
+                <span>Featured Master Mix</span>
+              </div>
+
+              {/* Mix Selector Tabs */}
+              <div className="mix-selector-tabs">
+                {availableMixes.map((mix) => (
+                  <button
+                    key={mix.id}
+                    className={`mix-selector-btn ${activeMix?.id === mix.id && playerType === 'mix' ? 'is-active' : ''}`}
+                    onClick={() => handleSelectMix(mix, true)}
+                  >
+                    {mix.title}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="public-player-left" style={{ marginTop: '12px' }}>
+              <div className={`public-player-cover-wrap ${isPlaying && playerType === 'mix' ? 'is-playing' : ''}`}>
                 <img
-                  src={activeRelease?.coverUrl || '/mm_logo.jpg'}
-                  alt={activeRelease?.title}
-                  className={`public-player-cover ${isPlaying ? 'is-spinning' : ''}`}
+                  src={activeMix?.coverUrl || '/mm_banner.png'}
+                  alt={activeMix?.title}
+                  className={`public-player-cover ${isPlaying && playerType === 'mix' ? 'is-spinning' : ''}`}
+                  style={{ borderRadius: '16px' }}
                 />
               </div>
-              <div className="public-player-meta">
-                <span className="public-tag-free">Free Public Release</span>
-                <h3 className="public-player-title">{activeRelease?.title}</h3>
-                <span className="public-player-artist">{activeRelease?.artist}</span>
-                <p className="public-player-desc">{activeRelease?.description || activeRelease?.album}</p>
 
-                <div className="public-player-ctrls">
-                  <button className="btn btn-accent btn-play-main" onClick={handleTogglePlayPause}>
-                    {isPlaying ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}
-                    <span>{isPlaying ? 'Pause Track' : 'Play Now'}</span>
+              <div className="public-player-meta">
+                <span className="public-tag-free">Continuous Full Session</span>
+                <h3 className="public-player-title" style={{ fontSize: '1.4rem' }}>{activeMix?.title}</h3>
+                <span className="public-player-artist" style={{ fontSize: '1rem', color: '#00f59b' }}>{activeMix?.artist}</span>
+                <p className="public-player-desc">{activeMix?.description || activeMix?.album}</p>
+
+                <div className="public-player-ctrls" style={{ flexWrap: 'wrap', gap: '14px' }}>
+                  <button
+                    className="btn btn-accent btn-play-main"
+                    onClick={() => {
+                      if (playerType !== 'mix') {
+                        handleSelectMix(activeMix || availableMixes[0], true);
+                      } else {
+                        handleTogglePlayPause();
+                      }
+                    }}
+                  >
+                    {isPlaying && playerType === 'mix' ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}
+                    <span>{isPlaying && playerType === 'mix' ? 'Pause Mix' : 'Start Streaming'}</span>
                   </button>
+
+                  {/* Direct Download Functionality */}
+                  <a
+                    href={activeMix?.audioUrl}
+                    download={`${activeMix?.title} - ${activeMix?.artist}.mp3`}
+                    className="btn btn-outline"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', minHeight: '44px' }}
+                    title="Download Master Mix"
+                  >
+                    <Download size={16} />
+                    <span>Download Mix</span>
+                  </a>
 
                   <div className="volume-inline">
                     <button className="ctrl-btn" onClick={() => setIsMuted(!isMuted)}>
@@ -520,78 +600,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
             </div>
           </div>
-
-          {/* Table of all 16 free releases */}
-          <div className="releases-grid-header">
-            <h4>All 16 Official Master Releases</h4>
-            <span style={{ fontSize: '0.84rem', color: '#64748b' }}>Select any song to listen</span>
-          </div>
-
-          <div className="releases-list-box">
-            {mmReleases.map((song, idx) => {
-              const isSelected = activeRelease?.id === song.id;
-              return (
-                <div
-                  key={song.id}
-                  className={`release-row ${isSelected ? 'is-active' : ''}`}
-                  onClick={() => handleSelectRelease(song)}
-                >
-                  <div className="release-col-num">
-                    {isSelected && isPlaying ? (
-                      <div className="mini-equalizer">
-                        <span className="eq-bar"></span>
-                        <span className="eq-bar"></span>
-                        <span className="eq-bar"></span>
-                      </div>
-                    ) : (
-                      idx + 1
-                    )}
-                  </div>
-                  <img src={song.coverUrl} alt={song.title} className="release-thumb" />
-                  <div className="release-info">
-                    <span className="release-title">{song.title}</span>
-                    <span className="release-artist">{song.artist}</span>
-                  </div>
-                  <div className="release-genre">
-                    <span className="badge badge-genre">{song.genre}</span>
-                  </div>
-                  <div className="release-duration">
-                    {formatTime(song.duration)}
-                  </div>
-                  <div className="release-play-btn">
-                    <button
-                      className="btn-play-table"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSelectRelease(song);
-                      }}
-                    >
-                      {isSelected && isPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" />}
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          <div style={{ textAlign: 'center', marginTop: '28px' }}>
-            {currentUser ? (
-              <button className="btn btn-primary" onClick={() => handleLaunchMusicLab('releases')}>
-                <span>View Releases in Full Web App</span>
-                <ExternalLink size={15} />
-              </button>
-            ) : (
-              <button className="btn btn-primary" onClick={() => onOpenAuth('register')}>
-                <Lock size={15} />
-                <span>Sign Up to Launch Music Lab</span>
-              </button>
-            )}
-          </div>
         </div>
       </section>
 
       {/* ==========================================================================
-          SECTION 2: NOTICE BOARD & VERIFIED EVENT FLYERS
+          SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS
           ========================================================================== */}
       <section id="notice-board" className="landing-section">
         <div className="section-container">
@@ -602,27 +615,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             </div>
             <h2 className="landing-section-h2">Event Flyers & Studio Notices</h2>
             <p className="landing-section-desc">
-              Official soundclash dates, festival schedules, and live studio announcements. 
+              Official soundclash dates, festival schedules, and live studio announcements.
               Notices are verified and posted exclusively by Marshall Administration.
             </p>
-          </div>
-
-          {/* Regular User Policy Banner */}
-          <div className="landing-policy-box">
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <ShieldCheck size={20} color="#00f59b" style={{ flexShrink: 0 }} />
-              <span className="landing-policy-text">
-                Public & Member Notice Board: View and download verified event flyers. Uploading notices is reserved for verified administrators.
-              </span>
-            </div>
-            {currentUser?.role === 'admin' && (
-              <button
-                className="btn btn-primary btn-sm"
-                onClick={() => handleLaunchMusicLab('admin')}
-              >
-                Admin: Post New Flyer
-              </button>
-            )}
           </div>
 
           {/* Flyers Grid */}
@@ -681,35 +676,191 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               ))}
             </div>
           )}
+        </div>
+      </section>
 
-          <div style={{ textAlign: 'center', marginTop: '36px' }}>
-            <button
-              className="btn btn-outline btn-lg"
-              onClick={() => handleLaunchMusicLab('notices')}
-              style={{ fontWeight: 800, display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-            >
-              <Calendar size={18} />
-              <span>Open Dedicated Notice Board Desk</span>
-              <ArrowRight size={16} />
-            </button>
+      {/* ==========================================================================
+          SECTION: MY MM RELEASES (PLACED AT BOTTOM OF HOME PAGE)
+          (Handwritten Note 9: "Put List of releases at Bottom of Home Page")
+          (Handwritten Note 4: "When 'MY Releases' is selected a List should appear")
+          (Handwritten Note 5: "Display Genre from Table")
+          (Handwritten Note 6: "Add Download functionality for MY MM Releases")
+          ========================================================================== */}
+      <section id="mm-releases" className="landing-section bg-secondary">
+        <div className="section-container">
+          <div className="section-title-wrap">
+            <div className="section-kicker">
+              <Sparkles size={14} />
+              <span>Public Audio Catalog</span>
+            </div>
+            <h2 className="landing-section-h2">My MM Releases — Stream Free Without Login</h2>
+            <p className="landing-section-desc">
+              All 16 official releases from <em>mymusicmarshall.com</em> are available right here for instant, unrestricted playback and download.
+              No login required. Click any song to listen or download immediately!
+            </p>
+          </div>
+
+          {/* Interactive Public Player Card */}
+          <div className="public-player-card">
+            <div className="public-player-left">
+              <div className={`public-player-cover-wrap ${isPlaying && playerType === 'track' ? 'is-playing' : ''}`}>
+                <img
+                  src={activeTrack?.coverUrl || '/mm_logo.jpg'}
+                  alt={activeTrack?.title}
+                  className={`public-player-cover ${isPlaying && playerType === 'track' ? 'is-spinning' : ''}`}
+                />
+              </div>
+              <div className="public-player-meta">
+                <span className="public-tag-free">Free Public Release</span>
+                <h3 className="public-player-title">{activeTrack?.title}</h3>
+                <span className="public-player-artist">{activeTrack?.artist}</span>
+                <p className="public-player-desc">{activeTrack?.description || activeTrack?.album}</p>
+
+                <div className="public-player-ctrls" style={{ flexWrap: 'wrap', gap: '12px' }}>
+                  <button
+                    className="btn btn-accent btn-play-main"
+                    onClick={() => {
+                      if (playerType !== 'track') {
+                        handleSelectRelease(activeTrack || mmReleases[0]);
+                      } else {
+                        handleTogglePlayPause();
+                      }
+                    }}
+                  >
+                    {isPlaying && playerType === 'track' ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}
+                    <span>{isPlaying && playerType === 'track' ? 'Pause Track' : 'Play Now'}</span>
+                  </button>
+
+                  {/* Direct Download Button for Active Song */}
+                  <a
+                    href={activeTrack?.audioUrl}
+                    download={`${activeTrack?.title} - ${activeTrack?.artist}.mp3`}
+                    className="btn btn-outline"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+                    title="Download this track"
+                  >
+                    <Download size={16} />
+                    <span>Download</span>
+                  </a>
+
+                  <div className="volume-inline">
+                    <button className="ctrl-btn" onClick={() => setIsMuted(!isMuted)}>
+                      {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+                    </button>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1"
+                      step="0.05"
+                      value={isMuted ? 0 : volume}
+                      onChange={(e) => {
+                        setVolume(parseFloat(e.target.value));
+                        if (isMuted) setIsMuted(false);
+                      }}
+                      className="volume-slider"
+                    />
+                  </div>
+                </div>
+
+                <div className="scrubber-row">
+                  <span className="time-label">{formatTime(currentTime)}</span>
+                  <input
+                    type="range"
+                    min="0"
+                    max={duration || 100}
+                    step="0.5"
+                    value={currentTime}
+                    onChange={handleSeek}
+                    className="scrubber-slider"
+                  />
+                  <span className="time-label">{formatTime(duration)}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Table of all 16 free releases with Genre & Download functionality */}
+          <div className="releases-grid-header">
+            <h4>All 16 Official Master Releases</h4>
+            <span style={{ fontSize: '0.84rem', color: '#64748b' }}>Select any track to play or download</span>
+          </div>
+
+          <div className="releases-list-box">
+            {mmReleases.map((song, idx) => {
+              const isSelected = activeTrack?.id === song.id && playerType === 'track';
+              return (
+                <div
+                  key={song.id}
+                  className={`release-row ${isSelected ? 'is-active' : ''}`}
+                  onClick={() => handleSelectRelease(song)}
+                >
+                  <div className="release-col-num">
+                    {isSelected && isPlaying ? (
+                      <div className="mini-equalizer">
+                        <span className="eq-bar"></span>
+                        <span className="eq-bar"></span>
+                        <span className="eq-bar"></span>
+                      </div>
+                    ) : (
+                      idx + 1
+                    )}
+                  </div>
+                  <img src={song.coverUrl} alt={song.title} className="release-thumb" />
+                  <div className="release-info">
+                    <span className="release-title">{song.title}</span>
+                    <span className="release-artist">{song.artist}</span>
+                  </div>
+
+                  {/* Note 5 (Handwritten): Display Genre from Table */}
+                  <div className="release-genre">
+                    <span className="badge-genre">{song.genre}</span>
+                  </div>
+
+                  <div className="release-duration">
+                    {formatTime(song.duration)}
+                  </div>
+
+                  {/* Note 6 (Handwritten): Add Download functionality for MY MM Releases */}
+                  <div className="release-actions" onClick={(e) => e.stopPropagation()}>
+                    <a
+                      href={song.audioUrl}
+                      download={`${song.title} - ${song.artist}.mp3`}
+                      className="btn-download-table"
+                      title={`Download ${song.title}`}
+                    >
+                      <Download size={13} />
+                      <span>Download</span>
+                    </a>
+
+                    <div className="release-play-btn">
+                      <button
+                        className="btn-play-table"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectRelease(song);
+                        }}
+                        title={isSelected && isPlaying ? 'Pause' : 'Play'}
+                      >
+                        {isSelected && isPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" />}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* ==========================================================================
-          SECTION 3: TECHNICAL & ADMIN SUPPORT / TICKET SYSTEM
+          SECTION: CONTACT US & SUPPORT
           ========================================================================== */}
-      <section id="support-desk" className="landing-section">
-        <div className="section-container">
-          <div className="section-title-wrap">
-            <div className="section-kicker section-kicker-cyan">
-              <HelpCircle size={14} />
-              <span>24/7 Marshall Helpdesk</span>
-            </div>
-            <h2 className="landing-section-h2">Technical & Admin Support</h2>
+      <section id="contact-us" className="landing-section">
+        <div className="section-container" style={{ maxWidth: '1080px', margin: '0 auto' }}>
+          <div className="section-title-wrap" style={{ textAlign: 'center', marginBottom: '36px' }}>
+            <h2 className="landing-section-h2">Contact Music Marshall</h2>
             <p className="landing-section-desc">
-              Need assistance with audio playback, account activation, referral passes, or master stems? 
-              Contact our engineering team or submit a ticket directly below.
+              Direct access to our studio sound desk, artist relations, and technical inquiries.
             </p>
           </div>
 
@@ -722,10 +873,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <span>DIRECT STUDIO CHANNELS</span>
                 </div>
                 <h3 className="support-channel-title">
-                  Connect With Support
+                  Connect With Us
                 </h3>
                 <p className="support-channel-desc">
-                  Our technical response team monitors submissions around the clock. Typical response turnaround is under 2 hours.
+                  Our team monitors submissions around the clock. Typical response turnaround is under 2 hours.
                 </p>
 
                 <div className="support-channel-list">
@@ -734,7 +885,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <Phone size={20} />
                     </div>
                     <div>
-                      <div className="channel-label">Direct Support Line</div>
+                      <div className="channel-label">Direct Studio Line</div>
                       <a href="tel:9547018103" className="channel-value">
                         (954) 701-8103
                       </a>
@@ -758,7 +909,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       <Mail size={20} />
                     </div>
                     <div>
-                      <div className="channel-label">Studio & VIP Inquiries</div>
+                      <div className="channel-label">Studio & Licensing</div>
                       <a href="mailto:mymusicmarshall@gmail.com" className="channel-value">
                         mymusicmarshall@gmail.com
                       </a>
@@ -766,27 +917,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                 </div>
               </div>
-
-              <div className="support-channels-footer">
-                <button
-                  className="btn btn-outline"
-                  onClick={() => handleLaunchMusicLab('support')}
-                  style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-                >
-                  <HelpCircle size={16} />
-                  <span>View All Tickets in Web App</span>
-                </button>
-              </div>
             </div>
 
-            {/* Interactive Ticket Form */}
+            {/* Interactive Message / Ticket Form */}
             <div className="support-form-card">
               <div className="support-form-header">
                 <h3 className="support-form-title">
-                  Create Support Ticket
+                  Send A Message
                 </h3>
                 <span className="badge badge-accent">
-                  Direct Queue
+                  Direct Desk
                 </span>
               </div>
 
@@ -825,40 +965,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                 ) : (
                   <div className="ticket-user-badge">
-                    <span>Submitting as: <strong>{currentUser.username}</strong> ({currentUser.email})</span>
+                    <span>Sending as: <strong>{currentUser.username}</strong> ({currentUser.email})</span>
                     <span className="badge badge-accent">Verified User</span>
                   </div>
                 )}
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label>Issue Category</label>
-                    <select
-                      className="form-control"
-                      value={tktCategory}
-                      onChange={(e) => setTktCategory(e.target.value as any)}
-                    >
-                      <option value="Technical Support">Technical & Playback</option>
-                      <option value="Account & Verification">Account & Verification</option>
-                      <option value="Audio Playback">Audio Playback & Download Stems</option>
-                      <option value="Admin Inquiry">Admin & Studio Inquiry</option>
-                      <option value="General">General Question</option>
-                    </select>
-                  </div>
-                  <div className="form-group" style={{ margin: 0 }}>
-                    <label>Priority Level</label>
-                    <select
-                      className="form-control"
-                      value={tktPriority}
-                      onChange={(e) => setTktPriority(e.target.value as any)}
-                    >
-                      <option value="low">Low (General Query)</option>
-                      <option value="medium">Medium (Standard)</option>
-                      <option value="high">High (Playback Issue)</option>
-                      <option value="urgent">Urgent (Account Issue)</option>
-                    </select>
-                  </div>
-                </div>
 
                 <div className="form-group" style={{ margin: 0 }}>
                   <label>Subject *</label>
@@ -866,19 +976,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     type="text"
                     required
                     className="form-control"
-                    placeholder="Brief description of your issue"
+                    placeholder="Brief description of your message or inquiry"
                     value={tktSubject}
                     onChange={(e) => setTktSubject(e.target.value)}
                   />
                 </div>
 
                 <div className="form-group" style={{ margin: 0 }}>
-                  <label>Detailed Message *</label>
+                  <label>Message *</label>
                   <textarea
                     required
                     rows={4}
                     className="form-control"
-                    placeholder="Provide details about the issue or request so our sound team can assist you immediately..."
+                    placeholder="How can we help you? Feel free to ask about releases, mixes, or studio sessions..."
                     value={tktMessage}
                     onChange={(e) => setTktMessage(e.target.value)}
                     style={{ resize: 'vertical' }}
@@ -891,136 +1001,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   style={{ width: '100%', padding: '14px', fontSize: '0.98rem', fontWeight: 800, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
                 >
                   <Send size={16} />
-                  <span>Submit Support Request</span>
+                  <span>Send Message</span>
                 </button>
               </form>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-          SECTION 4: ABOUT US
-          ========================================================================== */}
-      <section id="about-us" className="landing-section">
-        <div className="section-container">
-          <div className="section-title-wrap">
-            <div className="section-kicker">
-              <Disc3 size={14} />
-              <span>Roots & Legacy</span>
-            </div>
-            <h2 className="landing-section-h2">About Music Marshall</h2>
-            <p className="landing-section-desc">
-              Dedicated to the preservation, elevation, and global broadcast of authentic soundclash and studio masters.
-            </p>
-          </div>
-
-          <div className="about-grid">
-            <div className="about-card">
-              <div className="about-card-icon">🇯🇲</div>
-              <h3>Authentic Heritage</h3>
-              <p>
-                From the bustling sound systems of Kingston, Jamaica to the master dub rooms of London, 
-                Music Marshall was built to honor the founding champions of conscious reggae and rocksteady.
-              </p>
-            </div>
-
-            <div className="about-card">
-              <div className="about-card-icon">🎸</div>
-              <h3>Legendary Artists</h3>
-              <p>
-                Home to foundational tracks by <strong>Wayne Armond</strong> (Chalice co-founder), 
-                <strong>Stevie Malekuu</strong>, <strong>Luciano</strong> (The Messenger), saxophone maestro 
-                <strong>Yishka</strong>, and vibrant talent <strong>Teacha Barnes</strong>.
-              </p>
-            </div>
-
-            <div className="about-card">
-              <div className="about-card-icon">🎛️</div>
-              <h3>Studio Master Quality</h3>
-              <p>
-                Uncompressed acoustics captured directly from original reel-to-reel and multi-track mixing boards. 
-                Experience every baseline, horn riff, and vocal nuance without lossy digital compression.
-              </p>
-            </div>
-          </div>
-
-          <div className="about-quote-box">
-            <blockquote className="about-quote">
-              “Whatever will be, let the righteousness shine. Music Marshall frequency, elevating your mind.”
-            </blockquote>
-            <span className="about-quote-author">— Stevie Malekuu, <em>What Will Be</em></span>
-          </div>
-        </div>
-      </section>
-
-      {/* ==========================================================================
-          SECTION 4: CONTACT
-          ========================================================================== */}
-      <section id="contact-us" className="landing-section">
-        <div className="section-container" style={{ maxWidth: '960px', margin: '0 auto', textAlign: 'center' }}>
-          <div className="section-title-wrap" style={{ textAlign: 'center', marginBottom: '36px' }}>
-            <h2 className="landing-section-h2">
-              Contact Music Marshall
-            </h2>
-            <p className="landing-section-desc">
-              Direct access to our sound system management, mastering studio, and licensing desks.
-            </p>
-          </div>
-
-          <div className="contact-cards-grid">
-            {/* Phone */}
-            <div className="contact-card">
-              <div className="contact-icon-wrap contact-icon-emerald">
-                <Phone size={26} />
-              </div>
-              <span className="contact-label">PHONE SUPPORT</span>
-              <a href="tel:9547018103" className="contact-value">
-                (954) 701-8103
-              </a>
-              <a
-                href="tel:9547018103"
-                className="btn btn-outline"
-                style={{ width: '100%', minHeight: '48px', fontWeight: 700 }}
-              >
-                Call Direct
-              </a>
-            </div>
-
-            {/* Support */}
-            <div className="contact-card">
-              <div className="contact-icon-wrap contact-icon-cyan">
-                <Mail size={26} />
-              </div>
-              <span className="contact-label">TECHNICAL DESK</span>
-              <a href="mailto:support@ellivrocorporation.com" className="contact-value" style={{ fontSize: '0.95rem' }}>
-                support@ellivrocorporation.com
-              </a>
-              <a
-                href="mailto:support@ellivrocorporation.com"
-                className="btn btn-accent"
-                style={{ width: '100%', minHeight: '48px', fontWeight: 700 }}
-              >
-                Email Support
-              </a>
-            </div>
-
-            {/* Marketing */}
-            <div className="contact-card">
-              <div className="contact-icon-wrap contact-icon-amber">
-                <Mail size={26} />
-              </div>
-              <span className="contact-label">STUDIO & LICENSING</span>
-              <a href="mailto:mymusicmarshall@gmail.com" className="contact-value" style={{ fontSize: '0.95rem' }}>
-                mymusicmarshall@gmail.com
-              </a>
-              <a
-                href="mailto:mymusicmarshall@gmail.com"
-                className="btn btn-primary"
-                style={{ width: '100%', minHeight: '48px', fontWeight: 700 }}
-              >
-                Email Marketing
-              </a>
             </div>
           </div>
         </div>
@@ -1032,23 +1015,26 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <footer className="landing-footer">
         <div className="section-container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <img src="/mm_logo.jpg" alt="Logo" style={{ width: '32px', height: '32px', borderRadius: '6px' }} />
-            <span style={{ fontWeight: 800, fontSize: '0.95rem' }}>Music Marshall</span>
+            <img src="/headphone_logo.png" alt="Logo" style={{ width: '36px', height: '36px', objectFit: 'contain' }} />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontWeight: 800, fontSize: '0.95rem' }}>Music Marshall</span>
+              <span style={{ fontSize: '0.72rem', color: '#00f59b', fontStyle: 'italic', fontWeight: 700 }}>Authentic Audio</span>
+            </div>
           </div>
 
           <div style={{ fontSize: '0.84rem', color: '#64748b' }}>
             &copy; 2026 Music Marshall Studio & OKM Software. All Rights Reserved.
           </div>
 
-          <div>
-            {currentUser ? (
-              <button className="btn btn-outline btn-sm" onClick={() => handleLaunchMusicLab('home')}>
-                Launch Music Lab
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            {!currentUser ? (
+              <button className="btn btn-outline btn-sm" onClick={() => onOpenAuth('login')}>
+                Login
               </button>
             ) : (
-              <button className="btn btn-outline btn-sm" onClick={() => onOpenAuth('register')}>
-                <Lock size={12} style={{ marginRight: '5px' }} />
-                Sign Up to Launch Lab
+              <button className="btn btn-outline btn-sm" onClick={onLogout}>
+                <LogOut size={12} style={{ marginRight: '5px' }} />
+                Logout
               </button>
             )}
           </div>

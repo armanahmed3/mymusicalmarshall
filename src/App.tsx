@@ -427,24 +427,22 @@ export function App() {
         return;
       }
 
-      // 1. If Admin: Direct immediate access without 2FA
+      // 1. If Admin: Direct immediate access without 2FA, stay on clean Home page
       if (foundUser.role === 'admin') {
         setCurrentUser(foundUser);
-        setAppMode('app');
-        setActiveTab('admin');
+        setAppMode('landing');
         setAuthModalOpen(false);
         setLoginEmail('');
         setLoginPassword('');
         setAuthMessage(null);
-        setAdminToast('✓ Welcome Administrator! Direct access granted.');
+        setAdminToast('✓ Welcome Administrator! You are now logged in.');
         setTimeout(() => setAdminToast(null), 3500);
         return;
       }
 
-      // 2. Regular user: Immediate login & redirect to dashboard
+      // 2. Regular user: Immediate login, stay on clean Home page
       setCurrentUser(foundUser);
-      setAppMode('app');
-      setActiveTab('releases');
+      setAppMode('landing');
       setAuthModalOpen(false);
       setLoginEmail('');
       setLoginPassword('');
@@ -1035,6 +1033,7 @@ export function App() {
       <>
         <LandingPage
           mmReleases={mmReleases}
+          allMixes={songs.filter((s) => s.isMix || s.title.toLowerCase().includes('mix') || s.title.toLowerCase().includes('juggling') || s.title.toLowerCase().includes('medley'))}
           currentUser={currentUser}
           landingFeatureImage={landingFeatureImage}
           flyers={flyers}
@@ -1042,7 +1041,7 @@ export function App() {
           onSubmitTicket={handleSubmitSupportTicket}
           onOpenApp={(tab) => {
             if (!currentUser) {
-              setAuthMessage('🔒 Access to the SoundMarshall Music Lab requires VIP Login.');
+              setAuthMessage('🔒 Access requires login.');
               setAuthTab('login');
               setAuthModalOpen(true);
               return;
@@ -1053,6 +1052,17 @@ export function App() {
           onOpenAuth={(mode) => {
             setAuthTab(mode || 'login');
             setAuthModalOpen(true);
+          }}
+          onLogout={() => {
+            setCurrentUser(null);
+            localStorage.removeItem('mm_current_user');
+            setAppMode('landing');
+            setAdminToast('✓ You have been logged out.');
+            setTimeout(() => setAdminToast(null), 3000);
+          }}
+          onOpenAdmin={() => {
+            setAppMode('app');
+            setActiveTab('admin');
           }}
         />
 
