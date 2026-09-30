@@ -2044,7 +2044,9 @@ select:disabled {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
-.landing-links a {
+.landing-links a,
+.landing-links button,
+.landing-nav-link-btn {
   text-decoration: none;
   font-family: var(--font-family);
   font-size: 0.86rem;
@@ -2054,20 +2056,28 @@ select:disabled {
   border-radius: var(--radius-full);
   white-space: nowrap;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  background: transparent;
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  cursor: pointer;
 }
 
-.landing-links a:hover {
+.landing-links a:hover,
+.landing-links button:hover,
+.landing-nav-link-btn:hover {
   color: #ffffff;
   background: rgba(255, 255, 255, 0.08);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
 .landing-links a:active,
-.landing-links a:focus-visible {
+.landing-links a:focus-visible,
+.landing-links button:active,
+.landing-links button:focus-visible,
+.landing-nav-link-btn:active,
+.landing-nav-link-btn:focus-visible {
   color: var(--brand-accent);
   background: rgba(0, 245, 155, 0.1);
   border-color: rgba(0, 245, 155, 0.3);
@@ -3339,20 +3349,30 @@ section[id],
   z-index: 100;
 }
 
-.landing-mobile-menu a {
+.landing-mobile-menu a,
+.landing-mobile-menu button,
+.landing-mobile-menu-item {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
   border-radius: 8px;
   text-decoration: none;
+  font-family: inherit;
   font-size: 0.96rem;
   font-weight: 700;
   color: #94a3b8;
+  background: transparent;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
   transition: all 0.15s;
 }
 
-.landing-mobile-menu a:hover {
+.landing-mobile-menu a:hover,
+.landing-mobile-menu button:hover,
+.landing-mobile-menu-item:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
 }

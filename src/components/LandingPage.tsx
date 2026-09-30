@@ -50,6 +50,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   landingFeatureImage,
   flyers = [],
   onSubmitTicket,
+  onOpenApp,
   onOpenAuth,
   onLogout,
   onOpenAdmin
@@ -253,7 +254,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
               Home
             </a>
-            <a href="#listen-music">Listen to Music</a>
+            {currentUser && onOpenApp && (
+              <button
+                type="button"
+                className="landing-nav-link-btn"
+                onClick={() => onOpenApp('mixes')}
+                title="Listen to Music (VIP Member Access)"
+              >
+                <Headphones size={15} />
+                <span>Listen to Music</span>
+              </button>
+            )}
             <a href="#mm-releases">My MM Releases</a>
             <a href="#notice-board">Notice Board</a>
             <a href="#contact-us">Contact Us</a>
@@ -309,13 +320,19 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Home size={18} />
               <span>Home</span>
             </a>
-            <a
-              href="#listen-music"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Headphones size={18} />
-              <span>Listen to Music</span>
-            </a>
+            {currentUser && onOpenApp && (
+              <button
+                type="button"
+                className="landing-mobile-menu-item"
+                onClick={() => {
+                  setMobileMenuOpen(false);
+                  onOpenApp('mixes');
+                }}
+              >
+                <Headphones size={18} />
+                <span>Listen to Music</span>
+              </button>
+            )}
             <a
               href="#mm-releases"
               onClick={() => setMobileMenuOpen(false)}
@@ -433,13 +450,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             {/* Note 3 (Handwritten): Sign up (100% free) to listen to Audio Mixes */}
             {!currentUser ? (
               <button className="btn btn-primary btn-lg" onClick={() => onOpenAuth('register')}>
+                <Lock size={16} />
                 <span>Sign up (100% free) to listen to Audio Mixes</span>
               </button>
             ) : (
-              <a href="#listen-music" className="btn btn-primary btn-lg">
+              <button
+                className="btn btn-primary btn-lg"
+                onClick={() => onOpenApp && onOpenApp('mixes')}
+                title="Listen to Music (VIP Player)"
+              >
                 <Headphones size={18} />
-                <span>Stream Free Audio Mixes</span>
-              </a>
+                <span>Listen to Music (VIP Player)</span>
+              </button>
             )}
           </div>
           {/* Note 7 (Handwritten): "Remove 3 lines under Sign up" -> hero-feature-tags removed! */}
@@ -456,53 +478,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
-      {/* ==========================================================================
-          SECTION: MUSIC MARSHALL FEATURED MIX & AUDIO MIXES
-          (PDF Note 5 & Handwritten Note 8:
-           "Music Marshall Featured Mix - Stream Free Without Login"
-           "My MM Mixes - Stream Free Without Login - Start Streaming")
-          ========================================================================== */}
-      {/* ==========================================================================
-          SECTION: STREAM FREE BANNERS (PDF Note 5 & Handwritten Note 8 & 9)
-          "Music Marshall Featured Mix - Stream Free Without Login"
-          "My MM Releases — Stream Free Without Login"
-          ========================================================================== */}
-      <section id="listen-music" className="landing-section-banners">
-        <div className="section-container">
-          <div className="home-stream-banners-grid">
-            <div className="stream-pill-banner">
-              <div className="stream-pill-content">
-                <span className="stream-pill-title">Music Marshall Featured Mix -</span>
-                <span className="stream-pill-action">Stream Free Without Login</span>
-              </div>
-              <button
-                className="btn btn-accent btn-sm stream-pill-btn"
-                onClick={() => {
-                  if (playerType !== 'mix') {
-                    handleSelectMix(activeMix || availableMixes[0], true);
-                  } else {
-                    handleTogglePlayPause();
-                  }
-                }}
-              >
-                {isPlaying && playerType === 'mix' ? <Pause size={15} fill="white" /> : <Play size={15} fill="white" />}
-                <span>{isPlaying && playerType === 'mix' ? 'Pause' : 'Start Streaming'}</span>
-              </button>
-            </div>
-
-            <a href="#mm-releases" className="stream-pill-banner stream-pill-link">
-              <div className="stream-pill-content">
-                <span className="stream-pill-title">My MM Releases —</span>
-                <span className="stream-pill-action">Stream Free Without Login</span>
-              </div>
-              <span className="stream-pill-btn-outline">
-                <span>View Releases</span>
-                <ArrowRight size={14} />
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
 
       {/* ==========================================================================
           SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS

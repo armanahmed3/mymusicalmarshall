@@ -1041,7 +1041,7 @@ export function App() {
           onSubmitTicket={handleSubmitSupportTicket}
           onOpenApp={(tab) => {
             if (!currentUser) {
-              setAuthMessage('🔒 Access requires login.');
+              setAuthMessage('🔒 Security Notice: "Listen to Music" is an exclusive protected vault. Please sign in or register with your account to verify access.');
               setAuthTab('login');
               setAuthModalOpen(true);
               return;
