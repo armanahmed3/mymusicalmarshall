@@ -462,119 +462,44 @@ export const LandingPage: React.FC<LandingPageProps> = ({
            "Music Marshall Featured Mix - Stream Free Without Login"
            "My MM Mixes - Stream Free Without Login - Start Streaming")
           ========================================================================== */}
-      <section id="listen-music" className="landing-section bg-secondary">
+      {/* ==========================================================================
+          SECTION: STREAM FREE BANNERS (PDF Note 5 & Handwritten Note 8 & 9)
+          "Music Marshall Featured Mix - Stream Free Without Login"
+          "My MM Releases — Stream Free Without Login"
+          ========================================================================== */}
+      <section id="listen-music" className="landing-section-banners">
         <div className="section-container">
-          <div className="section-title-wrap">
-            <div className="section-kicker">
-              <Sparkles size={14} />
-              <span>Studio DJ Session</span>
-            </div>
-            <h2 className="landing-section-h2">
-              Music Marshall Featured Mix - Stream Free Without Login
-            </h2>
-            <p className="landing-section-desc">
-              My MM Mixes — Stream Free Without Login. Continuous high-definition soundclash and tribute sets recorded directly from master soundboards.
-            </p>
-          </div>
-
-          <div className="featured-mix-card">
-            <div className="featured-mix-header">
-              <div className="featured-mix-badge">
-                <Radio size={14} className="pulse-icon" />
-                <span>Featured Master Mix</span>
+          <div className="home-stream-banners-grid">
+            <div className="stream-pill-banner">
+              <div className="stream-pill-content">
+                <span className="stream-pill-title">Music Marshall Featured Mix -</span>
+                <span className="stream-pill-action">Stream Free Without Login</span>
               </div>
-
-              {/* Mix Selector Tabs */}
-              <div className="mix-selector-tabs">
-                {availableMixes.map((mix) => (
-                  <button
-                    key={mix.id}
-                    className={`mix-selector-btn ${activeMix?.id === mix.id && playerType === 'mix' ? 'is-active' : ''}`}
-                    onClick={() => handleSelectMix(mix, true)}
-                  >
-                    {mix.title}
-                  </button>
-                ))}
-              </div>
+              <button
+                className="btn btn-accent btn-sm stream-pill-btn"
+                onClick={() => {
+                  if (playerType !== 'mix') {
+                    handleSelectMix(activeMix || availableMixes[0], true);
+                  } else {
+                    handleTogglePlayPause();
+                  }
+                }}
+              >
+                {isPlaying && playerType === 'mix' ? <Pause size={15} fill="white" /> : <Play size={15} fill="white" />}
+                <span>{isPlaying && playerType === 'mix' ? 'Pause' : 'Start Streaming'}</span>
+              </button>
             </div>
 
-            <div className="public-player-left" style={{ marginTop: '12px' }}>
-              <div className={`public-player-cover-wrap ${isPlaying && playerType === 'mix' ? 'is-playing' : ''}`}>
-                <img
-                  src={activeMix?.coverUrl || '/mm_banner.png'}
-                  alt={activeMix?.title}
-                  className={`public-player-cover ${isPlaying && playerType === 'mix' ? 'is-spinning' : ''}`}
-                  style={{ borderRadius: '16px' }}
-                />
+            <a href="#mm-releases" className="stream-pill-banner stream-pill-link">
+              <div className="stream-pill-content">
+                <span className="stream-pill-title">My MM Releases —</span>
+                <span className="stream-pill-action">Stream Free Without Login</span>
               </div>
-
-              <div className="public-player-meta">
-                <span className="public-tag-free">Continuous Full Session</span>
-                <h3 className="public-player-title" style={{ fontSize: '1.4rem' }}>{activeMix?.title}</h3>
-                <span className="public-player-artist" style={{ fontSize: '1rem', color: '#00f59b' }}>{activeMix?.artist}</span>
-                <p className="public-player-desc">{activeMix?.description || activeMix?.album}</p>
-
-                <div className="public-player-ctrls" style={{ flexWrap: 'wrap', gap: '14px' }}>
-                  <button
-                    className="btn btn-accent btn-play-main"
-                    onClick={() => {
-                      if (playerType !== 'mix') {
-                        handleSelectMix(activeMix || availableMixes[0], true);
-                      } else {
-                        handleTogglePlayPause();
-                      }
-                    }}
-                  >
-                    {isPlaying && playerType === 'mix' ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}
-                    <span>{isPlaying && playerType === 'mix' ? 'Pause Mix' : 'Start Streaming'}</span>
-                  </button>
-
-                  {/* Direct Download Functionality */}
-                  <a
-                    href={activeMix?.audioUrl}
-                    download={`${activeMix?.title} - ${activeMix?.artist}.mp3`}
-                    className="btn btn-outline"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', minHeight: '44px' }}
-                    title="Download Master Mix"
-                  >
-                    <Download size={16} />
-                    <span>Download Mix</span>
-                  </a>
-
-                  <div className="volume-inline">
-                    <button className="ctrl-btn" onClick={() => setIsMuted(!isMuted)}>
-                      {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                    </button>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.05"
-                      value={isMuted ? 0 : volume}
-                      onChange={(e) => {
-                        setVolume(parseFloat(e.target.value));
-                        if (isMuted) setIsMuted(false);
-                      }}
-                      className="volume-slider"
-                    />
-                  </div>
-                </div>
-
-                <div className="scrubber-row">
-                  <span className="time-label">{formatTime(currentTime)}</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max={duration || 100}
-                    step="0.5"
-                    value={currentTime}
-                    onChange={handleSeek}
-                    className="scrubber-slider"
-                  />
-                  <span className="time-label">{formatTime(duration)}</span>
-                </div>
-              </div>
-            </div>
+              <span className="stream-pill-btn-outline">
+                <span>View Releases</span>
+                <ArrowRight size={14} />
+              </span>
+            </a>
           </div>
         </div>
       </section>
@@ -674,85 +599,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               All 16 official releases from <em>mymusicmarshall.com</em> are available right here for instant, unrestricted playback and download.
               No login required. Click any song to listen or download immediately!
             </p>
-          </div>
-
-          {/* Interactive Public Player Card */}
-          <div className="public-player-card">
-            <div className="public-player-left">
-              <div className={`public-player-cover-wrap ${isPlaying && playerType === 'track' ? 'is-playing' : ''}`}>
-                <img
-                  src={activeTrack?.coverUrl || '/mm_logo.jpg'}
-                  alt={activeTrack?.title}
-                  className={`public-player-cover ${isPlaying && playerType === 'track' ? 'is-spinning' : ''}`}
-                />
-              </div>
-              <div className="public-player-meta">
-                <span className="public-tag-free">Free Public Release</span>
-                <h3 className="public-player-title">{activeTrack?.title}</h3>
-                <span className="public-player-artist">{activeTrack?.artist}</span>
-                <p className="public-player-desc">{activeTrack?.description || activeTrack?.album}</p>
-
-                <div className="public-player-ctrls" style={{ flexWrap: 'wrap', gap: '12px' }}>
-                  <button
-                    className="btn btn-accent btn-play-main"
-                    onClick={() => {
-                      if (playerType !== 'track') {
-                        handleSelectRelease(activeTrack || mmReleases[0]);
-                      } else {
-                        handleTogglePlayPause();
-                      }
-                    }}
-                  >
-                    {isPlaying && playerType === 'track' ? <Pause size={20} fill="white" /> : <Play size={20} fill="white" />}
-                    <span>{isPlaying && playerType === 'track' ? 'Pause Track' : 'Play Now'}</span>
-                  </button>
-
-                  {/* Direct Download Button for Active Song */}
-                  <a
-                    href={activeTrack?.audioUrl}
-                    download={`${activeTrack?.title} - ${activeTrack?.artist}.mp3`}
-                    className="btn btn-outline"
-                    style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}
-                    title="Download this track"
-                  >
-                    <Download size={16} />
-                    <span>Download</span>
-                  </a>
-
-                  <div className="volume-inline">
-                    <button className="ctrl-btn" onClick={() => setIsMuted(!isMuted)}>
-                      {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-                    </button>
-                    <input
-                      type="range"
-                      min="0"
-                      max="1"
-                      step="0.05"
-                      value={isMuted ? 0 : volume}
-                      onChange={(e) => {
-                        setVolume(parseFloat(e.target.value));
-                        if (isMuted) setIsMuted(false);
-                      }}
-                      className="volume-slider"
-                    />
-                  </div>
-                </div>
-
-                <div className="scrubber-row">
-                  <span className="time-label">{formatTime(currentTime)}</span>
-                  <input
-                    type="range"
-                    min="0"
-                    max={duration || 100}
-                    step="0.5"
-                    value={currentTime}
-                    onChange={handleSeek}
-                    className="scrubber-slider"
-                  />
-                  <span className="time-label">{formatTime(duration)}</span>
-                </div>
-              </div>
-            </div>
           </div>
 
           {/* Table of all 16 free releases with Genre & Download functionality */}
