@@ -134,6 +134,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     }
   };
 
+  const handleListenMusicClick = () => {
+    if (currentUser && onOpenApp) {
+      onOpenApp('mixes');
+    } else if (onOpenApp) {
+      onOpenApp('mixes');
+    } else {
+      onOpenAuth('login');
+    }
+  };
+
   const formatTime = (secs: number) => {
     if (isNaN(secs) || secs < 0) return '0:00';
     const m = Math.floor(secs / 60);
@@ -173,17 +183,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
             <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
               Home
             </a>
-            {currentUser && onOpenApp && (
-              <button
-                type="button"
-                className="landing-nav-link-btn"
-                onClick={() => onOpenApp('mixes')}
-                title="Listen to Music (VIP Member Access)"
-              >
-                <Headphones size={15} />
-                <span>Listen to Music</span>
-              </button>
-            )}
+            <button
+              type="button"
+              className="landing-nav-link-btn"
+              onClick={handleListenMusicClick}
+              title="Listen to Music & Mixes"
+            >
+              <Headphones size={15} />
+              <span>Listen to Music</span>
+            </button>
             <a href="#mm-releases">My MM Releases</a>
             <a href="#notice-board">Notice Board</a>
             <a href="#contact-us">Contact Us</a>
@@ -239,19 +247,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Home size={18} />
               <span>Home</span>
             </a>
-            {currentUser && onOpenApp && (
-              <button
-                type="button"
-                className="landing-mobile-menu-item"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onOpenApp('mixes');
-                }}
-              >
-                <Headphones size={18} />
-                <span>Listen to Music</span>
-              </button>
-            )}
+            <button
+              type="button"
+              className="landing-mobile-menu-item"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                handleListenMusicClick();
+              }}
+            >
+              <Headphones size={18} />
+              <span>Listen to Music</span>
+            </button>
             <a
               href="#mm-releases"
               onClick={() => setMobileMenuOpen(false)}
