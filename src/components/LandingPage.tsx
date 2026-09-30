@@ -446,36 +446,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         <div className="landing-hero-visual">
-          <div className="hero-album-stack">
+          <div className="hero-headphone-showcase">
             <img
-              src={landingFeatureImage || "/mm_banner.png"}
-              alt="Music Marshall Banner"
-              className="hero-visual-banner"
+              src="/headphone_logo.png"
+              alt="Music Marshall Authentic Audio"
+              className="hero-headphone-img"
             />
-            <div className="hero-floating-card">
-              <div className={`floating-card-icon ${isPlaying ? 'pulse-icon' : ''}`}>
-                {isPlaying ? (
-                  <div className="mini-equalizer">
-                    <span className="eq-bar"></span>
-                    <span className="eq-bar"></span>
-                    <span className="eq-bar"></span>
-                  </div>
-                ) : (
-                  <Music2 size={20} color="#10b981" />
-                )}
-              </div>
-              <div className="floating-card-text">
-                <strong>{currentPlayingItem?.title || 'What Will Be'}</strong>
-                <span>{currentPlayingItem?.artist || 'Stevie Malekuu'}</span>
-              </div>
-              <button
-                className="btn-play-table"
-                onClick={handleTogglePlayPause}
-                title={isPlaying ? 'Pause' : 'Play Free'}
-              >
-                {isPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" />}
-              </button>
-            </div>
           </div>
         </div>
       </section>
