@@ -2,30 +2,24 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Play,
   Pause,
-  Volume2,
-  VolumeX,
-  Radio,
   Sparkles,
-  ArrowRight,
-  Mail,
   Phone,
   Disc3,
   ShieldCheck,
   Headphones,
-  Music2,
   Lock,
-  ExternalLink,
   Home,
   Menu,
   X,
   Calendar,
-  HelpCircle,
-  MapPin,
   Send,
-  CheckCircle2,
   Download,
   LogOut,
-  Layers
+  Radio,
+  MapPin,
+  ExternalLink,
+  Mail,
+  CheckCircle2
 } from 'lucide-react';
 import type { Song, User, EventFlyer, SupportTicket } from '../types';
 
@@ -45,9 +39,9 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   mmReleases,
-  allMixes = [],
+  allMixes: _allMixes = [],
   currentUser,
-  landingFeatureImage,
+  landingFeatureImage: _landingFeatureImage,
   flyers = [],
   onSubmitTicket,
   onOpenApp,
@@ -61,8 +55,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   // Landing page support inquiry form state
   const [tktName, setTktName] = useState(currentUser?.username || '');
   const [tktEmail, setTktEmail] = useState(currentUser?.email || '');
-  const [tktCategory, setTktCategory] = useState<SupportTicket['category']>('Technical Support');
-  const [tktPriority, setTktPriority] = useState<SupportTicket['priority']>('medium');
+  const tktCategory: SupportTicket['category'] = 'Technical Support';
+  const tktPriority: SupportTicket['priority'] = 'medium';
   const [tktSubject, setTktSubject] = useState('');
   const [tktMessage, setTktMessage] = useState('');
   const [tktSuccess, setTktSuccess] = useState<string | null>(null);
@@ -92,24 +86,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     setTimeout(() => setTktSuccess(null), 6000);
   };
 
-  // Compile full mixes list
-  const availableMixes = allMixes.length > 0
-    ? allMixes
-    : mmReleases.filter(s => s.isMix || s.title.toLowerCase().includes('mix') || s.title.toLowerCase().includes('juggling') || s.title.toLowerCase().includes('medley'));
-
-  // Active audio player state
+  // Active audio player state for My MM Releases
   const [activeTrack, setActiveTrack] = useState<Song>(mmReleases[0] || null);
-  const [activeMix, setActiveMix] = useState<Song>(availableMixes[0] || mmReleases[0] || null);
-  const [playerType, setPlayerType] = useState<'track' | 'mix'>('track');
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [duration, setDuration] = useState<number>(240);
-  const [volume, setVolume] = useState<number>(0.85);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const currentPlayingItem = playerType === 'mix' ? activeMix : activeTrack;
 
   // Audio element listeners
   useEffect(() => {
@@ -118,46 +98,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
     const handlePlayEvent = () => setIsPlaying(true);
     const handlePauseEvent = () => setIsPlaying(false);
-    const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
-    const handleLoadedMetadata = () => {
-      if (audio.duration && !isNaN(audio.duration)) {
-        setDuration(audio.duration);
-      }
-    };
     const handleEnded = () => {
-      if (playerType === 'track') {
-        const currentIndex = mmReleases.findIndex(r => r.id === activeTrack?.id);
-        const nextIndex = (currentIndex + 1) % mmReleases.length;
-        handleSelectRelease(mmReleases[nextIndex]);
-      } else {
-        setIsPlaying(false);
-      }
+      const currentIndex = mmReleases.findIndex(r => r.id === activeTrack?.id);
+      const nextIndex = (currentIndex + 1) % mmReleases.length;
+      handleSelectRelease(mmReleases[nextIndex]);
     };
 
     audio.addEventListener('play', handlePlayEvent);
     audio.addEventListener('pause', handlePauseEvent);
-    audio.addEventListener('timeupdate', handleTimeUpdate);
-    audio.addEventListener('loadedmetadata', handleLoadedMetadata);
     audio.addEventListener('ended', handleEnded);
 
     return () => {
       audio.removeEventListener('play', handlePlayEvent);
       audio.removeEventListener('pause', handlePauseEvent);
-      audio.removeEventListener('timeupdate', handleTimeUpdate);
-      audio.removeEventListener('loadedmetadata', handleLoadedMetadata);
       audio.removeEventListener('ended', handleEnded);
     };
-  }, [activeTrack, activeMix, playerType, mmReleases]);
-
-  useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = isMuted ? 0 : volume;
-    }
-  }, [volume, isMuted]);
+  }, [activeTrack, mmReleases]);
 
   const handleSelectRelease = (song: Song) => {
-    setPlayerType('track');
-    if (activeTrack?.id === song.id && playerType === 'track') {
+    if (activeTrack?.id === song.id) {
       if (audioRef.current) {
         if (audioRef.current.paused) {
           audioRef.current.play().catch(err => console.warn('Play error:', err));
@@ -167,51 +126,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       }
     } else {
       setActiveTrack(song);
-      setCurrentTime(0);
-      setDuration(song.duration || 240);
       if (audioRef.current) {
         audioRef.current.src = song.audioUrl;
         audioRef.current.load();
         audioRef.current.play().catch(err => console.warn('Play error:', err));
       }
-    }
-  };
-
-  const handleSelectMix = (mix: Song, autoPlay = true) => {
-    setPlayerType('mix');
-    setActiveMix(mix);
-    setCurrentTime(0);
-    setDuration(mix.duration || 1800);
-    if (audioRef.current) {
-      audioRef.current.src = mix.audioUrl;
-      audioRef.current.load();
-      if (autoPlay) {
-        audioRef.current.play().catch(err => console.warn('Mix play error:', err));
-      }
-    }
-  };
-
-  const handleTogglePlayPause = () => {
-    const item = playerType === 'mix' ? activeMix : activeTrack;
-    if (!item && mmReleases.length > 0) {
-      handleSelectRelease(mmReleases[0]);
-      return;
-    }
-
-    if (audioRef.current) {
-      if (audioRef.current.paused) {
-        audioRef.current.play().catch(err => console.warn('Play error:', err));
-      } else {
-        audioRef.current.pause();
-      }
-    }
-  };
-
-  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = parseFloat(e.target.value);
-    setCurrentTime(val);
-    if (audioRef.current) {
-      audioRef.current.currentTime = val;
     }
   };
 
@@ -224,10 +143,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div className="landing-wrap">
-      {/* Hidden public audio element */}
+      {/* Hidden public audio element for My MM Releases */}
       <audio
         ref={audioRef}
-        src={currentPlayingItem?.audioUrl}
+        src={activeTrack?.audioUrl}
         preload="metadata"
       />
 
@@ -584,7 +503,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           <div className="releases-list-box">
             {mmReleases.map((song, idx) => {
-              const isSelected = activeTrack?.id === song.id && playerType === 'track';
+              const isSelected = activeTrack?.id === song.id;
               return (
                 <div
                   key={song.id}
