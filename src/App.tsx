@@ -1880,7 +1880,6 @@ export function App() {
                 <table className="song-table">
                   <thead>
                     <tr>
-                      <th className="col-num">#</th>
                       <th>Title & Artist</th>
                       <th>Album / Description</th>
                       <th>Genre</th>
@@ -1889,7 +1888,7 @@ export function App() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mmReleases.map((song, index) => {
+                    {mmReleases.map((song) => {
                       const isCurrent = currentSong?.id === song.id;
                       return (
                         <tr
@@ -1897,24 +1896,25 @@ export function App() {
                           className={`song-row ${isCurrent ? 'is-active' : ''}`}
                           onClick={() => handlePlaySong(song)}
                         >
-                          <td className="col-num">
-                            {isCurrent && isPlaying ? (
-                              <div className="mini-equalizer" title="Playing Now">
-                                <span className="eq-bar"></span>
-                                <span className="eq-bar"></span>
-                                <span className="eq-bar"></span>
-                              </div>
-                            ) : (
-                              index + 1
-                            )}
-                          </td>
                           <td>
                             <div className="song-title-group">
-                              <img
-                                src={song.isMmRelease ? '/headphone_logo.png' : song.coverUrl}
-                                alt={song.title}
-                                className="song-cover-thumb"
-                              />
+                              <div style={{ position: 'relative', width: '40px', height: '40px', flexShrink: 0 }}>
+                                <img
+                                  src="/headphone_logo.png"
+                                  alt={song.title}
+                                  className="song-cover-thumb"
+                                  style={{ width: '100%', height: '100%', margin: 0 }}
+                                />
+                                {isCurrent && isPlaying && (
+                                  <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                    <div className="mini-equalizer">
+                                      <span className="eq-bar"></span>
+                                      <span className="eq-bar"></span>
+                                      <span className="eq-bar"></span>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                               <div className="song-title-meta">
                                 <span className="song-title">{song.title}</span>
                                 <span className="song-artist">{song.artist}</span>

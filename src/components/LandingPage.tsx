@@ -14,7 +14,6 @@ import {
   Send,
   Download,
   LogOut,
-  Radio,
   MapPin,
   ExternalLink,
   CheckCircle2
@@ -353,12 +352,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
 
         <div className="landing-hero-content">
-          {/* Note 1 (Handwritten): Remove ARCHIVES from "Official High Definition Audio" */}
-          <div className="hero-badge-pill">
-            <Radio size={14} className="pulse-icon" />
-            <span>Official High Definition Audio</span>
-          </div>
-
           <h1 className="landing-hero-title">
             <span className="highlight-text">Music Marshall</span>
           </h1>
@@ -567,7 +560,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <div className="releases-list-box">
-            {mmReleases.map((song, idx) => {
+            {mmReleases.map((song) => {
               const isSelected = activeTrack?.id === song.id;
               return (
                 <div
@@ -575,18 +568,18 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   className={`release-row ${isSelected ? 'is-active' : ''}`}
                   onClick={() => handleSelectRelease(song)}
                 >
-                  <div className="release-col-num">
-                    {isSelected && isPlaying ? (
-                      <div className="mini-equalizer">
-                        <span className="eq-bar"></span>
-                        <span className="eq-bar"></span>
-                        <span className="eq-bar"></span>
+                  <div style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
+                    <img src="/headphone_logo.png" alt={song.title} className="release-thumb" style={{ width: '100%', height: '100%', display: 'block' }} />
+                    {isSelected && isPlaying && (
+                      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div className="mini-equalizer">
+                          <span className="eq-bar"></span>
+                          <span className="eq-bar"></span>
+                          <span className="eq-bar"></span>
+                        </div>
                       </div>
-                    ) : (
-                      idx + 1
                     )}
                   </div>
-                  <img src="/headphone_logo.png" alt={song.title} className="release-thumb" />
                   <div className="release-info">
                     <span className="release-title">{song.title}</span>
                     <span className="release-artist">{song.artist}</span>
