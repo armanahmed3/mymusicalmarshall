@@ -264,9 +264,11 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                     >
                       {mix.title}
                     </h3>
-                    <div style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>
-                      {mix.artist}
-                    </div>
+                    {mix.artist?.trim() ? (
+                      <div style={{ fontSize: '0.82rem', color: '#64748b', fontWeight: 600 }}>
+                        {mix.artist}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 

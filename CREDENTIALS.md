@@ -22,12 +22,12 @@ Use these credentials to access the **Admin Panel** where you can upload new son
 ### Category B: Extended VIP Catalog (Requires Account & Login)
 - Unreleased studio dubs, acoustic stems, and custom user uploads.
 - Guests can browse the titles, artists, and duration, but playback requires logging in.
-- Registration strictly enforces a **compulsory referral code**.
+- Registration enforces referral codes: (Membership is by referral only).
 
 ---
 
-## 3. Compulsory Referral Codes (For New User Registration)
-Registration on Music Marshall is strictly invite-only:
+## 3. Referral Codes (For New User Registration)
+Registration on Music Marshall is by referral only:
 
 | Referral Code | Description |
 |---|---|
@@ -50,7 +50,7 @@ In the **Admin Panel** (`⚙️ Admin Panel` on the sidebar — visible only to 
 
 ### For Members & Listeners:
 1. **Registration Verification via Official SMTP**:
-   - New members provide their username, email, password, and compulsory referral code.
+   - New members provide their First Name, Last Name (optional), email address, password, and referral code.
    - Upon submitting, a cryptographic 6-digit OTP is automatically generated and dispatched directly to their registered email address via Gmail SMTP (`mymusicmarshall@gmail.com`).
    - The user checks their real email inbox and enters the 6-digit code in the **Email Verification Modal** to verify their address.
 2. **Login Gating & Admin Approval**:

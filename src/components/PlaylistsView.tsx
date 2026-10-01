@@ -299,7 +299,9 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             />
                             <div>
                               <div style={{ fontWeight: 700, color: '#ffffff' }}>{song.title}</div>
-                              <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{song.artist}</div>
+                              {song.artist?.trim() ? (
+                                <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>{song.artist}</div>
+                              ) : null}
                             </div>
                           </div>
                         </td>
@@ -318,7 +320,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             {song.isDownloadable && (
                               <a
                                 href={song.audioUrl}
-                                download={`${song.title} - ${song.artist}.mp3`}
+                                download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
                                 className="btn btn-outline btn-sm"
                                 style={{ padding: '4px 8px', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
                                 title="Download audio mix"

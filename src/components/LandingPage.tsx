@@ -582,7 +582,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="release-info">
                     <span className="release-title">{song.title}</span>
-                    <span className="release-artist">{song.artist}</span>
+                    {song.artist?.trim() ? <span className="release-artist">{song.artist}</span> : null}
                   </div>
 
                   {/* Note 5: Display Genre from Table */}
@@ -598,7 +598,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <div className="release-actions" onClick={(e) => e.stopPropagation()}>
                     <a
                       href={song.audioUrl}
-                      download={`${song.title} - ${song.artist}.mp3`}
+                      download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
                       className="btn-download-table"
                       title={`Download ${song.title}`}
                     >

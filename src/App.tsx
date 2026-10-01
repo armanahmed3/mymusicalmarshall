@@ -77,12 +77,16 @@ export function App() {
         if (Array.isArray(parsed) && parsed.length >= INITIAL_SONGS.length) {
           return parsed.map((s: Song) => {
             const initSong = INITIAL_SONGS.find((init) => init.id === s.id);
-            if (initSong && initSong.isMmRelease) {
+            if (initSong) {
               return {
                 ...s,
+                title: initSong.title,
+                artist: initSong.artist,
+                description: initSong.description,
+                album: initSong.album,
                 coverUrl: '/headphone_logo.png',
                 genre: initSong.genre || s.genre,
-                isMmRelease: true
+                isMmRelease: initSong.isMmRelease
               };
             }
             return s;
@@ -147,7 +151,8 @@ export function App() {
   // --- Auth Form Fields ---
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
-  const [regUsername, setRegUsername] = useState('');
+  const [regFirstName, setRegFirstName] = useState('');
+  const [regLastName, setRegLastName] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPassword, setRegPassword] = useState('');
   const [regReferralCode, setRegReferralCode] = useState('');
@@ -486,10 +491,28 @@ export function App() {
     e.preventDefault();
     setRegError(null);
 
-    // Referral code is STRICTLY COMPULSORY
+    const cleanFirstName = regFirstName.trim();
+    const cleanLastName = regLastName.trim();
+    const cleanEmail = regEmail.trim();
     const cleanCode = regReferralCode.trim().toUpperCase();
+
+    if (!cleanFirstName) {
+      setRegError('Please enter your First Name.');
+      return;
+    }
+
+    if (!cleanEmail) {
+      setRegError('Please enter your Email address.');
+      return;
+    }
+
+    if (!regPassword) {
+      setRegError('Please enter a Password.');
+      return;
+    }
+
     if (!cleanCode) {
-      setRegError('⚠️ Referral code is COMPULSORY to join Music Marshall.');
+      setRegError('Membership is by referral only. Please use the contact us link to request a code.');
       return;
     }
 
@@ -498,16 +521,11 @@ export function App() {
     const isUserReferral = users.some((u) => u.referralCode.toUpperCase() === cleanCode);
 
     if (!isPlatformCode && !isUserReferral) {
-      setRegError(`❌ Invalid referral code "${cleanCode}". Please use a valid VIP code (e.g., MARSHALL-VIP).`);
+      setRegError(`❌ Invalid referral code "${cleanCode}". (Membership is by referral only. Please use the contact us link to request a code)`);
       return;
     }
 
-    if (!regUsername.trim() || !regEmail.trim()) {
-      setRegError('Please provide username and email.');
-      return;
-    }
-
-    if (users.some((u) => u.email.toLowerCase() === regEmail.toLowerCase())) {
+    if (users.some((u) => u.email.toLowerCase() === cleanEmail.toLowerCase())) {
       setRegError('An account with this email already exists.');
       return;
     }
@@ -517,14 +535,18 @@ export function App() {
       prev.map((rc) => (rc.code.toUpperCase() === cleanCode ? { ...rc, uses: rc.uses + 1 } : rc))
     );
 
-    const newUserCode = `${regUsername.slice(0, 4).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const fullName = cleanLastName ? `${cleanFirstName} ${cleanLastName}` : cleanFirstName;
+    const prefix = (cleanFirstName.replace(/[^a-zA-Z]/g, '').slice(0, 4) || 'USER').toUpperCase();
+    const newUserCode = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
     const otp = generateOtp();
     const expires = Date.now() + 10 * 60 * 1000;
 
     const newUser: User = {
       id: `usr-${Date.now()}`,
-      username: regUsername.trim(),
-      email: regEmail.trim(),
+      username: fullName,
+      firstName: cleanFirstName,
+      lastName: cleanLastName || undefined,
+      email: cleanEmail,
       role: 'user',
       referralCode: newUserCode,
       referredBy: cleanCode,
@@ -547,8 +569,8 @@ export function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to: regEmail.trim(),
-        username: regUsername.trim(),
+        to: cleanEmail,
+        username: fullName,
         otp,
         mode: 'register'
       })
@@ -559,13 +581,14 @@ export function App() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        username: regUsername.trim(),
-        email: regEmail.trim(),
-        referralCode: regReferralCode.trim().toUpperCase()
+        username: fullName,
+        email: cleanEmail,
+        referralCode: cleanCode
       })
     }).catch((err) => console.error('Admin Registration Alert Error:', err));
 
-    setRegUsername('');
+    setRegFirstName('');
+    setRegLastName('');
     setRegEmail('');
     setRegPassword('');
     setRegReferralCode('');
@@ -1091,7 +1114,7 @@ export function App() {
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3 className="modal-title">
-                  {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive VIP Registration'}
+                  {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive Registration'}
                 </h3>
                 <button
                   type="button"
@@ -1131,7 +1154,7 @@ export function App() {
                       setRegError(null);
                     }}
                   >
-                    Register (Invite Only)
+                    Register
                   </button>
                 </div>
 
@@ -1180,19 +1203,30 @@ export function App() {
                     )}
 
                     <div className="form-group">
-                      <label>Username</label>
+                      <label>First Name</label>
                       <input
                         type="text"
                         required
                         className="form-control"
-                        placeholder="Choose username"
-                        value={regUsername}
-                        onChange={(e) => setRegUsername(e.target.value)}
+                        placeholder="First Name"
+                        value={regFirstName}
+                        onChange={(e) => setRegFirstName(e.target.value)}
                       />
                     </div>
 
                     <div className="form-group">
-                      <label>Email</label>
+                      <label>Last Name (not required)</label>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Last Name (optional)"
+                        value={regLastName}
+                        onChange={(e) => setRegLastName(e.target.value)}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label>Email address</label>
                       <input
                         type="email"
                         required
@@ -1216,21 +1250,35 @@ export function App() {
                     </div>
 
                     <div className="form-group" style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                      <label style={{ display: 'flex', alignItems: 'center' }}>
-                        Referral Code
-                        <span className="compulsory-badge">* COMPULSORY</span>
-                      </label>
+                      <label>Referral Code</label>
                       <input
                         type="text"
                         required
                         className="form-control"
-                        placeholder="e.g. MARSHALL-VIP"
+                        placeholder=""
                         value={regReferralCode}
                         onChange={(e) => setRegReferralCode(e.target.value)}
                         style={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}
                       />
-                      <small style={{ color: '#64748b', fontSize: '0.74rem', marginTop: '4px' }}>
-                        Registration is strictly invite-only. A valid referral code is required.
+                      <small style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
+                        (Membership is by referral only. Please use the{' '}
+                        <a
+                          href="#contact-us"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setAuthModalOpen(false);
+                            if (appMode === 'landing') {
+                              const el = document.getElementById('contact-us');
+                              if (el) el.scrollIntoView({ behavior: 'smooth' });
+                            } else {
+                              setActiveTab('support');
+                            }
+                          }}
+                          style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
+                        >
+                          contact us
+                        </a>{' '}
+                        link to request a code)
                       </small>
                     </div>
 
@@ -1239,7 +1287,7 @@ export function App() {
                       className="btn btn-primary"
                       style={{ width: '100%', marginTop: '14px' }}
                     >
-                      Complete VIP Registration
+                      Complete Registration
                     </button>
                   </form>
                 )}
@@ -1917,7 +1965,7 @@ export function App() {
                               </div>
                               <div className="song-title-meta">
                                 <span className="song-title">{song.title}</span>
-                                <span className="song-artist">{song.artist}</span>
+                                {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
                               </div>
                             </div>
                           </td>
@@ -2077,7 +2125,7 @@ export function App() {
                               />
                               <div className="song-title-meta">
                                 <span className="song-title">{song.title}</span>
-                                <span className="song-artist">{song.artist}</span>
+                                {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
                               </div>
                             </div>
                           </td>
@@ -2179,7 +2227,7 @@ export function App() {
                                 />
                                 <div className="song-title-meta">
                                   <span className="song-title">{song.title}</span>
-                                  <span className="song-artist">{song.artist}</span>
+                                  {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
                                 </div>
                               </div>
                             </td>
@@ -2301,7 +2349,7 @@ export function App() {
                             />
                             <div className="song-title-meta">
                               <span className="song-title">{song.title}</span>
-                              <span className="song-artist">{song.artist}</span>
+                              {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
                             </div>
                           </div>
                         </td>
@@ -3393,7 +3441,7 @@ export function App() {
                               <tr key={song.id}>
                                 <td className="col-num">{i + 1}</td>
                                 <td>
-                                  <strong>{song.title}</strong> — {song.artist}
+                                  <strong>{song.title}</strong>{song.artist?.trim() ? ` — ${song.artist}` : ''}
                                 </td>
                                 <td>
                                   {song.isMmRelease ? (
@@ -3441,7 +3489,7 @@ export function App() {
                                     {song.isDownloadable && (
                                       <a
                                         href={song.audioUrl}
-                                        download={`${song.title} - ${song.artist}.mp3`}
+                                        download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
                                         className="btn btn-outline btn-sm"
                                         style={{ padding: '3px 6px', color: '#16a34a', borderColor: '#86efac' }}
                                         title="Test download audio file"
@@ -3554,7 +3602,7 @@ export function App() {
                     </span>
                   )}
                 </span>
-                <span className="player-artist">{currentSong.artist}</span>
+                {currentSong.artist?.trim() ? <span className="player-artist">{currentSong.artist}</span> : null}
               </div>
             </>
           ) : (
@@ -3667,7 +3715,7 @@ export function App() {
           {currentSong?.isDownloadable ? (
             <a
               href={currentSong.audioUrl}
-              download={`${currentSong.title} - ${currentSong.artist}.mp3`}
+              download={currentSong.artist?.trim() ? `${currentSong.title} - ${currentSong.artist}.mp3` : `${currentSong.title}.mp3`}
               className="ctrl-btn"
               style={{ color: '#16a34a', display: 'flex', alignItems: 'center' }}
               title="Download this audio mix (High-Res Studio MP3)"
@@ -3716,7 +3764,7 @@ export function App() {
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive VIP Registration'}
+                {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive Registration'}
               </h3>
               <button
                 type="button"
@@ -3756,7 +3804,7 @@ export function App() {
                     setRegError(null);
                   }}
                 >
-                  Register (Invite Only)
+                  Register
                 </button>
               </div>
 
@@ -3805,19 +3853,30 @@ export function App() {
                   )}
 
                   <div className="form-group">
-                    <label>Username</label>
+                    <label>First Name</label>
                     <input
                       type="text"
                       required
                       className="form-control"
-                      placeholder="Choose username"
-                      value={regUsername}
-                      onChange={(e) => setRegUsername(e.target.value)}
+                      placeholder="First Name"
+                      value={regFirstName}
+                      onChange={(e) => setRegFirstName(e.target.value)}
                     />
                   </div>
 
                   <div className="form-group">
-                    <label>Email</label>
+                    <label>Last Name (not required)</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Last Name (optional)"
+                      value={regLastName}
+                      onChange={(e) => setRegLastName(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>Email address</label>
                     <input
                       type="email"
                       required
@@ -3841,21 +3900,32 @@ export function App() {
                   </div>
 
                   <div className="form-group" style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                    <label style={{ display: 'flex', alignItems: 'center' }}>
-                      Referral Code
-                      <span className="compulsory-badge">* COMPULSORY</span>
-                    </label>
+                    <label>Referral Code</label>
                     <input
                       type="text"
                       required
                       className="form-control"
-                      placeholder="e.g. MARSHALL-VIP"
+                      placeholder=""
                       value={regReferralCode}
                       onChange={(e) => setRegReferralCode(e.target.value)}
                       style={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}
                     />
-                    <small style={{ color: '#64748b', fontSize: '0.74rem', marginTop: '4px' }}>
-                      Registration is strictly invite-only. A valid referral code is required.
+                    <small style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
+                      (Membership is by referral only. Please use the{' '}
+                      <a
+                        href="#contact-us"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setAuthModalOpen(false);
+                          setActiveTab('support');
+                          const el = document.getElementById('contact-us');
+                          if (el) el.scrollIntoView({ behavior: 'smooth' });
+                        }}
+                        style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
+                      >
+                        contact us
+                      </a>{' '}
+                      link to request a code)
                     </small>
                   </div>
 
@@ -3864,7 +3934,7 @@ export function App() {
                     className="btn btn-primary"
                     style={{ width: '100%', marginTop: '14px' }}
                   >
-                    Complete VIP Registration
+                    Complete Registration
                   </button>
                 </form>
               )}

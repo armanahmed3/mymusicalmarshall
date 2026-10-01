@@ -79,9 +79,9 @@ export const INITIAL_SONGS: Song[] = [
   },
   {
     id: 'song-mm-2012',
-    title: 'Wayne Armond Picks on Alton Ellis (Full Mix)',
+    title: 'Wayne Armond Picks on Alton Ellis',
     artist: 'Wayne Armond',
-    album: 'Master Soundboard Mixes',
+    album: 'My MM Release Archive',
     duration: 2730,
     audioUrl: '/audio/Wayne_Alton_Full_Mixx220453461.mp3',
     coverUrl: '/headphone_logo.png',
@@ -91,13 +91,13 @@ export const INITIAL_SONGS: Song[] = [
     isMmRelease: true,
     isMix: true,
     isDownloadable: true,
-    description: 'Master 45-minute continuous tribute DJ session honoring Rocksteady king Alton Ellis.'
+    description: 'Wayne Armond Picks on Alton Ellis'
   },
   {
     id: 'song-mm-3015',
-    title: 'Afrobeat Medley (Afrobeat Meets R&B Mix)',
-    artist: 'Music Marshall All-Stars',
-    album: 'Studio Medley Mix Vault',
+    title: 'Afrobeat Medley',
+    artist: '',
+    album: 'My MM Release Archive',
     duration: 292,
     audioUrl: '/audio/Afrobeat_Medley221610074.mp3',
     coverUrl: '/headphone_logo.png',
@@ -107,13 +107,13 @@ export const INITIAL_SONGS: Song[] = [
     isMmRelease: true,
     isMix: true,
     isDownloadable: true,
-    description: 'High-tempo polyrhythmic fusion mix blending contemporary African grooves with R&B.'
+    description: 'Afrobeat Meets R&B'
   },
   {
     id: 'song-mm-3017',
-    title: 'Positive Transfusion EP Juggling (Soundclash Set)',
-    artist: 'DJ Music Marshall',
-    album: 'Soundclash Juggling Vol. 1',
+    title: 'Positive Transfusion EP Juggling',
+    artist: '',
+    album: 'My MM Release Archive',
     duration: 1800,
     audioUrl: '/audio/Positive_Transfusion_Juggling_v2222755873.mp3',
     coverUrl: '/headphone_logo.png',
@@ -123,7 +123,7 @@ export const INITIAL_SONGS: Song[] = [
     isMmRelease: true,
     isMix: true,
     isDownloadable: true,
-    description: '30-minute nonstop soundclash juggling set curated by DJ Music Marshall.'
+    description: 'Positive Transfusion EP Juggling'
   },
   {
     id: 'song-mm-3025',
