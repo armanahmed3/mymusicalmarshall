@@ -46,17 +46,16 @@ In the **Admin Panel** (`⚙️ Admin Panel` on the sidebar — visible only to 
 
 ---
 
-## 5. Email Verification & Admin 2FA Security System
+## 5. Direct Streamlined Authentication (No 2FA / No Email Confirmation Complexity)
 
 ### For Members & Listeners:
-1. **Registration Verification via Official SMTP**:
+1. **Direct Instant Registration**:
    - New members provide their First Name, Last Name (optional), email address, password, and referral code.
-   - Upon submitting, a cryptographic 6-digit OTP is automatically generated and dispatched directly to their registered email address via Gmail SMTP (`mymusicmarshall@gmail.com`).
-   - The user checks their real email inbox and enters the 6-digit code in the **Email Verification Modal** to verify their address.
-2. **Login Gating & Admin Approval**:
-   - If an unverified user attempts to log in, Music Marshall intercepts and dispatches a fresh OTP to their email.
-   - If a user is not yet approved by the administrator (`accountStatus: 'pending_approval'`), login is gated with a notification that administrator approval is required.
-   - Once approved by the administrator on the Admin Panel, the user receives an official activation email and full player access is granted.
+   - Upon clicking **"Complete Registration"**, their account is instantly activated and logged in directly.
+   - No OTP email confirmation, no 2FA codes, and no verification modals.
+2. **Direct Instant Sign In**:
+   - Members log in with their email address and password for immediate, unrestricted access.
+   - Zero authentication roadblocks or 2FA complexity.
 
 ### For Administrators (`admin@marshall.com`):
 1. **Direct Administrator Access (No 2FA Required)**:

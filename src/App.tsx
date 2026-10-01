@@ -52,7 +52,6 @@ import {
   INITIAL_SUPPORT_TICKETS
 } from './data/initialSongs';
 import { LandingPage } from './components/LandingPage';
-import { EmailVerificationModal } from './components/EmailVerificationModal';
 import { PreferencesModal } from './components/PreferencesModal';
 import { MusicMixesView } from './components/MusicMixesView';
 import { PlaylistsView } from './components/PlaylistsView';
@@ -140,12 +139,6 @@ export function App() {
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const [authMessage, setAuthMessage] = useState<string | null>(null);
 
-  // --- Email Verification & Admin 2FA State ---
-  const [verificationModalOpen, setVerificationModalOpen] = useState(false);
-  const [pendingVerificationUser, setPendingVerificationUser] = useState<User | null>(null);
-  const [currentOtpCode, setCurrentOtpCode] = useState<string>('');
-  const [verificationMode, setVerificationMode] = useState<'register' | 'login' | 'admin_2fa'>('register');
-  const [verificationToast, setVerificationToast] = useState<string | null>(null);
   const [approvingUserId, setApprovingUserId] = useState<string | null>(null);
 
   // --- Auth Form Fields ---
@@ -438,50 +431,24 @@ export function App() {
     }
   };
 
-  const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
-
-  // --- Auth Handlers with Email Verification & Admin 2FA ---
+  // --- Direct Auth Handlers (No 2FA / No Email Confirmation Complexity) ---
   const handleLoginSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const foundUser = users.find((u) => u.email.toLowerCase() === loginEmail.toLowerCase());
     if (foundUser) {
-      // 0. Check Deactivated Status
       if (foundUser.accountStatus === 'deactivated') {
         setAuthMessage('🚫 Your account has been deactivated by administrator. Please contact technical and admin support.');
         return;
       }
 
-      // 1. If Admin: Direct immediate access without 2FA, stay on clean Home page
-      if (foundUser.role === 'admin') {
-        setCurrentUser(foundUser);
-        setAppMode('landing');
-        setAuthModalOpen(false);
-        setLoginEmail('');
-        setLoginPassword('');
-        setAuthMessage(null);
-        setAdminToast('✓ Welcome Administrator! You are now logged in.');
-        setTimeout(() => setAdminToast(null), 3500);
-        return;
-      }
-
-      // 2. Regular user: Immediate login, stay on clean Home page
       setCurrentUser(foundUser);
       setAppMode('landing');
       setAuthModalOpen(false);
       setLoginEmail('');
       setLoginPassword('');
       setAuthMessage(null);
-
-      // 3. One-time activation notice after login (only for users awaiting admin activation)
-      if (foundUser.accountStatus !== 'approved') {
-        setAdminToast(
-          `⏳ Welcome ${foundUser.username}! Your account is logged in and awaiting one-time activation confirmation from the administrator. My MM Releases are 100% free to stream!`
-        );
-        setTimeout(() => setAdminToast(null), 7000);
-      } else {
-        setAdminToast(`✓ Welcome back, ${foundUser.username}! VIP Access Active.`);
-        setTimeout(() => setAdminToast(null), 3500);
-      }
+      setAdminToast(`✓ Welcome back, ${foundUser.username}!`);
+      setTimeout(() => setAdminToast(null), 3500);
     } else {
       setAuthMessage('User account not found. Please register with a referral code or check credentials.');
     }
@@ -538,8 +505,6 @@ export function App() {
     const fullName = cleanLastName ? `${cleanFirstName} ${cleanLastName}` : cleanFirstName;
     const prefix = (cleanFirstName.replace(/[^a-zA-Z]/g, '').slice(0, 4) || 'USER').toUpperCase();
     const newUserCode = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const otp = generateOtp();
-    const expires = Date.now() + 10 * 60 * 1000;
 
     const newUser: User = {
       id: `usr-${Date.now()}`,
@@ -551,41 +516,15 @@ export function App() {
       referralCode: newUserCode,
       referredBy: cleanCode,
       createdAt: new Date().toISOString().split('T')[0],
-      isEmailVerified: false,
-      verificationCode: otp,
-      verificationCodeExpires: expires,
-      accountStatus: 'pending_approval'
+      isEmailVerified: true,
+      accountStatus: 'approved'
     };
 
     setUsers((prev) => [...prev, newUser]);
-    setPendingVerificationUser(newUser);
-    setCurrentOtpCode(otp);
-    setVerificationMode('register');
+    setCurrentUser(newUser);
     setAuthModalOpen(false);
-    setVerificationModalOpen(true);
-
-    // Dispatch real OTP email directly to the registered email address via Gmail SMTP
-    fetch('/api/send-otp-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: cleanEmail,
-        username: fullName,
-        otp,
-        mode: 'register'
-      })
-    }).catch((err) => console.error('SMTP OTP Register Error:', err));
-
-    // Dispatch instant admin alert to mymusicmarshall@gmail.com
-    fetch('/api/send-admin-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: fullName,
-        email: cleanEmail,
-        referralCode: cleanCode
-      })
-    }).catch((err) => console.error('Admin Registration Alert Error:', err));
+    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Registration complete.`);
+    setTimeout(() => setAdminToast(null), 4000);
 
     setRegFirstName('');
     setRegLastName('');
@@ -594,58 +533,6 @@ export function App() {
     setRegReferralCode('');
     setRegError(null);
     setAuthMessage(null);
-  };
-
-  const handleVerifyOtp = (code: string): boolean => {
-    if (!pendingVerificationUser) return false;
-
-    const validCode = currentOtpCode || pendingVerificationUser.verificationCode;
-    if (code.trim() === validCode?.trim()) {
-      const isAdm = pendingVerificationUser.role === 'admin';
-      const verifiedUser: User = {
-        ...pendingVerificationUser,
-        isEmailVerified: true,
-        verifiedAt: new Date().toISOString().split('T')[0],
-        verificationCode: undefined,
-        verificationCodeExpires: undefined,
-        accountStatus: isAdm ? 'approved' : 'pending_approval'
-      };
-
-      setUsers((prev) => prev.map((u) => (u.id === verifiedUser.id ? verifiedUser : u)));
-
-      if (isAdm) {
-        setCurrentUser(verifiedUser);
-        setTimeout(() => {
-          setVerificationModalOpen(false);
-          setPendingVerificationUser(null);
-          setVerificationToast('🛡️ Admin 2FA Identity Authorized! Full administrative control granted.');
-          setTimeout(() => setVerificationToast(null), 4000);
-        }, 800);
-      } else {
-        // Dispatch alert to admin mailbox mymusicmarshall@gmail.com
-        fetch('/api/send-admin-notification', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            username: verifiedUser.username,
-            email: verifiedUser.email,
-            referralCode: verifiedUser.referralCode
-          })
-        }).catch(() => {});
-
-        setTimeout(() => {
-          setVerificationModalOpen(false);
-          setPendingVerificationUser(null);
-          setVerificationToast(
-            '✓ Email verified! In accordance with VIP security protocol, your registration requires administrator confirmation. You will receive an official activation email from mymusicmarshall@gmail.com once confirmed by admin.'
-          );
-          setTimeout(() => setVerificationToast(null), 8500);
-        }, 800);
-      }
-
-      return true;
-    }
-    return false;
   };
 
   const handleAdminApproveAndSendEmail = async (userToApprove: User) => {
@@ -691,34 +578,6 @@ export function App() {
     }
   };
 
-  const handleResendOtp = () => {
-    if (!pendingVerificationUser) return;
-    const newOtp = generateOtp();
-    const expires = Date.now() + 10 * 60 * 1000;
-    const updated = {
-      ...pendingVerificationUser,
-      verificationCode: newOtp,
-      verificationCodeExpires: expires
-    };
-    setPendingVerificationUser(updated);
-    setCurrentOtpCode(newOtp);
-    setUsers((prev) => prev.map((u) => (u.id === updated.id ? updated : u)));
-
-    // Send real OTP email via SMTP
-    fetch('/api/send-otp-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: pendingVerificationUser.email,
-        username: pendingVerificationUser.username,
-        otp: newOtp,
-        mode: verificationMode
-      })
-    }).catch((err) => console.error('SMTP OTP Resend Error:', err));
-
-    setVerificationToast(`📧 Verification code dispatched via SMTP to ${pendingVerificationUser.email}!`);
-    setTimeout(() => setVerificationToast(null), 4000);
-  };
 
   // --- Admin Promo Code CRUD Handlers ---
   const handleAddPromoCode = (e: React.FormEvent) => {
@@ -1296,27 +1155,6 @@ export function App() {
           </div>
         )}
 
-        {/* Email Verification Modal (Landing Mode) */}
-        <EmailVerificationModal
-          isOpen={verificationModalOpen}
-          email={pendingVerificationUser?.email || ''}
-          verificationCode={currentOtpCode}
-          mode={verificationMode}
-          onVerify={handleVerifyOtp}
-          onResend={handleResendOtp}
-          onClose={() => {
-            setVerificationModalOpen(false);
-            setPendingVerificationUser(null);
-          }}
-        />
-
-        {/* Global Toast */}
-        {verificationToast && (
-          <div className="verification-toast-global">
-            <CheckCircle2 size={18} color="#4ade80" />
-            <span>{verificationToast}</span>
-          </div>
-        )}
       </>
     );
   }
@@ -3951,27 +3789,6 @@ export function App() {
         </div>
       )}
 
-      {/* Email Verification Modal (Web App Mode) */}
-      <EmailVerificationModal
-        isOpen={verificationModalOpen}
-        email={pendingVerificationUser?.email || ''}
-        verificationCode={currentOtpCode}
-        mode={verificationMode}
-        onVerify={handleVerifyOtp}
-        onResend={handleResendOtp}
-        onClose={() => {
-          setVerificationModalOpen(false);
-          setPendingVerificationUser(null);
-        }}
-      />
-
-      {/* Global Toast */}
-      {verificationToast && (
-        <div className="verification-toast-global">
-          <CheckCircle2 size={18} color="#4ade80" />
-          <span>{verificationToast}</span>
-        </div>
-      )}
 
       {/* Preferences Modal (Loop Mix & Stop Alerts) */}
       <PreferencesModal
