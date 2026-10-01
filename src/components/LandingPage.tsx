@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import {
   Play,
   Pause,
-  Sparkles,
-  Phone,
   Disc3,
+  Phone,
   ShieldCheck,
   Headphones,
   Lock,
@@ -18,7 +17,6 @@ import {
   Radio,
   MapPin,
   ExternalLink,
-  Mail,
   CheckCircle2
 } from 'lucide-react';
 import type { Song, User, EventFlyer, SupportTicket } from '../types';
@@ -204,7 +202,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Headphones size={15} />
               <span>Listen to Music</span>
             </button>
-            <a href="#mm-releases">My MM Releases</a>
+            <a href="#mm-releases">My MM Productions</a>
             <a href="#notice-board">Notice Board</a>
             <a href="#contact-us">Contact Us</a>
           </nav>
@@ -275,7 +273,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               onClick={() => setMobileMenuOpen(false)}
             >
               <Disc3 size={18} />
-              <span>My MM Releases</span>
+              <span>My MM Productions</span>
             </a>
             <a
               href="#notice-board"
@@ -555,30 +553,17 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ==========================================================================
-          SECTION: MY MM RELEASES (PLACED AT BOTTOM OF HOME PAGE)
-          (Handwritten Note 9: "Put List of releases at Bottom of Home Page")
-          (Handwritten Note 4: "When 'MY Releases' is selected a List should appear")
-          (Handwritten Note 5: "Display Genre from Table")
-          (Handwritten Note 6: "Add Download functionality for MY MM Releases")
+          SECTION: MY MM PRODUCTIONS (PLACED AT BOTTOM OF HOME PAGE)
           ========================================================================== */}
       <section id="mm-releases" className="landing-section bg-secondary">
         <div className="section-container">
           <div className="section-title-wrap">
-            <div className="section-kicker">
-              <Sparkles size={14} />
-              <span>Public Audio Catalog</span>
-            </div>
-            <h2 className="landing-section-h2">My MM Releases — Stream Free Without Login</h2>
+            <h2 className="landing-section-h2">My MM Productions</h2>
             <p className="landing-section-desc">
-              All 16 official releases from <em>mymusicmarshall.com</em> are available right here for instant, unrestricted playback and download.
-              No login required. Click any song to listen or download immediately!
+              My Music Marshall is affiliated to MY MM Productions Label and is authorized to stream and allow downloads of the releases below.
+              <br />
+              Click any song to listen or download.
             </p>
-          </div>
-
-          {/* Table of all 16 free releases with Genre & Download functionality */}
-          <div className="releases-grid-header">
-            <h4>All 16 Official Master Releases</h4>
-            <span style={{ fontSize: '0.84rem', color: '#64748b' }}>Select any track to play or download</span>
           </div>
 
           <div className="releases-list-box">
@@ -601,13 +586,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       idx + 1
                     )}
                   </div>
-                  <img src={song.coverUrl} alt={song.title} className="release-thumb" />
+                  <img src="/headphone_logo.png" alt={song.title} className="release-thumb" />
                   <div className="release-info">
                     <span className="release-title">{song.title}</span>
                     <span className="release-artist">{song.artist}</span>
                   </div>
 
-                  {/* Note 5 (Handwritten): Display Genre from Table */}
+                  {/* Note 5: Display Genre from Table */}
                   <div className="release-genre">
                     <span className="badge-genre">{song.genre}</span>
                   </div>
@@ -616,7 +601,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     {formatTime(song.duration)}
                   </div>
 
-                  {/* Note 6 (Handwritten): Add Download functionality for MY MM Releases */}
+                  {/* Note 6: Add Download functionality for MY MM Releases */}
                   <div className="release-actions" onClick={(e) => e.stopPropagation()}>
                     <a
                       href={song.audioUrl}
@@ -652,69 +637,12 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           SECTION: CONTACT US & SUPPORT
           ========================================================================== */}
       <section id="contact-us" className="landing-section">
-        <div className="section-container" style={{ maxWidth: '1080px', margin: '0 auto' }}>
-          <div className="section-title-wrap" style={{ textAlign: 'center', marginBottom: '36px' }}>
+        <div className="section-container" style={{ maxWidth: '780px', margin: '0 auto' }}>
+          <div className="section-title-wrap" style={{ textAlign: 'center', marginBottom: '32px' }}>
             <h2 className="landing-section-h2">Contact Music Marshall</h2>
-            <p className="landing-section-desc">
-              Direct access to our studio sound desk, artist relations, and technical inquiries.
-            </p>
           </div>
 
-          <div className="support-grid">
-            {/* Direct Studio Contacts Card */}
-            <div className="support-channels-card">
-              <div>
-                <div className="support-channel-pill">
-                  <ShieldCheck size={14} />
-                  <span>DIRECT STUDIO CHANNELS</span>
-                </div>
-                <h3 className="support-channel-title">
-                  Connect With Us
-                </h3>
-                <p className="support-channel-desc">
-                  Our team monitors submissions around the clock. Typical response turnaround is under 2 hours.
-                </p>
-
-                <div className="support-channel-list">
-                  <div className="support-channel-item">
-                    <div className="channel-icon-circle channel-icon-emerald">
-                      <Phone size={20} />
-                    </div>
-                    <div>
-                      <div className="channel-label">Direct Studio Line</div>
-                      <a href="tel:9547018103" className="channel-value">
-                        (954) 701-8103
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="support-channel-item">
-                    <div className="channel-icon-circle channel-icon-cyan">
-                      <Mail size={20} />
-                    </div>
-                    <div>
-                      <div className="channel-label">Technical Helpdesk</div>
-                      <a href="mailto:support@ellivrocorporation.com" className="channel-value">
-                        support@ellivrocorporation.com
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="support-channel-item">
-                    <div className="channel-icon-circle channel-icon-amber">
-                      <Mail size={20} />
-                    </div>
-                    <div>
-                      <div className="channel-label">Studio & Licensing</div>
-                      <a href="mailto:mymusicmarshall@gmail.com" className="channel-value">
-                        mymusicmarshall@gmail.com
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div>
             {/* Interactive Message / Ticket Form */}
             <div className="support-form-card">
               <div className="support-form-header">
@@ -819,7 +747,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <div style={{ fontSize: '0.84rem', color: '#64748b' }}>
-            &copy; 2026 Music Marshall Studio & OKM Software. All Rights Reserved.
+            &copy; 2026 OKM Software. All Rights Reserved.
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>

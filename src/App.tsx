@@ -74,7 +74,20 @@ export function App() {
       try {
         const parsed = JSON.parse(saved);
         // Ensure new downloaded releases are loaded if saved list is smaller
-        if (Array.isArray(parsed) && parsed.length >= INITIAL_SONGS.length) return parsed;
+        if (Array.isArray(parsed) && parsed.length >= INITIAL_SONGS.length) {
+          return parsed.map((s: Song) => {
+            const initSong = INITIAL_SONGS.find((init) => init.id === s.id);
+            if (initSong && initSong.isMmRelease) {
+              return {
+                ...s,
+                coverUrl: '/headphone_logo.png',
+                genre: initSong.genre || s.genre,
+                isMmRelease: true
+              };
+            }
+            return s;
+          });
+        }
       } catch {
         // fallback
       }
@@ -1324,7 +1337,7 @@ export function App() {
               }}
             >
               <Disc3 size={20} color={activeTab === 'releases' ? '#fff' : '#16a34a'} />
-              <span>My MM Releases</span>
+              <span>My MM Productions</span>
               <span style={{
                 fontSize: '0.66rem',
                 background: activeTab === 'releases' ? 'rgba(255,255,255,0.25)' : '#dcfce7',
@@ -1668,7 +1681,7 @@ export function App() {
                         >
                           <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <Disc3 size={14} />
-                            <span>My MM Releases</span>
+                            <span>My MM Productions</span>
                           </span>
                           <span style={{ fontSize: '0.7rem', color: '#00f59b', fontWeight: 800 }}>Free</span>
                         </button>
@@ -1824,7 +1837,7 @@ export function App() {
                     <span className="hero-pill" style={{ background: 'rgba(74, 222, 128, 0.2)', color: '#4ade80' }}>
                       Official Releases • Free to Stream Without Login
                     </span>
-                    <h1 className="hero-title">My MM Releases</h1>
+                    <h1 className="hero-title">My MM Productions</h1>
                     <p className="hero-desc">
                       Official songs downloaded directly from <em>mymusicmarshall.com/Mix/ListReleases</em>. 
                       These tracks are freely available to everyone without requiring an account.
@@ -1857,7 +1870,7 @@ export function App() {
 
                 <div className="section-header">
                   <div>
-                    <h2 className="section-title">Official MM Releases ({mmReleases.length})</h2>
+                    <h2 className="section-title">Official MM Productions ({mmReleases.length})</h2>
                     <p className="section-subtitle">
                       Streamable by all guests and members with zero restrictions
                     </p>
@@ -1898,7 +1911,7 @@ export function App() {
                           <td>
                             <div className="song-title-group">
                               <img
-                                src={song.coverUrl}
+                                src={song.isMmRelease ? '/headphone_logo.png' : song.coverUrl}
                                 alt={song.title}
                                 className="song-cover-thumb"
                               />
