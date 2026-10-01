@@ -324,7 +324,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
                 <span>
                   {mode === 'admin_2fa'
                     ? '✓ Admin identity authorized! Loading control center...'
-                    : '✓ Email successfully verified! Welcome to SoundMarshall VIP.'}
+                    : '✓ Email successfully verified! Welcome to Music Marshall VIP.'}
                 </span>
               </div>
             )}

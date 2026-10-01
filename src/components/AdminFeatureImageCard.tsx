@@ -227,7 +227,7 @@ export const AdminFeatureImageCard: React.FC<AdminFeatureImageCardProps> = ({
                 type="text"
                 required
                 className="form-control"
-                placeholder="e.g., SoundMarshall Reggae Roots Festival 2026"
+                placeholder="e.g., Music Marshall Reggae Roots Festival 2026"
                 value={flyerTitle}
                 onChange={(e) => setFlyerTitle(e.target.value)}
               />

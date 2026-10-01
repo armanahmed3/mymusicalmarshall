@@ -1,4 +1,4 @@
-# SoundMarshall — Platform Credentials & Architecture Documentation
+# Music Marshall — Platform Credentials & Architecture Documentation
 
 ## 1. Administrative Account
 Use these credentials to access the **Admin Panel** where you can upload new songs, select release categories, manage catalog tracks, view registered members, and track referral codes:
@@ -27,7 +27,7 @@ Use these credentials to access the **Admin Panel** where you can upload new son
 ---
 
 ## 3. Compulsory Referral Codes (For New User Registration)
-Registration on SoundMarshall is strictly invite-only:
+Registration on Music Marshall is strictly invite-only:
 
 | Referral Code | Description |
 |---|---|
@@ -54,7 +54,7 @@ In the **Admin Panel** (`⚙️ Admin Panel` on the sidebar — visible only to 
    - Upon submitting, a cryptographic 6-digit OTP is automatically generated and dispatched directly to their registered email address via Gmail SMTP (`mymusicmarshall@gmail.com`).
    - The user checks their real email inbox and enters the 6-digit code in the **Email Verification Modal** to verify their address.
 2. **Login Gating & Admin Approval**:
-   - If an unverified user attempts to log in, SoundMarshall intercepts and dispatches a fresh OTP to their email.
+   - If an unverified user attempts to log in, Music Marshall intercepts and dispatches a fresh OTP to their email.
    - If a user is not yet approved by the administrator (`accountStatus: 'pending_approval'`), login is gated with a notification that administrator approval is required.
    - Once approved by the administrator on the Admin Panel, the user receives an official activation email and full player access is granted.
 
@@ -96,5 +96,6 @@ In the **Admin Panel** (`⚙️ Admin Panel` on the sidebar — visible only to 
    - Public visitors can stream all 16 **My MM Releases** without login.
    - However, clicking **"Launch Music Lab"** requires a registered, approved account.
    - Once activated by the Admin, the user can log in and enter the full Spotify-style Music Lab!
+
 
 

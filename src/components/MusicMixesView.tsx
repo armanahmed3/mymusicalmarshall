@@ -76,7 +76,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
         <div style={{ flex: 1 }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: 'rgba(56, 189, 248, 0.15)', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '4px 10px', borderRadius: '9999px', fontSize: '0.78rem', color: '#38bdf8', fontWeight: 800, marginBottom: '12px' }}>
             <Disc3 size={14} />
-            <span>AUTHENTIC SOUNDMARSHALL DJ JUGGLINGS & SESSIONS</span>
+            <span>AUTHENTIC MUSIC MARSHALL DJ JUGGLINGS & SESSIONS</span>
           </div>
           <h1 style={{ fontSize: '1.9rem', fontWeight: 900, margin: '0 0 8px 0', letterSpacing: '-0.02em' }}>
             Master Music Mixes

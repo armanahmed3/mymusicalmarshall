@@ -43,11 +43,11 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       const { to, username, otp, mode } = JSON.parse(event.body || '{}');
       const is2fa = mode === 'admin_2fa';
       const subject = is2fa
-        ? '🔒 SoundMarshall Admin Security — 2FA Authorization Passcode'
-        : '🎵 Welcome to SoundMarshall — Your VIP Verification Code';
+        ? '🔒 Music Marshall Admin Security — 2FA Authorization Passcode'
+        : '🎵 Welcome to Music Marshall — Your VIP Verification Code';
 
       const mailOptions = {
-        from: '"SoundMarshall VIP Portal" <mymusicmarshall@gmail.com>',
+        from: '"Music Marshall VIP Portal" <mymusicmarshall@gmail.com>',
         to,
         subject,
         html: `
@@ -74,14 +74,14 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
           <body>
             <div class="container">
               <div class="header">
-                <h1 class="logo">SOUNDMARSHALL VIP</h1>
+                <h1 class="logo">Music Marshall VIP</h1>
                 <p class="tagline">High-Fidelity Audio Vault</p>
               </div>
               <div class="content">
                 <h2 class="greeting">Hello ${username || 'VIP Member'},</h2>
                 <p class="text">
                   ${is2fa
-                    ? 'An administrator login authorization request was initiated for your SoundMarshall account. Please enter the passcode below to authorize access.'
+                    ? 'An administrator login authorization request was initiated for your Music Marshall account. Please enter the passcode below to authorize access.'
                     : 'Use the following One-Time Passcode (OTP) to complete your VIP account registration.'}
                 </p>
                 <div class="otp-card">
@@ -91,7 +91,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
                 </div>
               </div>
               <div class="footer">
-                &copy; ${new Date().getFullYear()} SoundMarshall Platform.
+                &copy; ${new Date().getFullYear()} Music Marshall Platform.
               </div>
             </div>
           </body>
@@ -114,7 +114,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
         from: '"Music Marshall" <mymusicmarshall@gmail.com>',
         to,
         bcc: 'mymusicmarshall@gmail.com',
-        subject: '🎵 Your SoundMarshall VIP Account Has Been Activated!',
+        subject: '🎵 Your Music Marshall VIP Account Has Been Activated!',
         html: `
           <div style="font-family: sans-serif; padding: 24px; color: #0f172a; max-width: 580px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 14px;">
             <h2 style="color: #16a34a; margin-top: 0;">✓ Welcome, ${username}!</h2>
@@ -140,7 +140,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
     if (event.httpMethod === 'POST' && path === '/send-admin-notification') {
       const { username, email, referralCode } = JSON.parse(event.body || '{}');
       const mailOptions = {
-        from: '"SoundMarshall Security" <mymusicmarshall@gmail.com>',
+        from: '"Music Marshall Security" <mymusicmarshall@gmail.com>',
         to: 'mymusicmarshall@gmail.com',
         subject: `🔔 New VIP Registration Pending Approval: ${username}`,
         html: `
@@ -178,9 +178,9 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       for (const recipient of recipients) {
         try {
           await transporter.sendMail({
-            from: '"SoundMarshall VIP Broadcast" <mymusicmarshall@gmail.com>',
+            from: '"Music Marshall VIP Broadcast" <mymusicmarshall@gmail.com>',
             to: recipient.email,
-            subject: subject || '🎵 SoundMarshall VIP Announcement',
+            subject: subject || '🎵 Music Marshall VIP Announcement',
             html: `
               <div style="font-family: sans-serif; padding: 24px; color: #0f172a;">
                 <h2>${headline || subject}</h2>
@@ -216,3 +216,4 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
     };
   }
 };
+

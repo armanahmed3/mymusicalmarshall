@@ -33,7 +33,7 @@ function smtpApiPlugin(): Plugin {
                 from: '"Music Marshall" <mymusicmarshall@gmail.com>',
                 to,
                 bcc: 'mymusicmarshall@gmail.com',
-                subject: '🎵 Your SoundMarshall VIP Account Has Been Activated!',
+                subject: '🎵 Your Music Marshall VIP Account Has Been Activated!',
                 html: `
                   <!DOCTYPE html>
                   <html>
@@ -57,7 +57,7 @@ function smtpApiPlugin(): Plugin {
                   <body>
                     <div class="container">
                       <div class="header">
-                        <h1>SoundMarshall VIP Portal</h1>
+                        <h1>Music Marshall VIP Portal</h1>
                         <p>High-Fidelity Audio & Studio Production</p>
                       </div>
                       <div class="content">
@@ -71,10 +71,10 @@ function smtpApiPlugin(): Plugin {
                           <div class="details-row" style="margin-bottom: 0;"><strong>Access Status:</strong> <span style="color: #16a34a; font-weight: 700;">Full Access (Music Lab Unlocked)</span></div>
                         </div>
 
-                        <p>You can now sign in with your credentials and launch the full <strong>SoundMarshall Music Lab & Player</strong>.</p>
+                        <p>You can now sign in with your credentials and launch the full <strong>Music Marshall Music Lab & Player</strong>.</p>
 
                         <div style="text-align: center; margin-top: 24px;">
-                          <a href="http://localhost:5174/" class="btn">Launch SoundMarshall Music Lab</a>
+                          <a href="http://localhost:5174/" class="btn">Launch Music Marshall Music Lab</a>
                         </div>
                       </div>
                       <div class="footer">
@@ -92,13 +92,13 @@ function smtpApiPlugin(): Plugin {
               // 2. Also send dedicated Administrator Approval Notification to mymusicmarshall@gmail.com
               try {
                 await transporter.sendMail({
-                  from: '"SoundMarshall Administration" <mymusicmarshall@gmail.com>',
+                  from: '"Music Marshall Administration" <mymusicmarshall@gmail.com>',
                   to: 'mymusicmarshall@gmail.com',
                   subject: `✅ Member Approved & Activated: ${username} (${to})`,
                   html: `
                     <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; color: #0f172a; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; background: #ffffff;">
                       <div style="background: #0f172a; color: #ffffff; padding: 20px 24px; border-radius: 8px; margin-bottom: 20px;">
-                        <h2 style="margin: 0; font-size: 18px; color: #ffffff;">SoundMarshall Administrator Alert</h2>
+                        <h2 style="margin: 0; font-size: 18px; color: #ffffff;">Music Marshall Administrator Alert</h2>
                         <p style="margin: 4px 0 0; font-size: 13px; color: #94a3b8;">Membership Approval & Activation Confirmation</p>
                       </div>
                       <div style="padding: 4px;">
@@ -154,13 +154,13 @@ function smtpApiPlugin(): Plugin {
             try {
               const { username, email, referralCode } = JSON.parse(body);
               const mailOptions = {
-                from: '"SoundMarshall Security" <mymusicmarshall@gmail.com>',
+                from: '"Music Marshall Security" <mymusicmarshall@gmail.com>',
                 to: 'mymusicmarshall@gmail.com',
                 subject: `🔔 New VIP Registration Pending Approval: ${username}`,
                 html: `
                   <div style="font-family: sans-serif; padding: 20px; color: #0f172a;">
                     <h2>New VIP Registration Pending Approval</h2>
-                    <p>A new listener has registered on SoundMarshall and is awaiting your confirmation on the Admin Portal:</p>
+                    <p>A new listener has registered on Music Marshall and is awaiting your confirmation on the Admin Portal:</p>
                     <ul>
                       <li><strong>Username:</strong> ${username}</li>
                       <li><strong>Email:</strong> ${email}</li>
@@ -195,11 +195,11 @@ function smtpApiPlugin(): Plugin {
 
               const is2fa = mode === 'admin_2fa';
               const subject = is2fa
-                ? '🔒 SoundMarshall Admin Security — 2FA Authorization Passcode'
-                : '🎵 Welcome to SoundMarshall — Your VIP Verification Code';
+                ? '🔒 Music Marshall Admin Security — 2FA Authorization Passcode'
+                : '🎵 Welcome to Music Marshall — Your VIP Verification Code';
 
               const mailOptions = {
-                from: '"SoundMarshall VIP Portal" <mymusicmarshall@gmail.com>',
+                from: '"Music Marshall VIP Portal" <mymusicmarshall@gmail.com>',
                 to,
                 subject,
                 html: `
@@ -229,15 +229,15 @@ function smtpApiPlugin(): Plugin {
                   <body>
                     <div class="container">
                       <div class="header">
-                        <h1 class="logo">SOUNDMARSHALL VIP</h1>
+                        <h1 class="logo">Music Marshall VIP</h1>
                         <p class="tagline">Studio Production & High-Fidelity Audio Vault</p>
                       </div>
                       <div class="content">
                         <h2 class="greeting">Hello ${username || 'VIP Member'},</h2>
                         <p class="text">
                           ${is2fa
-                            ? 'An administrator login authorization request was initiated for your SoundMarshall account. Please use the high-security passcode below to authorize administrative access.'
-                            : 'Thank you for registering on SoundMarshall. Use the following One-Time Passcode (OTP) to verify your email address and proceed with your VIP membership onboarding.'}
+                            ? 'An administrator login authorization request was initiated for your Music Marshall account. Please use the high-security passcode below to authorize administrative access.'
+                            : 'Thank you for registering on Music Marshall. Use the following One-Time Passcode (OTP) to verify your email address and proceed with your VIP membership onboarding.'}
                         </p>
                         
                         <div class="otp-card">
@@ -247,11 +247,11 @@ function smtpApiPlugin(): Plugin {
                         </div>
 
                         <div class="security-note">
-                          🔒 <strong>Security Warning:</strong> Never share this code with anyone. SoundMarshall personnel will never ask for your verification code. If you did not make this request, please contact our support team at <a href="mailto:support@ellivrocorporation.com" style="color: #38bdf8;">support@ellivrocorporation.com</a>.
+                          🔒 <strong>Security Warning:</strong> Never share this code with anyone. Music Marshall personnel will never ask for your verification code. If you did not make this request, please contact our support team at <a href="mailto:support@ellivrocorporation.com" style="color: #38bdf8;">support@ellivrocorporation.com</a>.
                         </div>
                       </div>
                       <div class="footer">
-                        &copy; ${new Date().getFullYear()} SoundMarshall. All rights reserved.<br>
+                        &copy; ${new Date().getFullYear()} Music Marshall. All rights reserved.<br>
                         Support: <a href="mailto:support@ellivrocorporation.com">support@ellivrocorporation.com</a> | Marketing: <a href="mailto:mymusicmarshall@gmail.com">mymusicmarshall@gmail.com</a>
                       </div>
                     </div>
@@ -296,9 +296,9 @@ function smtpApiPlugin(): Plugin {
               for (const recipient of recipients) {
                 try {
                   const mailOptions = {
-                    from: '"SoundMarshall VIP Broadcast" <mymusicmarshall@gmail.com>',
+                    from: '"Music Marshall VIP Broadcast" <mymusicmarshall@gmail.com>',
                     to: recipient.email,
-                    subject: subject || '🎵 SoundMarshall VIP Announcement',
+                    subject: subject || '🎵 Music Marshall VIP Announcement',
                     html: `
                       <!DOCTYPE html>
                       <html>
@@ -318,7 +318,7 @@ function smtpApiPlugin(): Plugin {
                       <body>
                         <div class="container">
                           <div class="header">
-                            <h1>SOUNDMARSHALL VIP</h1>
+                            <h1>Music Marshall VIP</h1>
                             <p style="margin:4px 0 0; font-size:12px; color:#94a3b8;">High-Fidelity Audio & Studio Production</p>
                           </div>
                           <div class="content">
@@ -326,11 +326,11 @@ function smtpApiPlugin(): Plugin {
                             <p style="font-size: 14px; color: #94a3b8; margin-top: 0;">Hello ${recipient.username || 'Member'},</p>
                             <div class="body-text">${content}</div>
                             <div style="margin-top: 28px; text-align: center;">
-                              <a href="http://127.0.0.1:5173/" style="display:inline-block; background:#22c55e; color:#0f172a; text-decoration:none; padding:12px 24px; border-radius:8px; font-weight:800; font-size:14px;">Open SoundMarshall Music Lab</a>
+                              <a href="http://127.0.0.1:5173/" style="display:inline-block; background:#22c55e; color:#0f172a; text-decoration:none; padding:12px 24px; border-radius:8px; font-weight:800; font-size:14px;">Open Music Marshall Music Lab</a>
                             </div>
                           </div>
                           <div class="footer">
-                            &copy; ${new Date().getFullYear()} SoundMarshall Platform. Sent via Official Studio SMTP.
+                            &copy; ${new Date().getFullYear()} Music Marshall Platform. Sent via Official Studio SMTP.
                           </div>
                         </div>
                       </body>
@@ -380,3 +380,4 @@ function smtpApiPlugin(): Plugin {
 export default defineConfig({
   plugins: [react(), smtpApiPlugin()]
 });
+

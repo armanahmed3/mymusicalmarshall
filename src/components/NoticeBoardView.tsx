@@ -33,7 +33,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', background: '#dbeafe', color: '#1d4ed8', padding: '3px 10px', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: 800, marginBottom: '8px' }}>
             <Radio size={13} />
-            <span>OFFICIAL SOUNDMARSHALL BULLETIN</span>
+            <span>OFFICIAL MUSIC MARSHALL BULLETIN</span>
           </div>
           <h2 className="section-title">Notice Board & Event Flyers</h2>
           <p className="section-subtitle">

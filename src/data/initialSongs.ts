@@ -314,37 +314,14 @@ export const INITIAL_PLAYLISTS: Playlist[] = [
   }
 ];
 
-export const INITIAL_FLYERS: EventFlyer[] = [
-  {
-    id: 'flyer-01',
-    title: 'SoundMarshall Kingston Live Dub Session 2026',
-    eventDate: 'Saturday, October 24, 2026 • 8:00 PM EST',
-    location: 'Music Marshall Sound Yard, Kingston / Global Stream',
-    description: 'Live analog dub mixing, exclusive unreleased stems, and special guest Wayne Armond performing live on sound system!',
-    flyerUrl: '/mm_banner.png',
-    postedBy: 'Admin',
-    createdAt: '2026-03-10',
-    externalLink: 'https://mymusicmarshall.com'
-  },
-  {
-    id: 'flyer-02',
-    title: 'VIP Masterclass: Reggae & Dancehall Production Techniques',
-    eventDate: 'Friday, November 14, 2026 • 6:30 PM EST',
-    location: 'Studio A & VIP Virtual Studio',
-    description: 'Join the master producers behind Music Marshall for an exclusive deep dive into multi-track mastering and analog compression.',
-    flyerUrl: '/mm_logo.jpg',
-    postedBy: 'Admin',
-    createdAt: '2026-03-12',
-    externalLink: 'https://mymusicmarshall.com'
-  }
-];
+export const INITIAL_FLYERS: EventFlyer[] = [];
 
 export const INITIAL_SUPPORT_TICKETS: SupportTicket[] = [
   {
     id: 'tkt-1001',
     userId: 'usr-admin',
     username: 'DemoListener',
-    email: 'listener@soundmarshall.com',
+    email: 'listener@musicmarshall.com',
     subject: 'High-Res FLAC Audio Download Question',
     category: 'Audio Playback',
     priority: 'medium',

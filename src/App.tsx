@@ -183,7 +183,13 @@ export function App() {
 
   const [flyers, setFlyers] = useState<EventFlyer[]>(() => {
     const saved = localStorage.getItem('mm_flyers');
-    return saved ? JSON.parse(saved) : INITIAL_FLYERS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.filter((f: EventFlyer) => f.id !== 'flyer-01' && f.id !== 'flyer-02');
+      } catch {}
+    }
+    return INITIAL_FLYERS;
   });
 
   const [supportTickets, setSupportTickets] = useState<SupportTicket[]>(() => {
@@ -1072,7 +1078,7 @@ export function App() {
             <div className="modal-card" onClick={(e) => e.stopPropagation()}>
               <div className="modal-header">
                 <h3 className="modal-title">
-                  {authTab === 'login' ? 'SoundMarshall Sign In' : 'Exclusive VIP Registration'}
+                  {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive VIP Registration'}
                 </h3>
                 <button
                   type="button"
@@ -1289,7 +1295,7 @@ export function App() {
           >
             <img src="/mm_logo.jpg" alt="Music Marshall" />
             <div className="sidebar-logo-text">
-              <span className="sidebar-logo-title">SoundMarshall</span>
+              <span className="sidebar-logo-title">Music Marshall</span>
               <span className="sidebar-logo-subtitle">Hi-Fi Streaming</span>
             </div>
           </div>
@@ -1574,7 +1580,7 @@ export function App() {
             </div>
 
             <div className="header-user-actions">
-              <div className="studio-hi-res-badge" title="SoundMarshall Direct Hi-Res Audio Engine">
+              <div className="studio-hi-res-badge" title="Music Marshall Direct Hi-Res Audio Engine">
                 <span className="studio-pulse-dot"></span>
                 <span>96kHz / 24-bit Hi-Res</span>
               </div>
@@ -2323,7 +2329,7 @@ export function App() {
                 <div>
                   <div className="section-header">
                     <div>
-                      <h2 className="section-title">SoundMarshall Control Panel</h2>
+                      <h2 className="section-title">Music Marshall Control Panel</h2>
                       <p className="section-subtitle">
                         Administrative command center for memberships, audio catalog, flyers, and broadcasting.
                       </p>
@@ -3483,7 +3489,7 @@ export function App() {
                   </div>
                   <h2 style={{ fontSize: '1.4rem', fontWeight: 800, marginBottom: '8px' }}>Administrator Access Only</h2>
                   <p style={{ color: '#64748b', fontSize: '0.9rem', lineHeight: '1.5', marginBottom: '24px' }}>
-                    The SoundMarshall Control Panel is strictly restricted to platform administrators. Please sign in with an administrator account to manage tracks and users.
+                    The Music Marshall Control Panel is strictly restricted to platform administrators. Please sign in with an administrator account to manage tracks and users.
                   </p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <button
@@ -3697,7 +3703,7 @@ export function App() {
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {authTab === 'login' ? 'SoundMarshall Sign In' : 'Exclusive VIP Registration'}
+                {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive VIP Registration'}
               </h3>
               <button
                 type="button"

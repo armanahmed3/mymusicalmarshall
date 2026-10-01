@@ -39,7 +39,7 @@ interface LandingPageProps {
 
 export const LandingPage: React.FC<LandingPageProps> = ({
   mmReleases,
-  allMixes: _allMixes = [],
+  allMixes = [],
   currentUser,
   landingFeatureImage: _landingFeatureImage,
   flyers = [],
@@ -86,10 +86,22 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     setTimeout(() => setTktSuccess(null), 6000);
   };
 
-  // Active audio player state for My MM Releases
+  // Active audio player state for My MM Releases & Featured Mix
   const [activeTrack, setActiveTrack] = useState<Song>(mmReleases[0] || null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Featured Mix for Home Screen (PDF Item 4)
+  const featuredMix = allMixes.length > 0
+    ? allMixes[0]
+    : mmReleases.find(s => s.isMix || s.title.toLowerCase().includes('mix') || s.title.toLowerCase().includes('juggling') || s.title.toLowerCase().includes('medley')) || mmReleases[0];
+  
+  const isPlayingFeaturedMix = isPlaying && activeTrack?.id === featuredMix?.id;
+
+  const handleToggleFeaturedMix = () => {
+    if (!featuredMix) return;
+    handleSelectRelease(featuredMix);
+  };
 
   // Audio element listeners
   useEffect(() => {
@@ -350,11 +362,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <h1 className="landing-hero-title">
-            The Authentic Sound of <span className="highlight-text">Music Marshall</span>
+            <span className="highlight-text">Music Marshall</span>
           </h1>
 
-          <p style={{ fontSize: '1.05rem', color: '#94a3b8', maxWidth: '520px', lineHeight: 1.6, marginBottom: '24px' }}>
-            Experience original roots reggae, lovers rock, and exclusive studio soundclash masters directly from Jamaica and London.
+          <p style={{ fontSize: '1.05rem', color: '#94a3b8', maxWidth: '540px', lineHeight: 1.6, marginBottom: '24px' }}>
+            This platform provides a wide variety of music to satisfy the different tastes and preferences of listeners. Whether you enjoy reggae, dancehall, R&amp;B, hip-hop, soca, old-school classics, or today’s hits, there is a mix that will keep you entertained and engaged. Start listening now !!
           </p>
 
           <div className="hero-actions-row">
@@ -403,9 +415,63 @@ export const LandingPage: React.FC<LandingPageProps> = ({
         </div>
       </section>
 
+      {/* ==========================================================================
+          SECTION: MUSIC MARSHALL FEATURED MIX (PDF Item 4)
+          "Music Marshall Featured Mix - Stream Free Without Login"
+          ========================================================================== */}
+      <section className="landing-featured-mix-banner-wrap" style={{ padding: '0 24px 28px' }}>
+        <div className="section-container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+          <div className="featured-mix-stream-bar" style={{
+            background: 'rgba(11, 15, 25, 0.95)',
+            border: '1.5px solid rgba(0, 245, 155, 0.35)',
+            borderRadius: '16px',
+            padding: '18px 26px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '16px',
+            boxShadow: '0 10px 25px rgba(0, 0, 0, 0.45)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+              <div style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '12px',
+                background: 'rgba(0, 245, 155, 0.12)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: '#00f59b',
+                flexShrink: 0
+              }}>
+                <Headphones size={24} />
+              </div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
+                  Music Marshall Featured Mix -
+                </div>
+                <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
+                  Stream Free Without Login
+                </div>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              className="btn btn-accent btn-md"
+              onClick={handleToggleFeaturedMix}
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 22px', fontWeight: 800, borderRadius: '9999px' }}
+            >
+              {isPlayingFeaturedMix ? <Pause size={17} fill="white" /> : <Play size={17} fill="white" />}
+              <span>{isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}</span>
+            </button>
+          </div>
+        </div>
+      </section>
 
       {/* ==========================================================================
-          SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS
+          SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS (PDF Item 6 & 7)
           ========================================================================== */}
       <section id="notice-board" className="landing-section">
         <div className="section-container">
@@ -414,19 +480,27 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Calendar size={14} />
               <span>Verified Notice Board & Events</span>
             </div>
-            <h2 className="landing-section-h2">Event Flyers & Studio Notices</h2>
+            <h2 className="landing-section-h2">Event Flyers & Other Notices</h2>
             <p className="landing-section-desc">
-              Official soundclash dates, festival schedules, and live studio announcements.
-              Notices are verified and posted exclusively by Marshall Administration.
+              Promoters can upload flyers and they will be posted free. Contact us for more details
             </p>
           </div>
 
-          {/* Flyers Grid */}
+          {/* Flyers Grid or Promotional Noticeboard Placeholder */}
           {flyers.length === 0 ? (
-            <div className="flyers-empty-state">
-              <Calendar size={36} color="#64748b" style={{ margin: '0 auto 10px' }} />
-              <h3 className="empty-title">No Event Notices Posted Yet</h3>
-              <p className="empty-desc">Check back soon for upcoming soundclash dates and concert flyers.</p>
+            <div className="flyers-empty-state" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '16px', padding: '36px 20px', textAlign: 'center' }}>
+              <div style={{ display: 'inline-flex', padding: '12px', borderRadius: '50%', background: 'rgba(0, 245, 155, 0.1)', color: '#00f59b', marginBottom: '14px' }}>
+                <Calendar size={28} />
+              </div>
+              <h3 className="empty-title" style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
+                Notice Board & Event Feature
+              </h3>
+              <p className="empty-desc" style={{ maxWidth: '520px', margin: '0 auto 16px', color: '#94a3b8', lineHeight: 1.6, fontSize: '0.94rem' }}>
+                Promoters can upload flyers and they will be posted free. Contact us for more details and to get your event listed on Music Marshall.
+              </p>
+              <a href="#contact-us" className="btn btn-outline btn-sm">
+                <span>Contact Us to Post a Flyer</span>
+              </a>
             </div>
           ) : (
             <div className="flyers-grid">

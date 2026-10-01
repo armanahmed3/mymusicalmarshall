@@ -76,7 +76,7 @@ export const SupportView: React.FC<SupportViewProps> = ({
       setGuestName('');
       setGuestEmail('');
     }
-    setTicketToast('Your support request has been dispatched to the SoundMarshall technical desk.');
+    setTicketToast('Your support request has been dispatched to the Music Marshall technical desk.');
     setTimeout(() => setTicketToast(null), 4000);
     setActiveSupportTab('my_tickets');
   };
@@ -357,7 +357,7 @@ export const SupportView: React.FC<SupportViewProps> = ({
                   {t.adminReply && (
                     <div style={{ background: 'rgba(0, 245, 155, 0.06)', borderLeft: '4px solid #00f59b', borderRadius: '4px', padding: '10px 14px', marginTop: '10px' }}>
                       <div style={{ fontSize: '0.74rem', color: '#00f59b', fontWeight: 800, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                        <UserCheck size={14} /> SoundMarshall Administrator Reply
+                        <UserCheck size={14} /> Music Marshall Administrator Reply
                       </div>
                       <p style={{ fontSize: '0.82rem', color: '#e2e8f0', margin: '4px 0 0 0' }}>
                         {t.adminReply}
