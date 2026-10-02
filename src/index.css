@@ -138,108 +138,182 @@ h1, h2, h3, h4, .section-title, .landing-hero-title, .sidebar-logo-title, .hero-
    SIDEBAR (LUXURY STUDIO DARK OBSIDIAN)
    ========================================================================== */
 .sidebar {
-  width: 264px;
-  min-width: 264px;
-  background: linear-gradient(180deg, #090d16 0%, #060911 100%);
-  border-right: 1px solid var(--border);
+  width: 270px;
+  min-width: 270px;
+  background: linear-gradient(180deg, #090d16 0%, #050811 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 22px 18px;
+  padding: 18px 14px 14px 14px;
   user-select: none;
   box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
+  position: relative;
+  z-index: 50;
 }
 
-.sidebar-logo {
+/* Sidebar Top Header & Brand Lockup */
+.sidebar-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 20px;
+  justify-content: space-between;
+  padding: 0 4px 16px 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 12px;
+  gap: 10px;
+}
+
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  padding: 4px 6px;
+  border-radius: 10px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex: 1;
+  min-width: 0;
 }
 
-.sidebar-logo:hover {
-  transform: translateY(-1px);
+.sidebar-brand:hover {
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.sidebar-logo img {
-  width: 44px;
-  height: 44px;
-  border-radius: var(--radius-md);
+.sidebar-brand-avatar {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.sidebar-brand-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
   object-fit: cover;
-  border: 1.5px solid rgba(0, 245, 155, 0.4);
-  box-shadow: 0 4px 14px rgba(0, 245, 155, 0.2);
+  border: 1.5px solid rgba(0, 245, 155, 0.35);
+  box-shadow: 0 2px 10px rgba(0, 245, 155, 0.2);
+  transition: all 0.22s ease;
 }
 
-.sidebar-logo-text {
+.sidebar-brand:hover .sidebar-brand-avatar img {
+  border-color: var(--brand-accent);
+  box-shadow: 0 0 16px rgba(0, 245, 155, 0.35);
+  transform: scale(1.02);
+}
+
+.brand-status-indicator {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  width: 10px;
+  height: 10px;
+  background: #00f59b;
+  border-radius: 50%;
+  border: 2px solid #090d16;
+  box-shadow: 0 0 8px #00f59b;
+}
+
+.sidebar-brand-meta {
   display: flex;
   flex-direction: column;
+  gap: 2px;
+  min-width: 0;
 }
 
-.sidebar-logo-title {
-  font-size: 1.15rem;
-  font-weight: 900;
-  letter-spacing: -0.03em;
+.sidebar-brand-title {
+  font-size: 0.98rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: var(--font-display);
 }
 
-.sidebar-logo-subtitle {
-  font-size: 0.7rem;
+.sidebar-brand-badge {
+  font-size: 0.64rem;
   color: var(--brand-accent);
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-family: var(--font-mono);
 }
 
+.sidebar-home-quickbtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.sidebar-home-quickbtn:hover {
+  background: rgba(0, 245, 155, 0.12);
+  border-color: rgba(0, 245, 155, 0.35);
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 245, 155, 0.18);
+}
+
+/* Sidebar Section Headers */
+.sidebar-section-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #64748b;
+  padding: 12px 10px 4px 10px;
+  font-family: var(--font-display);
+}
+
+/* Sidebar Navigation Container & Scrollbar */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 3px;
   flex: 1;
   overflow-y: auto;
   padding-right: 2px;
+  margin-bottom: 8px;
 }
 
-.sidebar-home-btn {
-  width: 100%;
-  min-height: 48px;
-  padding: 12px 16px;
-  margin-bottom: 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 10px;
-  border-radius: var(--radius-md);
-  font-size: 0.95rem;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: var(--text-main);
-  cursor: pointer;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
 }
 
-.sidebar-home-btn:hover {
-  background: rgba(0, 245, 155, 0.12);
-  color: #ffffff;
-  border-color: var(--brand-accent);
-  transform: translateY(-1.5px);
-  box-shadow: 0 8px 18px rgba(0, 245, 155, 0.2);
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
 }
 
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 245, 155, 0.3);
+}
+
+/* Navigation Links */
 .nav-link {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 12px 16px;
-  min-height: 46px;
-  border-radius: var(--radius-md);
-  color: var(--text-muted);
-  font-size: 0.94rem;
+  gap: 12px;
+  padding: 9px 12px;
+  min-height: 42px;
+  border-radius: 9px;
+  color: #94a3b8;
+  font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -248,70 +322,358 @@ h1, h2, h3, h4, .section-title, .landing-hero-title, .sidebar-logo-title, .hero-
   width: 100%;
   text-align: left;
   position: relative;
+  user-select: none;
 }
 
 .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: rgba(255, 255, 255, 0.05);
   color: #ffffff;
-  transform: translateX(3px);
+  transform: translateX(2px);
 }
 
 .nav-link.active {
-  background: linear-gradient(135deg, rgba(0, 245, 155, 0.12) 0%, rgba(0, 210, 255, 0.08) 100%);
+  background: linear-gradient(135deg, rgba(0, 245, 155, 0.14) 0%, rgba(0, 210, 255, 0.06) 100%);
   border: 1px solid rgba(0, 245, 155, 0.3);
   color: #ffffff;
-  box-shadow: 0 6px 18px rgba(0, 245, 155, 0.15);
   font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 245, 155, 0.12);
 }
 
 .nav-link.active::before {
   content: '';
   position: absolute;
   left: 0;
-  top: 25%;
-  height: 50%;
-  width: 4px;
+  top: 22%;
+  height: 56%;
+  width: 3.5px;
   background: var(--brand-accent);
   box-shadow: 0 0 10px var(--brand-accent);
   border-radius: 0 4px 4px 0;
 }
 
-.nav-link.active svg {
+.nav-link .nav-icon {
+  flex-shrink: 0;
+  color: #94a3b8;
+  transition: color 0.18s ease;
+}
+
+.nav-link:hover .nav-icon,
+.nav-link.active .nav-icon {
   color: var(--brand-accent) !important;
 }
 
-.sidebar-footer {
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
+.nav-label {
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.referral-badge-box {
+/* Nav Badge Pills */
+.nav-pill {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 2px 7px;
+  border-radius: 5px;
+  margin-left: auto;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.nav-pill-emerald {
+  background: rgba(0, 245, 155, 0.12);
+  color: #00f59b;
+  border: 1px solid rgba(0, 245, 155, 0.25);
+}
+
+.nav-pill-cyan {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.nav-pill-purple {
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  border: 1px solid rgba(168, 85, 247, 0.25);
+}
+
+.nav-pill-amber {
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  border: 1px solid rgba(251, 191, 36, 0.25);
+}
+
+.nav-pill-gold {
+  background: rgba(245, 158, 11, 0.16);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+/* Audio Preferences Modern Control Box */
+.sidebar-pref-box {
+  padding: 4px 2px 8px 2px;
+}
+
+.sidebar-pref-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-radius: 9px;
+  font-size: 0.78rem;
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: 14px;
-  margin-bottom: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  outline: none;
 }
 
-.referral-badge-title {
+.sidebar-pref-btn:hover {
+  background: rgba(0, 245, 155, 0.06);
+  border-color: rgba(0, 245, 155, 0.28);
+  transform: translateY(-1px);
+}
+
+.sidebar-pref-left {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.sidebar-pref-icon {
+  color: #94a3b8;
+  flex-shrink: 0;
+}
+
+.sidebar-pref-title {
+  font-weight: 700;
+  color: #e2e8f0;
+}
+
+.sidebar-pref-badge {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #94a3b8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-pref-badge.active {
+  background: rgba(0, 245, 155, 0.14);
+  color: #00f59b;
+  border-color: rgba(0, 245, 155, 0.28);
+}
+
+.pref-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #64748b;
+}
+
+.sidebar-pref-badge.active .pref-indicator-dot {
+  background: #00f59b;
+  box-shadow: 0 0 6px #00f59b;
+}
+
+/* Sidebar Footer & VIP Referral Card */
+.sidebar-footer {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-referral-card {
+  background: linear-gradient(135deg, rgba(0, 245, 155, 0.04) 0%, rgba(13, 18, 34, 0.7) 100%);
+  border: 1px solid rgba(0, 245, 155, 0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.sidebar-referral-header {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 4px;
+}
+
+.referral-icon-wrap {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: rgba(0, 245, 155, 0.12);
+  color: #00f59b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.referral-header-title {
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--brand-accent);
-  margin-bottom: 4px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-mono);
 }
 
-.referral-badge-desc {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+.sidebar-referral-desc {
+  font-size: 0.73rem;
+  color: #94a3b8;
   line-height: 1.35;
+  margin: 0 0 6px 0;
 }
+
+.sidebar-referral-code-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-code-pill {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 9px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(0, 245, 155, 0.3);
+  color: #ffffff;
+  letter-spacing: 0.05em;
+}
+
+/* User Card & Authentication Button in Sidebar */
+.sidebar-user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-user-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(0, 245, 155, 0.2) 0%, rgba(0, 210, 255, 0.2) 100%);
+  border: 1px solid rgba(0, 245, 155, 0.35);
+  color: #00f59b;
+  font-weight: 800;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sidebar-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar-user-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.sidebar-user-name span.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
+}
+
+.sidebar-user-email {
+  font-size: 0.7rem;
+  color: #64748b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 140px;
+}
+
+.sidebar-logout-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.sidebar-logout-btn:hover {
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #f87171;
+  transform: scale(1.05);
+}
+
+.sidebar-signin-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 9px;
+  font-size: 0.86rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00f59b 0%, #00d2ff 100%);
+  color: #060911;
+  border: none;
+  cursor: pointer;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 245, 155, 0.25);
+}
+
+.sidebar-signin-btn:hover {
+  transform: translateY(-1.5px);
+  box-shadow: 0 6px 22px rgba(0, 245, 155, 0.35);
+}
+
+/* Backward compatibility aliases */
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+.sidebar-logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+}
+.sidebar-logo-text { display: flex; flex-direction: column; }
+.sidebar-logo-title { font-size: 1rem; font-weight: 900; color: #fff; }
+.sidebar-logo-subtitle { font-size: 0.68rem; color: var(--brand-accent); font-weight: 700; }
+.referral-badge-box { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 12px; }
+.referral-badge-title { font-size: 0.72rem; font-weight: 800; color: var(--brand-accent); display: flex; align-items: center; gap: 6px; }
+.referral-badge-desc { font-size: 0.78rem; color: var(--text-muted); }
 
 /* ==========================================================================
    MAIN CONTENT AREA

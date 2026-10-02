@@ -1202,37 +1202,44 @@ export function App() {
             SIDEBAR (LEFT)
             ========================================================================== */}
         <aside className={`sidebar ${mobileSidebarOpen ? 'mobile-open' : ''}`}>
-          {/* Brand Logo -> Return to Home Page */}
-          <div
-            className="sidebar-logo"
-            onClick={() => {
-              setAppMode('landing');
-              setMobileSidebarOpen(false);
-            }}
-            title="Return to Home Page"
-          >
-            <img src="/mm_logo.jpg" alt="Music Marshall" />
-            <div className="sidebar-logo-text">
-              <span className="sidebar-logo-title">Music Marshall</span>
-              <span className="sidebar-logo-subtitle">Hi-Fi Streaming</span>
+          {/* Sidebar Top Header & Brand Lockup */}
+          <div className="sidebar-header">
+            <div
+              className="sidebar-brand"
+              onClick={() => {
+                setAppMode('landing');
+                setMobileSidebarOpen(false);
+              }}
+              title="Return to Public Home Page"
+            >
+              <div className="sidebar-brand-avatar">
+                <img src="/mm_logo.jpg" alt="Music Marshall" />
+                <span className="brand-status-indicator" />
+              </div>
+              <div className="sidebar-brand-meta">
+                <span className="sidebar-brand-title">Music Marshall</span>
+                <span className="sidebar-brand-badge">HI-FI STREAMING</span>
+              </div>
             </div>
+
+            <button
+              type="button"
+              className="sidebar-home-quickbtn"
+              onClick={() => {
+                setAppMode('landing');
+                setMobileSidebarOpen(false);
+              }}
+              title="Return to Public Home Page"
+            >
+              <Home size={14} />
+              <span>Home</span>
+            </button>
           </div>
 
-          {/* Return to Home Page Button */}
-          <button
-            className="btn btn-outline sidebar-home-btn"
-            onClick={() => {
-              setAppMode('landing');
-              setMobileSidebarOpen(false);
-            }}
-            title="Return to Home Page"
-          >
-            <Home size={18} />
-            <span>Home Page</span>
-          </button>
-
-          {/* Navigation Links */}
+          {/* Navigation Links Grouped by Category */}
           <nav className="sidebar-nav">
+            <div className="sidebar-section-label">Main Catalog</div>
+
             {/* My MM Releases (FREE TO PLAY WITHOUT LOGIN) */}
             <button
               className={`nav-link ${activeTab === 'releases' ? 'active' : ''}`}
@@ -1241,22 +1248,12 @@ export function App() {
                 setMobileSidebarOpen(false);
               }}
             >
-              <Disc3 size={20} color={activeTab === 'releases' ? '#fff' : '#16a34a'} />
-              <span>My MM Productions</span>
-              <span style={{
-                fontSize: '0.66rem',
-                background: activeTab === 'releases' ? 'rgba(255,255,255,0.25)' : '#dcfce7',
-                color: activeTab === 'releases' ? '#fff' : '#166534',
-                padding: '1px 6px',
-                borderRadius: '4px',
-                marginLeft: 'auto',
-                fontWeight: 800
-              }}>
-                FREE
-              </span>
+              <Disc3 size={18} className="nav-icon" />
+              <span className="nav-label">My MM Productions</span>
+              <span className="nav-pill nav-pill-emerald">FREE</span>
             </button>
 
-            {/* Master Music Mixes (Select Music mix to play from a list) */}
+            {/* Master Music Mixes */}
             <button
               className={`nav-link ${activeTab === 'mixes' ? 'active' : ''}`}
               onClick={() => {
@@ -1264,22 +1261,12 @@ export function App() {
                 setMobileSidebarOpen(false);
               }}
             >
-              <Headphones size={20} color={activeTab === 'mixes' ? '#fff' : '#38bdf8'} />
-              <span>Master Mixes</span>
-              <span style={{
-                fontSize: '0.66rem',
-                background: activeTab === 'mixes' ? 'rgba(255,255,255,0.25)' : '#e0f2fe',
-                color: activeTab === 'mixes' ? '#fff' : '#0369a1',
-                padding: '1px 6px',
-                borderRadius: '4px',
-                marginLeft: 'auto',
-                fontWeight: 800
-              }}>
-                MIXES
-              </span>
+              <Headphones size={18} className="nav-icon" />
+              <span className="nav-label">Master Mixes</span>
+              <span className="nav-pill nav-pill-cyan">MIXES</span>
             </button>
 
-            {/* Mix Playlists (Create a Playlist from list of music mixes & view playlist) */}
+            {/* Mix Playlists */}
             <button
               className={`nav-link ${activeTab === 'playlists' ? 'active' : ''}`}
               onClick={() => {
@@ -1287,22 +1274,51 @@ export function App() {
                 setMobileSidebarOpen(false);
               }}
             >
-              <ListMusic size={20} color={activeTab === 'playlists' ? '#fff' : '#a855f7'} />
-              <span>Mix Playlists</span>
-              <span style={{
-                fontSize: '0.66rem',
-                background: activeTab === 'playlists' ? 'rgba(255,255,255,0.25)' : '#f3e8ff',
-                color: activeTab === 'playlists' ? '#fff' : '#7e22ce',
-                padding: '1px 6px',
-                borderRadius: '4px',
-                marginLeft: 'auto',
-                fontWeight: 800
-              }}>
-                {playlists.length}
-              </span>
+              <ListMusic size={18} className="nav-icon" />
+              <span className="nav-label">Mix Playlists</span>
+              <span className="nav-pill nav-pill-purple">{playlists.length}</span>
             </button>
 
-            {/* Notice Board & Events (NO user upload notice, view verified flyers) */}
+            <div className="sidebar-section-label">Studio Vault</div>
+
+            {/* Extended Library */}
+            <button
+              className={`nav-link ${activeTab === 'home' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('home');
+                setMobileSidebarOpen(false);
+              }}
+            >
+              <Music size={18} className="nav-icon" />
+              <span className="nav-label">All Master Tracks</span>
+            </button>
+
+            <button
+              className={`nav-link ${activeTab === 'search' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('search');
+                setMobileSidebarOpen(false);
+              }}
+            >
+              <Search size={18} className="nav-icon" />
+              <span className="nav-label">Search Library</span>
+            </button>
+
+            <button
+              className={`nav-link ${activeTab === 'ai' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveTab('ai');
+                setMobileSidebarOpen(false);
+              }}
+            >
+              <Sparkles size={18} className="nav-icon" />
+              <span className="nav-label">AI Vibe Matcher</span>
+              <span className="nav-pill nav-pill-amber">SMART</span>
+            </button>
+
+            <div className="sidebar-section-label">Community & Support</div>
+
+            {/* Notice Board & Events */}
             <button
               className={`nav-link ${activeTab === 'notices' ? 'active' : ''}`}
               onClick={() => {
@@ -1310,8 +1326,8 @@ export function App() {
                 setMobileSidebarOpen(false);
               }}
             >
-              <Calendar size={20} color={activeTab === 'notices' ? '#fff' : '#f97316'} />
-              <span>Notice Board</span>
+              <Calendar size={18} className="nav-icon" />
+              <span className="nav-label">Notice Board</span>
             </button>
 
             {/* Technical & Admin Support */}
@@ -1322,143 +1338,109 @@ export function App() {
                 setMobileSidebarOpen(false);
               }}
             >
-              <HelpCircle size={20} color={activeTab === 'support' ? '#fff' : '#14b8a6'} />
-              <span>Support Desk</span>
-            </button>
-
-            {/* Extended Library */}
-            <button
-              className={`nav-link ${activeTab === 'home' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('home');
-                setMobileSidebarOpen(false);
-              }}
-            >
-              <Music size={20} />
-              <span>All Master Tracks</span>
-            </button>
-
-            <button
-              className={`nav-link ${activeTab === 'search' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('search');
-                setMobileSidebarOpen(false);
-              }}
-            >
-              <Search size={20} />
-              <span>Search Library</span>
-            </button>
-
-            <button
-              className={`nav-link ${activeTab === 'ai' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('ai');
-                setMobileSidebarOpen(false);
-              }}
-            >
-              <Sparkles size={20} />
-              <span>AI Vibe Matcher</span>
+              <HelpCircle size={18} className="nav-icon" />
+              <span className="nav-label">Support Desk</span>
             </button>
 
             {currentUser?.role === 'admin' && (
-              <button
-                className={`nav-link ${activeTab === 'admin' ? 'active' : ''}`}
-                onClick={() => {
-                  setActiveTab('admin');
-                  setMobileSidebarOpen(false);
-                }}
-              >
-                <Shield size={20} />
-                <span>Admin Panel</span>
-              </button>
+              <>
+                <div className="sidebar-section-label">Administration</div>
+                <button
+                  className={`nav-link ${activeTab === 'admin' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('admin');
+                    setMobileSidebarOpen(false);
+                  }}
+                >
+                  <Shield size={18} className="nav-icon" />
+                  <span className="nav-label">Admin Panel</span>
+                  <span className="nav-pill nav-pill-gold">ADMIN</span>
+                </button>
+              </>
             )}
           </nav>
 
-          {/* Preferences Button */}
-          <div style={{ padding: '8px 12px 0 12px' }}>
+          {/* Preferences Control Box */}
+          <div className="sidebar-pref-box">
             <button
               type="button"
-              className="btn btn-outline btn-sm"
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '7px 12px',
-                fontSize: '0.78rem',
-                borderColor: preferences.repeatMixLoop ? '#86efac' : '#e2e8f0',
-                background: preferences.repeatMixLoop ? '#f0fdf4' : '#ffffff'
-              }}
+              className="sidebar-pref-btn"
               onClick={() => setPreferencesModalOpen(true)}
-              title="Edit preferences (loop mix, stop alerts)"
+              title="Edit playback preferences (loop mix, stop alerts)"
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Settings size={14} color="#64748b" />
-                <span style={{ fontWeight: 700, color: '#0f172a' }}>Preferences</span>
+              <div className="sidebar-pref-left">
+                <Settings size={14} className="sidebar-pref-icon" />
+                <span className="sidebar-pref-title">Preferences</span>
               </div>
-              <span style={{ fontSize: '0.7rem', color: preferences.repeatMixLoop ? '#16a34a' : '#64748b', fontWeight: 800 }}>
-                {preferences.repeatMixLoop ? 'Loop: ON' : 'Loop: OFF'}
-              </span>
+              <div className={`sidebar-pref-badge ${preferences.repeatMixLoop ? 'active' : ''}`}>
+                <span className="pref-indicator-dot" />
+                <span>{preferences.repeatMixLoop ? 'Loop ON' : 'Loop OFF'}</span>
+              </div>
             </button>
           </div>
 
-          {/* Sidebar Footer with Referral Status */}
+          {/* Sidebar Footer with VIP Referral Pass & User Profile */}
           <div className="sidebar-footer">
-            <div className="referral-badge-box">
-              <div className="referral-badge-title">
-                <Radio size={14} color="#0f172a" />
-                <span>VIP Referral Pass</span>
+            <div className="sidebar-referral-card">
+              <div className="sidebar-referral-header">
+                <div className="referral-icon-wrap">
+                  <Radio size={12} />
+                </div>
+                <span className="referral-header-title">VIP Referral Access</span>
               </div>
-              <p className="referral-badge-desc">
-                Extended archives require an exclusive invitation code.
+              <p className="sidebar-referral-desc">
+                Exclusive Studio Vault requires an active invitation pass.
               </p>
-              <div style={{ marginTop: '8px' }}>
-                <span className="badge" style={{ background: '#0f172a', color: '#fff' }}>
+              <div className="sidebar-referral-code-wrap">
+                <span className="sidebar-code-pill">
                   {currentUser ? currentUser.referralCode : 'MARSHALL-VIP'}
                 </span>
               </div>
             </div>
 
             {currentUser ? (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '4px 0' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <UserIcon size={16} />
-                  <div>
-                    <div style={{ fontSize: '0.85rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <span>{currentUser.username}</span>
-                      {currentUser.isEmailVerified && (
-                        <span title="Email Verified" style={{ display: 'inline-flex', alignItems: 'center' }}>
-                          <CheckCircle2 size={13} color="#22c55e" />
-                        </span>
-                      )}
-                      {currentUser.isLoyaltyEnrolled && (
-                        <span title={`Loyalty: ${currentUser.loyaltyTier || 'VIP'}`} style={{ display: 'inline-flex', alignItems: 'center' }}>
-                          <Award size={13} color="#d97706" />
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: '0.72rem', color: '#64748b' }}>{currentUser.email}</div>
+              <div className="sidebar-user-card">
+                <div className="sidebar-user-avatar">
+                  {currentUser.username ? currentUser.username.charAt(0).toUpperCase() : <UserIcon size={16} />}
+                </div>
+                <div className="sidebar-user-info">
+                  <div className="sidebar-user-name">
+                    <span className="truncate">{currentUser.username}</span>
+                    {currentUser.isEmailVerified && (
+                      <span title="Email Verified" style={{ display: 'inline-flex', alignItems: 'center', color: '#22c55e' }}>
+                        <CheckCircle2 size={13} />
+                      </span>
+                    )}
+                    {currentUser.isLoyaltyEnrolled && (
+                      <span title={`Loyalty: ${currentUser.loyaltyTier || 'VIP'}`} style={{ display: 'inline-flex', alignItems: 'center', color: '#fbbf24' }}>
+                        <Award size={13} />
+                      </span>
+                    )}
                   </div>
+                  <div className="sidebar-user-email">{currentUser.email}</div>
                 </div>
                 <button
-                  className="btn btn-outline btn-sm"
+                  type="button"
+                  className="sidebar-logout-btn"
                   onClick={handleLogout}
                   title="Logout"
+                  aria-label="Logout"
                 >
                   <LogOut size={14} />
                 </button>
               </div>
             ) : (
               <button
-                className="btn btn-primary"
-                style={{ width: '100%' }}
+                type="button"
+                className="sidebar-signin-btn"
                 onClick={() => {
                   setAuthMessage(null);
                   setAuthTab('login');
                   setAuthModalOpen(true);
                 }}
               >
-                Sign In / Join
+                <UserIcon size={16} />
+                <span>Sign In / Join VIP</span>
               </button>
             )}
           </div>
