@@ -1108,18 +1108,37 @@ export function App() {
                       />
                     </div>
 
-                    <div className="form-group" style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                      <label>Referral Code</label>
+                    <div
+                      className="form-group"
+                      style={{
+                        background: 'rgba(0, 245, 155, 0.04)',
+                        padding: '14px',
+                        borderRadius: '10px',
+                        border: '1px solid rgba(0, 245, 155, 0.22)',
+                        boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                      }}
+                    >
+                      <label style={{ color: 'var(--brand-accent, #00f59b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span>Referral Code</span>
+                        <span style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#94a3b8' }}>VIP Access Only</span>
+                      </label>
                       <input
                         type="text"
                         required
                         className="form-control"
-                        placeholder=""
+                        placeholder="ENTER VIP REFERRAL CODE"
                         value={regReferralCode}
                         onChange={(e) => setRegReferralCode(e.target.value)}
-                        style={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}
+                        style={{
+                          textTransform: 'uppercase',
+                          fontWeight: 700,
+                          letterSpacing: '0.05em',
+                          background: 'rgba(0, 0, 0, 0.35)',
+                          border: '1px solid rgba(0, 245, 155, 0.3)',
+                          color: '#ffffff',
+                        }}
                       />
-                      <small style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
+                      <small style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
                         (Membership is by referral only. Please use the{' '}
                         <a
                           href="#contact-us"
@@ -1133,7 +1152,7 @@ export function App() {
                               setActiveTab('support');
                             }
                           }}
-                          style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
+                          style={{ color: 'var(--brand-accent, #00f59b)', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
                         >
                           contact us
                         </a>{' '}
@@ -3737,18 +3756,37 @@ export function App() {
                     />
                   </div>
 
-                  <div className="form-group" style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}>
-                    <label>Referral Code</label>
+                  <div
+                    className="form-group"
+                    style={{
+                      background: 'rgba(0, 245, 155, 0.04)',
+                      padding: '14px',
+                      borderRadius: '10px',
+                      border: '1px solid rgba(0, 245, 155, 0.22)',
+                      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.2)',
+                    }}
+                  >
+                    <label style={{ color: 'var(--brand-accent, #00f59b)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <span>Referral Code</span>
+                      <span style={{ fontSize: '0.72rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: '#94a3b8' }}>VIP Access Only</span>
+                    </label>
                     <input
                       type="text"
                       required
                       className="form-control"
-                      placeholder=""
+                      placeholder="ENTER VIP REFERRAL CODE"
                       value={regReferralCode}
                       onChange={(e) => setRegReferralCode(e.target.value)}
-                      style={{ textTransform: 'uppercase', fontWeight: 700, letterSpacing: '0.05em' }}
+                      style={{
+                        textTransform: 'uppercase',
+                        fontWeight: 700,
+                        letterSpacing: '0.05em',
+                        background: 'rgba(0, 0, 0, 0.35)',
+                        border: '1px solid rgba(0, 245, 155, 0.3)',
+                        color: '#ffffff',
+                      }}
                     />
-                    <small style={{ color: '#64748b', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
+                    <small style={{ color: '#94a3b8', fontSize: '0.78rem', marginTop: '6px', display: 'block', lineHeight: 1.4 }}>
                       (Membership is by referral only. Please use the{' '}
                       <a
                         href="#contact-us"
@@ -3759,7 +3797,7 @@ export function App() {
                           const el = document.getElementById('contact-us');
                           if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }}
-                        style={{ color: '#0284c7', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
+                        style={{ color: 'var(--brand-accent, #00f59b)', textDecoration: 'underline', fontWeight: 600, cursor: 'pointer' }}
                       >
                         contact us
                       </a>{' '}
