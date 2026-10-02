@@ -8,7 +8,6 @@ import {
   VolumeX,
   Search,
   Music,
-  Sparkles,
   Shield,
   User as UserIcon,
   LogOut,
@@ -160,10 +159,6 @@ export function App() {
   const [isMuted, setIsMuted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // --- AI Studio State ---
-  const [aiMood, setAiMood] = useState<string>('all');
-  const [aiPrompt, setAiPrompt] = useState<string>('');
-  const [aiFilteredSongs, setAiFilteredSongs] = useState<Song[]>(INITIAL_SONGS);
 
   // --- Admin Form & File Upload State ---
   const [newTitle, setNewTitle] = useState('');
@@ -891,29 +886,6 @@ export function App() {
     setTimeout(() => setAdminToast(null), 3000);
   };
 
-  // --- Client-Side AI Logic (No API Key) ---
-  const handleRunAiMatch = (selectedMood: string, promptText: string) => {
-    setAiMood(selectedMood);
-    let matched = [...songs];
-
-    if (selectedMood !== 'all') {
-      matched = matched.filter((s) => s.mood === selectedMood || s.genre.toLowerCase().includes(selectedMood.toLowerCase()));
-    }
-
-    if (promptText.trim()) {
-      const q = promptText.toLowerCase();
-      matched = matched.filter((s) => {
-        return (
-          s.title.toLowerCase().includes(q) ||
-          s.artist.toLowerCase().includes(q) ||
-          s.genre.toLowerCase().includes(q) ||
-          s.mood.toLowerCase().includes(q)
-        );
-      });
-    }
-
-    setAiFilteredSongs(matched.length > 0 ? matched : songs);
-  };
 
   // Filter songs for search tab
   const displayedSongs = songs.filter((s) => {
@@ -1304,17 +1276,6 @@ export function App() {
               <span className="nav-label">Search Library</span>
             </button>
 
-            <button
-              className={`nav-link ${activeTab === 'ai' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('ai');
-                setMobileSidebarOpen(false);
-              }}
-            >
-              <Sparkles size={18} className="nav-icon" />
-              <span className="nav-label">AI Vibe Matcher</span>
-              <span className="nav-pill nav-pill-amber">SMART</span>
-            </button>
 
             <div className="sidebar-section-label">Community & Support</div>
 
@@ -1688,29 +1649,28 @@ export function App() {
 
           {/* Dynamic Content Views */}
           <div className="page-container">
-            {/* One-Time Activation Confirmation Notice (For users awaiting admin approval, NOT for admin) */}
+            {/* One-Time Activation Confirmation Notice (For users awaiting admin approval) */}
             {currentUser && currentUser.role !== 'admin' && currentUser.accountStatus !== 'approved' && (
               <div
                 style={{
-                  background: '#fffbeb',
-                  border: '1.5px solid #fde68a',
+                  background: 'rgba(245, 158, 11, 0.08)',
+                  border: '1px solid rgba(245, 158, 11, 0.28)',
                   borderRadius: '12px',
-                  padding: '16px 20px',
+                  padding: '14px 18px',
                   marginBottom: '20px',
                   display: 'flex',
                   alignItems: 'flex-start',
-                  gap: '14px',
-                  boxShadow: '0 2px 8px rgba(245, 158, 11, 0.08)'
+                  gap: '12px',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
                 }}
               >
-                <AlertCircle size={22} color="#d97706" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <AlertCircle size={20} color="#fbbf24" style={{ flexShrink: 0, marginTop: '2px' }} />
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.94rem', color: '#92400e' }}>
-                    ⏳ Awaiting One-Time Administrator Activation Confirmation
+                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#fbbf24' }}>
+                    Awaiting Administrator Activation
                   </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.84rem', color: '#78350f', lineHeight: 1.45 }}>
-                    Hello <strong>{currentUser.username}</strong>, your account is logged in! Full VIP studio vault access requires a one-time activation confirmation from the administrator. 
-                    All official <strong>My MM Releases</strong> are 100% free and playable right now. Once confirmed by the administrator on the Admin Portal, an official activation email will be delivered to <em>{currentUser.email}</em> from <em>mymusicmarshall@gmail.com</em>.
+                  <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.45 }}>
+                    Hello <strong>{currentUser.username}</strong>, your account is registered! All official <strong>My MM Productions</strong> releases are completely free to stream right now. Extended VIP Studio Vault playback will be unlocked as soon as an administrator confirms your access.
                   </p>
                 </div>
               </div>
@@ -2107,121 +2067,6 @@ export function App() {
               </div>
             )}
 
-            {/* VIEW 3: AI VIBE MATCHER (CLIENT-SIDE, NO API KEY) */}
-            {activeTab === 'ai' && (
-              <div>
-                <div className="ai-hero">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '8px' }}>
-                    <Sparkles size={24} color="#0f172a" />
-                    <h2 className="section-title" style={{ margin: 0 }}>Client-Side AI Music Curator</h2>
-                  </div>
-                  <p style={{ color: '#64748b', fontSize: '0.9rem' }}>
-                    Smart vibe analysis running directly in your browser without requiring external API keys.
-                    Select your mood or describe your desired energy level.
-                  </p>
-
-                  <div className="ai-chips-group">
-                    {['all', 'chill', 'workout', 'focus', 'soul', 'party'].map((m) => (
-                      <button
-                        key={m}
-                        className={`ai-chip ${aiMood === m ? 'active' : ''}`}
-                        onClick={() => handleRunAiMatch(m, aiPrompt)}
-                      >
-                        {m.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-
-                  <div className="ai-prompt-box">
-                    <input
-                      type="text"
-                      placeholder="e.g., 'Late night chill acoustic guitar' or 'High energy workout reggae'..."
-                      value={aiPrompt}
-                      onChange={(e) => setAiPrompt(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          handleRunAiMatch(aiMood, aiPrompt);
-                        }
-                      }}
-                    />
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleRunAiMatch(aiMood, aiPrompt)}
-                    >
-                      <Sparkles size={16} />
-                      <span>Curate Vibe</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="section-header">
-                  <h3 className="section-title">
-                    AI Recommended Matches ({aiFilteredSongs.length})
-                  </h3>
-                </div>
-
-                <table className="song-table">
-                  <thead>
-                    <tr>
-                      <th className="col-num">#</th>
-                      <th>Title & Artist</th>
-                      <th>AI Mood</th>
-                      <th>Genre</th>
-                      <th>Match Score</th>
-                      <th style={{ textAlign: 'center' }}>Stream</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {aiFilteredSongs.map((song, idx) => (
-                      <tr
-                        key={song.id}
-                        className="song-row"
-                        onClick={() => handlePlaySong(song)}
-                      >
-                        <td className="col-num">{idx + 1}</td>
-                        <td>
-                          <div className="song-title-group">
-                            <img
-                              src={song.coverUrl}
-                              alt={song.title}
-                              className="song-cover-thumb"
-                            />
-                            <div className="song-title-meta">
-                              <span className="song-title">{song.title}</span>
-                              {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <span className="badge" style={{ textTransform: 'capitalize' }}>
-                            {song.mood}
-                          </span>
-                        </td>
-                        <td>
-                          <span className="badge badge-genre">{song.genre}</span>
-                        </td>
-                        <td>
-                          <span className="match-score-badge">
-                            {98 - idx * 4}% Match
-                          </span>
-                        </td>
-                        <td style={{ textAlign: 'center' }}>
-                          <button
-                            className="btn-play-table"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handlePlaySong(song);
-                            }}
-                          >
-                            <Play size={18} fill="white" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
 
             {/* VIEW 4: ADMIN PANEL (STRICTLY ADMINS ONLY) */}
             {activeTab === 'admin' && (
@@ -2325,34 +2170,9 @@ export function App() {
                     </div>
                   </div>
 
-                  {/* Admin Module Selector Dropdown & Quick Sub-Nav */}
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '14px', marginBottom: '16px', flexWrap: 'wrap' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 800, color: '#94a3b8', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
-                        Admin Section:
-                      </span>
-                      <select
-                        className="form-control"
-                        value={adminSubTab}
-                        onChange={(e) => setAdminSubTab(e.target.value as any)}
-                        style={{ minWidth: '240px', padding: '9px 40px 9px 14px', fontSize: '0.86rem', fontWeight: 700 }}
-                        aria-label="Select admin dashboard module"
-                      >
-                        <option value="all">📋 All Modules Overview</option>
-                        <option value="pending">🔔 Pending Approvals ({users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length})</option>
-                        <option value="upload">📤 Upload & Add Song</option>
-                        <option value="users">👥 Member Directory & Loyalty ({users.length})</option>
-                        <option value="branding">🖼️ Branding & Banners</option>
-                        <option value="flyers">📅 Notice Board Flyers ({flyers.length})</option>
-                        <option value="blast">✉️ VIP Member Email Blast</option>
-                        <option value="promos">🎟️ Promo Codes ({referralCodes.length})</option>
-                        <option value="catalog">🎵 Catalog Tracks ({songs.length})</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  {/* Segmented Sub-Navigation Pills */}
-                  <div className="admin-subnav-bar">
+                  {/* Clean Professional Admin Navigation Bar */}
+                  <div style={{ margin: '18px 0 16px 0' }}>
+                    <div className="admin-subnav-bar">
                     <button
                       type="button"
                       className={`admin-subnav-pill ${adminSubTab === 'all' ? 'active' : ''}`}
@@ -2443,6 +2263,7 @@ export function App() {
                       <span className="subnav-badge">{songs.length}</span>
                     </button>
                   </div>
+                </div>
 
                   {/* MODULE 1: PENDING MEMBER ACTIVATIONS (PROMINENT STANDALONE CARD) */}
                   {(adminSubTab === 'all' || adminSubTab === 'pending') && (

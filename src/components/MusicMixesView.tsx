@@ -34,6 +34,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   onOpenCreatePlaylist,
   onAddToPlaylist,
   playlists,
+  currentUser,
   repeatMixLoop,
   onToggleLoop
 }) => {
@@ -121,7 +122,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {[
             { id: 'all', label: `All Mixes (${mixes.length})` },
-            { id: 'downloadable', label: '⬇ Downloadable' },
+            ...(currentUser?.role === 'admin' ? [{ id: 'downloadable', label: '⬇ Downloadable' }] : []),
             { id: 'juggling', label: 'Dancehall Juggling' },
             { id: 'tribute', label: 'Tributes & Rocksteady' },
             { id: 'afrobeat', label: 'Afrobeat Meets R&B' }
@@ -219,32 +220,34 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                       >
                         MIX / SESSION
                       </span>
-                      {mix.isDownloadable ? (
-                        <span
-                          style={{
-                            background: '#dcfce7',
-                            color: '#15803d',
-                            fontWeight: 800,
-                            fontSize: '0.68rem',
-                            padding: '2px 6px',
-                            borderRadius: '4px'
-                          }}
-                        >
-                          DOWNLOADABLE
-                        </span>
-                      ) : (
-                        <span
-                          style={{
-                            background: '#f1f5f9',
-                            color: '#64748b',
-                            fontWeight: 600,
-                            fontSize: '0.68rem',
-                            padding: '2px 6px',
-                            borderRadius: '4px'
-                          }}
-                        >
-                          STREAM ONLY
-                        </span>
+                      {currentUser?.role === 'admin' && (
+                        mix.isDownloadable ? (
+                          <span
+                            style={{
+                              background: '#dcfce7',
+                              color: '#15803d',
+                              fontWeight: 800,
+                              fontSize: '0.68rem',
+                              padding: '2px 6px',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            DOWNLOADABLE
+                          </span>
+                        ) : (
+                          <span
+                            style={{
+                              background: '#f1f5f9',
+                              color: '#64748b',
+                              fontWeight: 600,
+                              fontSize: '0.68rem',
+                              padding: '2px 6px',
+                              borderRadius: '4px'
+                            }}
+                          >
+                            STREAM ONLY
+                          </span>
+                        )
                       )}
                     </div>
 
@@ -405,26 +408,28 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                   )}
                 </div>
 
-                {/* Download Mix Button */}
-                {mix.isDownloadable ? (
-                  <a
-                    href={mix.audioUrl}
-                    download={`${mix.title} - ${mix.artist}.mp3`}
-                    className="btn btn-outline btn-sm"
-                    style={{ padding: '6px 10px', color: '#16a34a', borderColor: '#86efac' }}
-                    title="Download high-resolution audio mix"
-                  >
-                    <Download size={14} />
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    className="btn btn-outline btn-sm"
-                    style={{ padding: '6px 10px', opacity: 0.4, cursor: 'not-allowed' }}
-                    title="Download restricted for this studio release"
-                  >
-                    <Download size={14} />
-                  </button>
+                {/* Download Mix Button - Admin Only */}
+                {currentUser?.role === 'admin' && (
+                  mix.isDownloadable ? (
+                    <a
+                      href={mix.audioUrl}
+                      download={`${mix.title} - ${mix.artist}.mp3`}
+                      className="btn btn-outline btn-sm"
+                      style={{ padding: '6px 10px', color: '#16a34a', borderColor: '#86efac' }}
+                      title="Download high-resolution audio mix"
+                    >
+                      <Download size={14} />
+                    </a>
+                  ) : (
+                    <button
+                      disabled
+                      className="btn btn-outline btn-sm"
+                      style={{ padding: '6px 10px', opacity: 0.4, cursor: 'not-allowed' }}
+                      title="Download restricted for this studio release"
+                    >
+                      <Download size={14} />
+                    </button>
+                  )
                 )}
               </div>
             </div>

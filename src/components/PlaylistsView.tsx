@@ -36,6 +36,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
   onCreatePlaylist,
   onDeletePlaylist,
   onRemoveSongFromPlaylist,
+  currentUser,
   createModalOpen,
   onCloseCreateModal,
   onOpenCreateModal,
@@ -317,7 +318,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                         </td>
                         <td style={{ textAlign: 'right' }}>
                           <div style={{ display: 'inline-flex', gap: '6px', alignItems: 'center' }}>
-                            {song.isDownloadable && (
+                            {currentUser?.role === 'admin' && song.isDownloadable && (
                               <a
                                 href={song.audioUrl}
                                 download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
