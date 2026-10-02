@@ -15,7 +15,6 @@ import {
   Trash2,
   Lock,
   X,
-  Radio,
   CheckCircle2,
   AlertCircle,
   Upload,
@@ -1340,24 +1339,8 @@ export function App() {
             </button>
           </div>
 
-          {/* Sidebar Footer with VIP Referral Pass & User Profile */}
+          {/* Sidebar Footer with User Profile */}
           <div className="sidebar-footer">
-            <div className="sidebar-referral-card">
-              <div className="sidebar-referral-header">
-                <div className="referral-icon-wrap">
-                  <Radio size={12} />
-                </div>
-                <span className="referral-header-title">VIP Referral Access</span>
-              </div>
-              <p className="sidebar-referral-desc">
-                Exclusive Studio Vault requires an active invitation pass.
-              </p>
-              <div className="sidebar-referral-code-wrap">
-                <span className="sidebar-code-pill">
-                  {currentUser ? currentUser.referralCode : 'MARSHALL-VIP'}
-                </span>
-              </div>
-            </div>
 
             {currentUser ? (
               <div className="sidebar-user-card">
