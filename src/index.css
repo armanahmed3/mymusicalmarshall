@@ -127,11 +127,59 @@ h1, h2, h3, h4, .section-title, .landing-hero-title, .sidebar-logo-title, .hero-
   flex-direction: column;
 }
 
+/* Persistent Dashboard Top Nav */
+.dashboard-nav {
+  position: relative;
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(7, 9, 14, 0.98);
+  flex-shrink: 0;
+  height: 70px;
+}
+
+.dashboard-nav .landing-nav-inner {
+  max-width: 100%;
+  padding: 0 24px;
+}
+
+.dashboard-nav .landing-links a.active {
+  color: var(--brand-accent, #00f59b);
+  border-bottom: 2px solid var(--brand-accent, #00f59b);
+}
+
 .app-body {
   display: flex;
   flex: 1;
+  min-height: 0;
   overflow: hidden;
-  height: calc(100vh - 84px);
+  height: auto;
+}
+
+/* Sidebar Clean Playlist Creation Button */
+.sidebar-add-playlist-btn {
+  display: flex;
+  align-items: center;
+  justifyContent: center;
+  gap: 6px;
+  background: rgba(0, 245, 155, 0.08);
+  border: 1px dashed rgba(0, 245, 155, 0.35);
+  color: #00f59b;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 7px 12px;
+  border-radius: 8px;
+  margin: 4px 6px 8px 6px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+}
+
+.sidebar-add-playlist-btn:hover {
+  background: rgba(0, 245, 155, 0.18);
+  border-color: #00f59b;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 245, 155, 0.2);
 }
 
 /* ==========================================================================

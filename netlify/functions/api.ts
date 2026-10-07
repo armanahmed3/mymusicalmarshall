@@ -107,22 +107,39 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       };
     }
 
-    // 3. Send Activation Email to Member
-    if (event.httpMethod === 'POST' && path === '/send-activation-email') {
+    // 3. Send Welcome / Activation Email to Member
+    if (event.httpMethod === 'POST' && (path === '/send-activation-email' || path === '/send-welcome-email')) {
       const { to, username, referralCode } = JSON.parse(event.body || '{}');
       const mailOptions = {
         from: '"Music Marshall" <mymusicmarshall@gmail.com>',
         to,
         bcc: 'mymusicmarshall@gmail.com',
-        subject: '🎵 Your Music Marshall VIP Account Has Been Activated!',
+        subject: '🎵 Welcome to Music Marshall VIP — Lifetime Stream Access Pass!',
         html: `
-          <div style="font-family: sans-serif; padding: 24px; color: #0f172a; max-width: 580px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 14px;">
-            <h2 style="color: #16a34a; margin-top: 0;">✓ Welcome, ${username}!</h2>
-            <p>Your membership application has been reviewed and officially approved by the administrator.</p>
-            <div style="background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 16px; margin: 16px 0;">
-              <div><strong>Email:</strong> ${to}</div>
-              <div><strong>Referral Code:</strong> <span style="font-family: monospace; font-weight: 800;">${referralCode}</span></div>
-              <div><strong>Status:</strong> <span style="color: #16a34a; font-weight: 700;">Full VIP Access</span></div>
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; padding: 32px 16px; color: #f8fafc;">
+            <div style="max-width: 560px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+              <div style="background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); padding: 32px 24px; text-align: center; border-bottom: 1px solid #047857;">
+                <h1 style="color: #00f59b; font-size: 24px; font-weight: 800; margin: 0;">Music Marshall VIP Portal</h1>
+                <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 0 0;">High-Fidelity Studio Sound & DJ Jugglings</p>
+              </div>
+              <div style="padding: 28px 24px;">
+                <h2 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Welcome, ${username || 'VIP Member'}!</h2>
+                <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
+                  Your Music Marshall VIP registration is officially active! You have full, unrestricted streaming access to all authentic sound system mixes, dancehall jugglings, Rocksteady tributes, and official MY MM Productions releases.
+                </p>
+                <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; margin: 20px 0;">
+                  <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #00f59b; font-weight: 800; margin-bottom: 10px;">Membership Pass</div>
+                  <div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;"><strong>Email:</strong> ${to}</div>
+                  <div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;"><strong>Promo / Referral Code:</strong> <span style="font-family: monospace; font-weight: 800; color: #fbbf24;">${referralCode}</span></div>
+                  <div style="color: #34d399; font-size: 14px; font-weight: 700;"><strong>Status:</strong> ✓ Active VIP Listener</div>
+                </div>
+                <p style="color: #94a3b8; font-size: 13px; line-height: 1.5; margin: 16px 0 0 0;">
+                  Feel free to curate custom playlists, explore upcoming sound system flyers on our Notice Board, or loop extended mixes on your sound setup.
+                </p>
+              </div>
+              <div style="background: #0b0f19; padding: 16px; text-align: center; font-size: 12px; color: #64748b; border-top: 1px solid #1f2937;">
+                &copy; ${new Date().getFullYear()} Music Marshall Platform. Authentic Audio Studio.
+              </div>
             </div>
           </div>
         `

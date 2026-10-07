@@ -33,12 +33,11 @@ import {
   HelpCircle,
   Calendar,
   Settings,
-  Award,
   Users,
   Mail,
-  Bell,
-  Check,
-  ChevronDown
+  ChevronDown,
+  Ticket,
+  ShieldCheck
 } from 'lucide-react';
 import type { Song, User, ReferralCode, ActiveTab, AppMode, Playlist, EventFlyer, SupportTicket, UserPreferences } from './types';
 import {
@@ -58,6 +57,7 @@ import { SupportView } from './components/SupportView';
 import { AdminEditUserModal } from './components/AdminEditUserModal';
 import { AdminEmailBlastCard } from './components/AdminEmailBlastCard';
 import { AdminFeatureImageCard } from './components/AdminFeatureImageCard';
+import { WelcomeEmailModal } from './components/WelcomeEmailModal';
 
 export function App() {
   // --- Mode: Public Landing Page vs Web App ---
@@ -136,8 +136,6 @@ export function App() {
   const [authModalOpen, setAuthModalOpen] = useState(false);
   const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
   const [authMessage, setAuthMessage] = useState<string | null>(null);
-
-  const [approvingUserId, setApprovingUserId] = useState<string | null>(null);
 
   // --- Auth Form Fields ---
   const [loginEmail, setLoginEmail] = useState('');
@@ -226,6 +224,10 @@ export function App() {
   // Admin User Editing & Loyalty Modal
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [editUserModalOpen, setEditUserModalOpen] = useState(false);
+
+  // Welcome Email Modal State
+  const [welcomeEmailUser, setWelcomeEmailUser] = useState<User | null>(null);
+  const [welcomeEmailModalOpen, setWelcomeEmailModalOpen] = useState(false);
 
   // --- Promo Code Management State ---
   const [newPromoCode, setNewPromoCode] = useState('');
@@ -354,12 +356,6 @@ export function App() {
       setAuthMessage('🔒 VIP Track: Streaming the extended studio vault requires an account. Log in or register with your compulsory referral code to play.');
       setAuthTab('login');
       setAuthModalOpen(true);
-      return;
-    }
-
-    if (!song.isMmRelease && currentUser && currentUser.role !== 'admin' && currentUser.accountStatus !== 'approved') {
-      setAdminToast('⚠️ VIP Master Track: Requires one-time activation confirmation from administrator. Enjoy all My MM Releases freely while awaiting activation!');
-      setTimeout(() => setAdminToast(null), 5000);
       return;
     }
 
@@ -517,8 +513,24 @@ export function App() {
     setUsers((prev) => [...prev, newUser]);
     setCurrentUser(newUser);
     setAuthModalOpen(false);
-    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Registration complete.`);
-    setTimeout(() => setAdminToast(null), 4000);
+
+    // Show Welcome Email Modal immediately to user
+    setWelcomeEmailUser(newUser);
+    setWelcomeEmailModalOpen(true);
+
+    // Dispatch welcome email via SMTP in background
+    fetch('/api/send-welcome-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: newUser.email,
+        username: newUser.username,
+        referralCode: newUser.referralCode
+      })
+    }).catch((err) => console.log('Welcome email dispatch fallback:', err));
+
+    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Welcome email sent.`);
+    setTimeout(() => setAdminToast(null), 5000);
 
     setRegFirstName('');
     setRegLastName('');
@@ -528,50 +540,6 @@ export function App() {
     setRegError(null);
     setAuthMessage(null);
   };
-
-  const handleAdminApproveAndSendEmail = async (userToApprove: User) => {
-    setApprovingUserId(userToApprove.id);
-    try {
-      const res = await fetch('/api/send-activation-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          to: userToApprove.email,
-          username: userToApprove.username,
-          referralCode: userToApprove.referralCode
-        })
-      });
-      const data = await res.json();
-
-      const approvedUser: User = {
-        ...userToApprove,
-        accountStatus: 'approved',
-        isEmailVerified: true,
-        approvedAt: new Date().toISOString().split('T')[0]
-      };
-
-      setUsers((prev) => prev.map((u) => (u.id === userToApprove.id ? approvedUser : u)));
-
-      if (data.success) {
-        setAdminToast(`📧 Activation email dispatched via SMTP to ${userToApprove.email}! Member is now approved.`);
-      } else {
-        setAdminToast(`✓ Member ${userToApprove.username} approved! (SMTP notification: ${data.error || 'Sent'})`);
-      }
-    } catch (err: any) {
-      const approvedUser: User = {
-        ...userToApprove,
-        accountStatus: 'approved',
-        isEmailVerified: true,
-        approvedAt: new Date().toISOString().split('T')[0]
-      };
-      setUsers((prev) => prev.map((u) => (u.id === userToApprove.id ? approvedUser : u)));
-      setAdminToast(`✓ Member ${userToApprove.username} approved! (SMTP offline fallback: ${err.message})`);
-    } finally {
-      setApprovingUserId(null);
-      setTimeout(() => setAdminToast(null), 5000);
-    }
-  };
-
 
   // --- Admin Promo Code CRUD Handlers ---
   const handleAddPromoCode = (e: React.FormEvent) => {
@@ -1159,6 +1127,108 @@ export function App() {
         preload="metadata"
       />
 
+      {/* ==========================================================================
+          PERSISTENT TOP NAVIGATION BAR (Always visible in user dashboard)
+          ========================================================================== */}
+      <header className="landing-nav dashboard-nav" id="top-nav">
+        <div className="landing-nav-inner">
+          <div
+            className="landing-logo"
+            onClick={() => {
+              setAppMode('landing');
+              setMobileSidebarOpen(false);
+            }}
+            title="Return to Public Home Page"
+          >
+            <img
+              src="/headphone_logo.png"
+              alt="Music Marshall Headphone Logo"
+              className="headphone-logo-animated"
+            />
+            <div className="landing-logo-meta">
+              <span className="landing-logo-title">Music Marshall</span>
+              <span className="landing-logo-sub">Authentic Audio</span>
+            </div>
+          </div>
+
+          <nav className="landing-links">
+            <a
+              href="#"
+              onClick={(e) => {
+                e.preventDefault();
+                setAppMode('landing');
+              }}
+            >
+              Home
+            </a>
+            <button
+              type="button"
+              className={`landing-nav-link-btn ${activeTab === 'mixes' ? 'is-active' : ''}`}
+              onClick={() => setActiveTab('mixes')}
+              title="Listen to Music & Mixes"
+            >
+              <Headphones size={15} />
+              <span>Listen to Music</span>
+            </button>
+            <a
+              href="#mm-releases"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('releases');
+              }}
+              className={activeTab === 'releases' ? 'active' : ''}
+            >
+              My MM Productions
+            </a>
+            <a
+              href="#notice-board"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('notices');
+              }}
+              className={activeTab === 'notices' ? 'active' : ''}
+            >
+              Notice Board
+            </a>
+            <a
+              href="#contact-us"
+              onClick={(e) => {
+                e.preventDefault();
+                setActiveTab('support');
+              }}
+              className={activeTab === 'support' ? 'active' : ''}
+            >
+              Support Desk
+            </a>
+          </nav>
+
+          <div className="landing-nav-actions">
+            {currentUser && currentUser.role === 'admin' && (
+              <button
+                className={`btn btn-outline btn-sm ${activeTab === 'admin' ? 'btn-primary' : ''}`}
+                onClick={() => setActiveTab('admin')}
+                title="Open Administrator Control Center"
+              >
+                <ShieldCheck size={14} color="#00f59b" />
+                <span>Admin Panel</span>
+              </button>
+            )}
+
+            {currentUser && (
+              <button
+                className="btn btn-primary btn-sm"
+                onClick={handleLogout}
+                title={`Signed in as ${currentUser.username}. Click to log out.`}
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+              >
+                <LogOut size={13} />
+                <span>Logout ({currentUser.username})</span>
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+
       <div className="app-body">
         {/* Mobile Sidebar Backdrop Overlay */}
         {mobileSidebarOpen && (
@@ -1237,18 +1307,33 @@ export function App() {
               <span className="nav-pill nav-pill-cyan">MIXES</span>
             </button>
 
-            {/* Mix Playlists */}
-            <button
-              className={`nav-link ${activeTab === 'playlists' ? 'active' : ''}`}
-              onClick={() => {
-                setActiveTab('playlists');
-                setMobileSidebarOpen(false);
-              }}
-            >
-              <ListMusic size={18} className="nav-icon" />
-              <span className="nav-label">Mix Playlists</span>
-              <span className="nav-pill nav-pill-purple">{playlists.length}</span>
-            </button>
+            {/* Mix Playlists with Clean Add Button */}
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <button
+                className={`nav-link ${activeTab === 'playlists' ? 'active' : ''}`}
+                onClick={() => {
+                  setActiveTab('playlists');
+                  setMobileSidebarOpen(false);
+                }}
+              >
+                <ListMusic size={18} className="nav-icon" />
+                <span className="nav-label">Mix Playlists</span>
+                <span className="nav-pill nav-pill-purple">{playlists.length}</span>
+              </button>
+
+              <button
+                type="button"
+                className="sidebar-add-playlist-btn"
+                onClick={() => {
+                  setPreselectedMixId(null);
+                  setCreatePlaylistModalOpen(true);
+                }}
+                title="Create a new playlist from mixes"
+              >
+                <Plus size={13} />
+                <span>+ Create Playlist</span>
+              </button>
+            </div>
 
             <div className="sidebar-section-label">Studio Vault</div>
 
@@ -1337,56 +1422,6 @@ export function App() {
                 <span>{preferences.repeatMixLoop ? 'Loop ON' : 'Loop OFF'}</span>
               </div>
             </button>
-          </div>
-
-          {/* Sidebar Footer with User Profile */}
-          <div className="sidebar-footer">
-
-            {currentUser ? (
-              <div className="sidebar-user-card">
-                <div className="sidebar-user-avatar">
-                  {currentUser.username ? currentUser.username.charAt(0).toUpperCase() : <UserIcon size={16} />}
-                </div>
-                <div className="sidebar-user-info">
-                  <div className="sidebar-user-name">
-                    <span className="truncate">{currentUser.username}</span>
-                    {currentUser.isEmailVerified && (
-                      <span title="Email Verified" style={{ display: 'inline-flex', alignItems: 'center', color: '#22c55e' }}>
-                        <CheckCircle2 size={13} />
-                      </span>
-                    )}
-                    {currentUser.isLoyaltyEnrolled && (
-                      <span title={`Loyalty: ${currentUser.loyaltyTier || 'VIP'}`} style={{ display: 'inline-flex', alignItems: 'center', color: '#fbbf24' }}>
-                        <Award size={13} />
-                      </span>
-                    )}
-                  </div>
-                  <div className="sidebar-user-email">{currentUser.email}</div>
-                </div>
-                <button
-                  type="button"
-                  className="sidebar-logout-btn"
-                  onClick={handleLogout}
-                  title="Logout"
-                  aria-label="Logout"
-                >
-                  <LogOut size={14} />
-                </button>
-              </div>
-            ) : (
-              <button
-                type="button"
-                className="sidebar-signin-btn"
-                onClick={() => {
-                  setAuthMessage(null);
-                  setAuthTab('login');
-                  setAuthModalOpen(true);
-                }}
-              >
-                <UserIcon size={16} />
-                <span>Sign In / Join VIP</span>
-              </button>
-            )}
           </div>
         </aside>
 
@@ -1632,33 +1667,6 @@ export function App() {
 
           {/* Dynamic Content Views */}
           <div className="page-container">
-            {/* One-Time Activation Confirmation Notice (For users awaiting admin approval) */}
-            {currentUser && currentUser.role !== 'admin' && currentUser.accountStatus !== 'approved' && (
-              <div
-                style={{
-                  background: 'rgba(245, 158, 11, 0.08)',
-                  border: '1px solid rgba(245, 158, 11, 0.28)',
-                  borderRadius: '12px',
-                  padding: '14px 18px',
-                  marginBottom: '20px',
-                  display: 'flex',
-                  alignItems: 'flex-start',
-                  gap: '12px',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
-                }}
-              >
-                <AlertCircle size={20} color="#fbbf24" style={{ flexShrink: 0, marginTop: '2px' }} />
-                <div>
-                  <div style={{ fontWeight: 800, fontSize: '0.92rem', color: '#fbbf24' }}>
-                    Awaiting Administrator Activation
-                  </div>
-                  <p style={{ margin: '4px 0 0', fontSize: '0.82rem', color: '#cbd5e1', lineHeight: 1.45 }}>
-                    Hello <strong>{currentUser.username}</strong>, your account is registered! All official <strong>My MM Productions</strong> releases are completely free to stream right now. Extended VIP Studio Vault playback will be unlocked as soon as an administrator confirms your access.
-                  </p>
-                </div>
-              </div>
-            )}
-
             {/* VIEW 0: MY MM RELEASES (AVAILABLE WITHOUT LOGIN) */}
             {activeTab === 'releases' && (
               <div>
@@ -2067,38 +2075,20 @@ export function App() {
                   {/* Summary Metric Cards */}
                   <div className="admin-summary-grid">
                     <div
-                      className={`admin-metric-card ${
-                        users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved') ? 'alert-active' : ''
-                      }`}
-                      onClick={() => setAdminSubTab('pending')}
+                      className="admin-metric-card"
+                      onClick={() => setAdminSubTab('promos')}
                     >
                       <div className="admin-metric-header">
-                        <span className="admin-metric-title">Pending Approvals</span>
-                        <div className="admin-metric-icon alert">
-                          <Bell size={18} />
+                        <span className="admin-metric-title">Active Promo Codes</span>
+                        <div className="admin-metric-icon alert" style={{ background: 'rgba(0, 245, 155, 0.15)', color: '#00f59b' }}>
+                          <Ticket size={18} />
                         </div>
                       </div>
-                      <div
-                        className="admin-metric-val"
-                        style={{
-                          color: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                            ? '#fbbf24'
-                            : '#ffffff'
-                        }}
-                      >
-                        {users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length}
+                      <div className="admin-metric-val" style={{ color: '#00f59b' }}>
+                        {referralCodes.length}
                       </div>
-                      <div
-                        className="admin-metric-hint"
-                        style={{
-                          color: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                            ? '#fbbf24'
-                            : '#10b981'
-                        }}
-                      >
-                        {users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                          ? '⚠️ Requires your 1-click activation'
-                          : '✓ All registered accounts active'}
+                      <div className="admin-metric-hint" style={{ color: '#00f59b' }}>
+                        {referralCodes.reduce((sum, rc) => sum + rc.uses, 0)} member redemptions
                       </div>
                     </div>
 
@@ -2114,7 +2104,7 @@ export function App() {
                       </div>
                       <div className="admin-metric-val">{users.length}</div>
                       <div className="admin-metric-hint">
-                        {users.filter((u) => u.accountStatus === 'approved').length} approved & streaming
+                        {users.filter((u) => u.accountStatus !== 'deactivated').length} active VIP listeners
                       </div>
                     </div>
 
@@ -2162,22 +2152,6 @@ export function App() {
                       onClick={() => setAdminSubTab('all')}
                     >
                       <span>📋 All Modules</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'pending' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('pending')}
-                    >
-                      <Bell size={14} />
-                      <span>Pending Approvals</span>
-                      <span
-                        className={`subnav-badge ${
-                          users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved') ? 'alert' : ''
-                        }`}
-                      >
-                        {users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length}
-                      </span>
                     </button>
 
                     <button
@@ -2247,158 +2221,6 @@ export function App() {
                     </button>
                   </div>
                 </div>
-
-                  {/* MODULE 1: PENDING MEMBER ACTIVATIONS (PROMINENT STANDALONE CARD) */}
-                  {(adminSubTab === 'all' || adminSubTab === 'pending') && (
-                    <div
-                      className="admin-card"
-                      style={{
-                        border: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                          ? '1px solid rgba(245, 158, 11, 0.4)'
-                          : '1px solid rgba(255, 255, 255, 0.08)',
-                        background: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                          ? 'rgba(245, 158, 11, 0.05)'
-                          : 'rgba(15, 20, 36, 0.75)',
-                        marginBottom: '24px'
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginBottom: '14px',
-                          flexWrap: 'wrap',
-                          gap: '8px'
-                        }}
-                      >
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <div
-                            style={{
-                              width: '38px',
-                              height: '38px',
-                              borderRadius: '10px',
-                              background: 'rgba(245, 158, 11, 0.15)',
-                              color: '#fbbf24',
-                              border: '1px solid rgba(245, 158, 11, 0.3)',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}
-                          >
-                            <Bell size={18} />
-                          </div>
-                          <div>
-                            <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                              Pending Member Activations
-                            </h3>
-                            <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
-                              One-click approval sends instant activation confirmation email to the member and records a copy to your admin mailbox (mymusicmarshall@gmail.com).
-                            </p>
-                          </div>
-                        </div>
-
-                        <span
-                          className="badge"
-                          style={{
-                            background: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                              ? '#f59e0b'
-                              : '#10b981',
-                            color: users.some((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                              ? '#000000'
-                              : '#ffffff',
-                            padding: '6px 12px',
-                            fontSize: '0.78rem',
-                            fontWeight: 800
-                          }}
-                        >
-                          {users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length} Awaiting Approval
-                        </span>
-                      </div>
-
-                      {users.filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved').length === 0 ? (
-                        <div
-                          style={{
-                            fontSize: '0.85rem',
-                            color: '#00f59b',
-                            background: 'rgba(0, 245, 155, 0.06)',
-                            padding: '16px',
-                            borderRadius: '10px',
-                            border: '1px dashed rgba(0, 245, 155, 0.3)',
-                            textAlign: 'center',
-                            fontWeight: 600
-                          }}
-                        >
-                          ✓ All registered members are currently approved & authorized to stream VIP Vault tracks.
-                        </div>
-                      ) : (
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                          {users
-                            .filter((u) => u.role !== 'admin' && u.accountStatus !== 'approved')
-                            .map((u) => (
-                              <div
-                                key={u.id}
-                                style={{
-                                  background: 'rgba(15, 20, 36, 0.85)',
-                                  border: '1px solid rgba(245, 158, 11, 0.3)',
-                                  borderRadius: '12px',
-                                  padding: '14px 16px',
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center',
-                                  gap: '14px',
-                                  flexWrap: 'wrap',
-                                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)'
-                                }}
-                              >
-                                <div>
-                                  <div style={{ fontWeight: 800, fontSize: '0.95rem', color: '#ffffff' }}>
-                                    {u.username}{' '}
-                                    <span style={{ color: '#94a3b8', fontWeight: 400, fontSize: '0.85rem' }}>
-                                      ({u.email})
-                                    </span>
-                                  </div>
-                                  <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '4px' }}>
-                                    Promo Code:{' '}
-                                    <span style={{ fontWeight: 700, color: '#fbbf24' }}>{u.referralCode}</span> • Email Verified:{' '}
-                                    <span style={{ color: u.isEmailVerified ? '#10b981' : '#f59e0b', fontWeight: 700 }}>
-                                      {u.isEmailVerified ? '✓ Verified' : '⏳ Pending'}
-                                    </span>{' '}
-                                    • Status: <strong style={{ color: '#fbbf24' }}>Awaiting Approval</strong>
-                                  </div>
-                                </div>
-
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                  <button
-                                    type="button"
-                                    className="btn btn-primary"
-                                    style={{
-                                      background: '#16a34a',
-                                      borderColor: '#16a34a',
-                                      padding: '8px 16px',
-                                      fontSize: '0.85rem',
-                                      fontWeight: 800,
-                                      display: 'flex',
-                                      alignItems: 'center',
-                                      gap: '6px'
-                                    }}
-                                    disabled={approvingUserId === u.id}
-                                    onClick={() => handleAdminApproveAndSendEmail(u)}
-                                  >
-                                    <Check size={16} />
-                                    <span>
-                                      {approvingUserId === u.id
-                                        ? 'Sending Email...'
-                                        : 'Approve & Send Activation Email'}
-                                    </span>
-                                  </button>
-                                </div>
-                              </div>
-                            ))}
-                        </div>
-                      )}
-                    </div>
-                  )}
 
                   {/* MODULE 2 & 3: GRID (UPLOAD TRACK & PROMO CODES) */}
                   {(adminSubTab === 'all' || adminSubTab === 'upload' || adminSubTab === 'promos') && (
@@ -2868,7 +2690,6 @@ export function App() {
                             );
                           })
                           .map((u) => {
-                            const isApproved = u.accountStatus === 'approved';
                             return (
                               <div
                                 key={u.id}
@@ -2927,7 +2748,7 @@ export function App() {
                                     >
                                       <XCircle size={13} /> Deactivated
                                     </span>
-                                  ) : isApproved ? (
+                                  ) : (
                                     <span
                                       style={{
                                         background: 'rgba(16, 185, 129, 0.12)',
@@ -2942,24 +2763,7 @@ export function App() {
                                         gap: '4px'
                                       }}
                                     >
-                                      <CheckCircle2 size={13} /> Approved
-                                    </span>
-                                  ) : (
-                                    <span
-                                      style={{
-                                        background: 'rgba(245, 158, 11, 0.12)',
-                                        color: '#fbbf24',
-                                        border: '1px solid rgba(245, 158, 11, 0.25)',
-                                        padding: '4px 10px',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.74rem',
-                                        fontWeight: 800,
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px'
-                                      }}
-                                    >
-                                      <XCircle size={13} /> Not Approved
+                                      <CheckCircle2 size={13} /> Active VIP
                                     </span>
                                   )}
 
@@ -3002,37 +2806,6 @@ export function App() {
                                       >
                                         {u.accountStatus === 'deactivated' ? 'Reactivate' : 'Deactivate'}
                                       </button>
-
-                                      {!isApproved && u.accountStatus !== 'deactivated' ? (
-                                        <button
-                                          type="button"
-                                          className="btn btn-primary btn-sm"
-                                          style={{ padding: '5px 12px', fontSize: '0.74rem', background: '#16a34a', borderColor: '#16a34a', fontWeight: 800 }}
-                                          onClick={() => handleAdminApproveAndSendEmail(u)}
-                                          disabled={approvingUserId === u.id}
-                                          title="Approve membership and send activation email via SMTP"
-                                        >
-                                          Approve
-                                        </button>
-                                      ) : isApproved ? (
-                                        <button
-                                          type="button"
-                                          className="btn btn-outline btn-sm"
-                                          style={{ padding: '5px 10px', fontSize: '0.74rem', color: '#fbbf24', borderColor: 'rgba(245, 158, 11, 0.3)' }}
-                                          onClick={() => {
-                                            setUsers((prev) =>
-                                              prev.map((user) =>
-                                                user.id === u.id ? { ...user, accountStatus: 'pending_approval' } : user
-                                              )
-                                            );
-                                            setAdminToast(`Status changed to Not Approved for ${u.username}.`);
-                                            setTimeout(() => setAdminToast(null), 3000);
-                                          }}
-                                          title="Revoke approval (mark as Not Approved)"
-                                        >
-                                          Revoke
-                                        </button>
-                                      ) : null}
 
                                       <button
                                         type="button"
@@ -3636,6 +3409,18 @@ export function App() {
         }}
         user={editingUser}
         onSaveUser={handleSaveEditedUser}
+      />
+
+      {/* Welcome Email Modal (Triggered immediately after user registration) */}
+      <WelcomeEmailModal
+        user={welcomeEmailUser}
+        isOpen={welcomeEmailModalOpen}
+        onClose={() => setWelcomeEmailModalOpen(false)}
+        onStartListening={() => {
+          setWelcomeEmailModalOpen(false);
+          setAppMode('app');
+          setActiveTab('mixes');
+        }}
       />
     </div>
   );
