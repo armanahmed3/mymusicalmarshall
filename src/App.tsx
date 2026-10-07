@@ -12,7 +12,6 @@ import {
   User as UserIcon,
   LogOut,
   Plus,
-  Trash2,
   Lock,
   X,
   CheckCircle2,
@@ -24,7 +23,6 @@ import {
   Headphones,
   Edit3,
   Save,
-  XCircle,
   Home,
   Menu,
   Repeat,
@@ -33,8 +31,6 @@ import {
   HelpCircle,
   Calendar,
   Settings,
-  Users,
-  Mail,
   ChevronDown,
   Ticket,
   ShieldCheck
@@ -54,8 +50,6 @@ import { MusicMixesView } from './components/MusicMixesView';
 import { PlaylistsView } from './components/PlaylistsView';
 import { NoticeBoardView } from './components/NoticeBoardView';
 import { SupportView } from './components/SupportView';
-import { AdminEditUserModal } from './components/AdminEditUserModal';
-import { AdminEmailBlastCard } from './components/AdminEmailBlastCard';
 import { AdminFeatureImageCard } from './components/AdminFeatureImageCard';
 import { WelcomeEmailModal } from './components/WelcomeEmailModal';
 
@@ -173,8 +167,6 @@ export function App() {
   const [isNewMix, setIsNewMix] = useState<boolean>(false);
   const [isNewDownloadable, setIsNewDownloadable] = useState<boolean>(true);
   const [adminToast, setAdminToast] = useState<string | null>(null);
-  const [adminSubTab, setAdminSubTab] = useState<'all' | 'pending' | 'upload' | 'users' | 'branding' | 'flyers' | 'blast' | 'promos' | 'catalog'>('all');
-  const [adminUserSearch, setAdminUserSearch] = useState('');
 
   // --- Feature States: Playlists, Notice Board Flyers, Support Desk ---
   const [playlists, setPlaylists] = useState<Playlist[]>(() => {
@@ -221,17 +213,11 @@ export function App() {
   const [preferencesModalOpen, setPreferencesModalOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
-  // Admin User Editing & Loyalty Modal
-  const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [editUserModalOpen, setEditUserModalOpen] = useState(false);
-
   // Welcome Email Modal State
   const [welcomeEmailUser, setWelcomeEmailUser] = useState<User | null>(null);
   const [welcomeEmailModalOpen, setWelcomeEmailModalOpen] = useState(false);
 
   // --- Promo Code Management State ---
-  const [newPromoCode, setNewPromoCode] = useState('');
-  const [newPromoDesc, setNewPromoDesc] = useState('');
   const [editingPromoCode, setEditingPromoCode] = useState<string | null>(null);
   const [editPromoCodeVal, setEditPromoCodeVal] = useState('');
   const [editPromoDescVal, setEditPromoDescVal] = useState('');
@@ -541,48 +527,7 @@ export function App() {
     setAuthMessage(null);
   };
 
-  // --- Admin Promo Code CRUD Handlers ---
-  const handleAddPromoCode = (e: React.FormEvent) => {
-    e.preventDefault();
-    const cleanCode = newPromoCode.trim().toUpperCase();
-    if (!cleanCode) {
-      setAdminToast('Please enter a valid promo code');
-      setTimeout(() => setAdminToast(null), 3000);
-      return;
-    }
-    if (referralCodes.some((rc) => rc.code.toUpperCase() === cleanCode)) {
-      setAdminToast(`Promo code "${cleanCode}" already exists!`);
-      setTimeout(() => setAdminToast(null), 3000);
-      return;
-    }
-
-    const newCodeItem: ReferralCode = {
-      code: cleanCode,
-      description: newPromoDesc.trim() || 'Exclusive VIP Access Pass',
-      uses: 0
-    };
-
-    setReferralCodes((prev) => [newCodeItem, ...prev]);
-    setNewPromoCode('');
-    setNewPromoDesc('');
-    setAdminToast(`✓ Promo code "${cleanCode}" added successfully!`);
-    setTimeout(() => setAdminToast(null), 3500);
-  };
-
-  const handleDeletePromoCode = (codeToDelete: string) => {
-    if (referralCodes.length <= 1) {
-      setAdminToast('At least one promo code must remain active for registrations.');
-      setTimeout(() => setAdminToast(null), 3500);
-      return;
-    }
-    setReferralCodes((prev) => prev.filter((rc) => rc.code !== codeToDelete));
-    if (editingPromoCode === codeToDelete) {
-      setEditingPromoCode(null);
-    }
-    setAdminToast(`🗑️ Deleted promo code "${codeToDelete}"`);
-    setTimeout(() => setAdminToast(null), 3500);
-  };
-
+  // --- Admin Promo Code Edit Handlers ---
   const handleStartEditPromo = (item: ReferralCode) => {
     setEditingPromoCode(item.code);
     setEditPromoCodeVal(item.code);
@@ -612,19 +557,6 @@ export function App() {
     );
     setEditingPromoCode(null);
     setAdminToast(`✓ Updated promo code "${cleanCode}"`);
-    setTimeout(() => setAdminToast(null), 3500);
-  };
-
-  const handleDeleteUser = (userId: string) => {
-    const target = users.find((u) => u.id === userId);
-    if (!target) return;
-    if (target.role === 'admin') {
-      setAdminToast('Cannot delete primary administrator account.');
-      setTimeout(() => setAdminToast(null), 3000);
-      return;
-    }
-    setUsers((prev) => prev.filter((u) => u.id !== userId));
-    setAdminToast(`✓ User "${target.username}" (${target.email}) deleted.`);
     setTimeout(() => setAdminToast(null), 3500);
   };
 
@@ -718,19 +650,6 @@ export function App() {
       setAdminToast(`Track "${created.title}" uploaded & added to catalog!`);
     }
     setTimeout(() => setAdminToast(null), 3500);
-  };
-
-  // --- 1-Click Track Modifier Handlers ---
-  const handleToggleDownloadable = (songId: string) => {
-    setSongs((prev) =>
-      prev.map((s) => (s.id === songId ? { ...s, isDownloadable: !s.isDownloadable } : s))
-    );
-  };
-
-  const handleToggleMix = (songId: string) => {
-    setSongs((prev) =>
-      prev.map((s) => (s.id === songId ? { ...s, isMix: !s.isMix } : s))
-    );
   };
 
   // --- Playlist Handlers ---
@@ -830,29 +749,6 @@ export function App() {
     setAdminToast(`Support ticket status updated to ${status}.`);
     setTimeout(() => setAdminToast(null), 3000);
   };
-
-  // --- Admin User Editing Handler ---
-  const handleSaveEditedUser = (updatedUser: User) => {
-    setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
-    if (currentUser?.id === updatedUser.id) {
-      setCurrentUser(updatedUser);
-    }
-    setAdminToast(`Updated user profile for ${updatedUser.username}.`);
-    setTimeout(() => setAdminToast(null), 3000);
-  };
-
-  const handleDeleteSong = (songId: string) => {
-    const target = songs.find((s) => s.id === songId);
-    setSongs((prev) => prev.filter((s) => s.id !== songId));
-    if (currentSong?.id === songId) {
-      audioRef.current?.pause();
-      setIsPlaying(false);
-      setCurrentSong(songs.find((s) => s.id !== songId) || null);
-    }
-    setAdminToast(`Deleted "${target?.title || 'Track'}"`);
-    setTimeout(() => setAdminToast(null), 3000);
-  };
-
 
   // Filter songs for search tab
   const displayedSongs = songs.filter((s) => {
@@ -2072,161 +1968,8 @@ export function App() {
                     </div>
                   </div>
 
-                  {/* Summary Metric Cards */}
-                  <div className="admin-summary-grid">
-                    <div
-                      className="admin-metric-card"
-                      onClick={() => setAdminSubTab('promos')}
-                    >
-                      <div className="admin-metric-header">
-                        <span className="admin-metric-title">Active Promo Codes</span>
-                        <div className="admin-metric-icon alert" style={{ background: 'rgba(0, 245, 155, 0.15)', color: '#00f59b' }}>
-                          <Ticket size={18} />
-                        </div>
-                      </div>
-                      <div className="admin-metric-val" style={{ color: '#00f59b' }}>
-                        {referralCodes.length}
-                      </div>
-                      <div className="admin-metric-hint" style={{ color: '#00f59b' }}>
-                        {referralCodes.reduce((sum, rc) => sum + rc.uses, 0)} member redemptions
-                      </div>
-                    </div>
-
-                    <div
-                      className="admin-metric-card"
-                      onClick={() => setAdminSubTab('users')}
-                    >
-                      <div className="admin-metric-header">
-                        <span className="admin-metric-title">Registered Members</span>
-                        <div className="admin-metric-icon info">
-                          <Users size={18} />
-                        </div>
-                      </div>
-                      <div className="admin-metric-val">{users.length}</div>
-                      <div className="admin-metric-hint">
-                        {users.filter((u) => u.accountStatus !== 'deactivated').length} active VIP listeners
-                      </div>
-                    </div>
-
-                    <div
-                      className="admin-metric-card"
-                      onClick={() => setAdminSubTab('catalog')}
-                    >
-                      <div className="admin-metric-header">
-                        <span className="admin-metric-title">Continuous Mixes</span>
-                        <div className="admin-metric-icon purple">
-                          <Disc3 size={18} />
-                        </div>
-                      </div>
-                      <div className="admin-metric-val">
-                        {songs.filter((s) => s.isMix).length}
-                      </div>
-                      <div className="admin-metric-hint">
-                        Auto-looping ready for sound systems
-                      </div>
-                    </div>
-
-                    <div
-                      className="admin-metric-card"
-                      onClick={() => setAdminSubTab('catalog')}
-                    >
-                      <div className="admin-metric-header">
-                        <span className="admin-metric-title">Total Tracks</span>
-                        <div className="admin-metric-icon success">
-                          <Music size={18} />
-                        </div>
-                      </div>
-                      <div className="admin-metric-val">{songs.length}</div>
-                      <div className="admin-metric-hint">
-                        {songs.filter((s) => s.isDownloadable).length} tagged as downloadable
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Clean Professional Admin Navigation Bar */}
-                  <div style={{ margin: '18px 0 16px 0' }}>
-                    <div className="admin-subnav-bar">
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'all' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('all')}
-                    >
-                      <span>📋 All Modules</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'upload' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('upload')}
-                    >
-                      <Upload size={14} />
-                      <span>Upload & Add Song</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'users' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('users')}
-                    >
-                      <Users size={14} />
-                      <span>Member Directory & Loyalty</span>
-                      <span className="subnav-badge">{users.length}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'branding' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('branding')}
-                    >
-                      <ImageIcon size={14} />
-                      <span>Branding & Banners</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'flyers' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('flyers')}
-                    >
-                      <Calendar size={14} />
-                      <span>Notice Board Flyers</span>
-                      <span className="subnav-badge">{flyers.length}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'blast' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('blast')}
-                    >
-                      <Mail size={14} />
-                      <span>Email Blast</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'promos' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('promos')}
-                    >
-                      <span>🎟️ Promo Codes</span>
-                      <span className="subnav-badge">{referralCodes.length}</span>
-                    </button>
-
-                    <button
-                      type="button"
-                      className={`admin-subnav-pill ${adminSubTab === 'catalog' ? 'active' : ''}`}
-                      onClick={() => setAdminSubTab('catalog')}
-                    >
-                      <ListMusic size={14} />
-                      <span>Catalog Tracks</span>
-                      <span className="subnav-badge">{songs.length}</span>
-                    </button>
-                  </div>
-                </div>
-
-                  {/* MODULE 2 & 3: GRID (UPLOAD TRACK & PROMO CODES) */}
-                  {(adminSubTab === 'all' || adminSubTab === 'upload' || adminSubTab === 'promos') && (
-                    <div className="admin-grid" style={{ marginBottom: '24px' }}>
-                      {/* Add Track & File Upload Card */}
-                      {(adminSubTab === 'all' || adminSubTab === 'upload') && (
+                  {/* Top Grid: Upload & Add Song (Left) and 1 Promo Code (Right) */}
+                  <div className="admin-grid" style={{ marginBottom: '24px' }}>
                         <div className="admin-card">
                           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                             <Upload size={18} />
@@ -2460,504 +2203,171 @@ export function App() {
                             </button>
                           </form>
                         </div>
-                      )}
 
-                      {/* VIP Referral Codes Card */}
-                      {(adminSubTab === 'all' || adminSubTab === 'promos') && (
-                        <div className="admin-card">
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px', flexWrap: 'wrap', gap: '8px' }}>
-                            <div>
-                              <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                                VIP Referral & Promo Codes ({referralCodes.length})
-                              </h3>
-                              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                                Codes required for listener registration. Add, update, or delete codes below.
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Add New Promo Code Form */}
-                          <form
-                            onSubmit={handleAddPromoCode}
-                            style={{
-                              background: 'rgba(255, 255, 255, 0.03)',
-                              border: '1px solid rgba(255, 255, 255, 0.08)',
-                              borderRadius: '12px',
-                              padding: '14px',
-                              marginBottom: '16px',
-                              display: 'flex',
-                              flexDirection: 'column',
-                              gap: '10px'
-                            }}
-                          >
-                            <div style={{ fontSize: '0.85rem', fontWeight: 700, color: '#ffffff' }}>
-                              + Create New Promo Code
-                            </div>
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.5fr auto', gap: '8px', alignItems: 'center' }}>
-                              <input
-                                type="text"
-                                required
-                                placeholder="CODE (e.g. MARSHALL2026)"
-                                value={newPromoCode}
-                                onChange={(e) => setNewPromoCode(e.target.value)}
-                                className="form-control"
-                                style={{ textTransform: 'uppercase', fontWeight: 800, fontSize: '0.85rem' }}
-                              />
-                              <input
-                                type="text"
-                                placeholder="Description / Campaign name"
-                                value={newPromoDesc}
-                                onChange={(e) => setNewPromoDesc(e.target.value)}
-                                className="form-control"
-                                style={{ fontSize: '0.85rem' }}
-                              />
-                              <button
-                                type="submit"
-                                className="btn btn-primary btn-sm"
-                                style={{ padding: '8px 16px', fontWeight: 700, whiteSpace: 'nowrap' }}
-                              >
-                                <Plus size={15} />
-                                <span>Add Code</span>
-                              </button>
-                            </div>
-                          </form>
-
-                          {/* Promo Codes List with Edit & Delete */}
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                            {referralCodes.map((code) => {
-                              const isEditing = editingPromoCode === code.code;
-                              return (
-                                <div
-                                  key={code.code}
-                                  style={{
-                                    padding: '12px 14px',
-                                    border: '1px solid rgba(255, 255, 255, 0.08)',
-                                    borderRadius: '12px',
-                                    display: 'flex',
-                                    justifyContent: 'space-between',
-                                    alignItems: 'center',
-                                    background: isEditing ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 20, 36, 0.7)',
-                                    gap: '12px',
-                                    flexWrap: 'wrap'
-                                  }}
-                                >
-                                  {isEditing ? (
-                                    <div style={{ display: 'flex', gap: '8px', flex: 1, alignItems: 'center', flexWrap: 'wrap' }}>
-                                      <input
-                                        type="text"
-                                        value={editPromoCodeVal}
-                                        onChange={(e) => setEditPromoCodeVal(e.target.value)}
-                                        className="form-control"
-                                        style={{ width: '150px', textTransform: 'uppercase', fontWeight: 850, fontSize: '0.85rem' }}
-                                        placeholder="PROMO CODE"
-                                      />
-                                      <input
-                                        type="text"
-                                        value={editPromoDescVal}
-                                        onChange={(e) => setEditPromoDescVal(e.target.value)}
-                                        className="form-control"
-                                        style={{ flex: 1, minWidth: '180px', fontSize: '0.85rem' }}
-                                        placeholder="Description"
-                                      />
-                                      <button
-                                        type="button"
-                                        className="btn btn-primary btn-sm"
-                                        style={{ padding: '6px 12px', background: '#16a34a', borderColor: '#16a34a' }}
-                                        onClick={() => handleSaveEditPromo(code.code)}
-                                        title="Save changes"
-                                      >
-                                        <Save size={14} />
-                                        <span>Save</span>
-                                      </button>
-                                      <button
-                                        type="button"
-                                        className="btn btn-outline btn-sm"
-                                        style={{ padding: '6px 10px' }}
-                                        onClick={() => setEditingPromoCode(null)}
-                                        title="Cancel"
-                                      >
-                                        <X size={14} />
-                                        <span>Cancel</span>
-                                      </button>
-                                    </div>
-                                  ) : (
-                                    <>
-                                      <div style={{ flex: 1, minWidth: 0 }}>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                          <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#ffffff', letterSpacing: '0.04em' }}>
-                                            {code.code}
-                                          </span>
-                                          <span className="badge" style={{ background: 'rgba(0, 245, 155, 0.12)', color: '#00f59b', border: '1px solid rgba(0, 245, 155, 0.25)', fontSize: '0.72rem' }}>
-                                            {code.uses} Used
-                                          </span>
-                                        </div>
-                                        <div style={{ fontSize: '0.78rem', color: '#94a3b8', marginTop: '2px' }}>
-                                          {code.description}
-                                        </div>
-                                      </div>
-
-                                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                                        <button
-                                          type="button"
-                                          className="btn btn-outline btn-sm"
-                                          style={{ padding: '5px 10px', fontSize: '0.75rem' }}
-                                          onClick={() => handleStartEditPromo(code)}
-                                          title="Update promo code"
-                                        >
-                                          <Edit3 size={13} />
-                                          <span>Edit</span>
-                                        </button>
-                                        <button
-                                          type="button"
-                                          className="btn btn-danger btn-sm"
-                                          style={{ padding: '5px 8px' }}
-                                          onClick={() => handleDeletePromoCode(code.code)}
-                                          title="Delete promo code"
-                                        >
-                                          <Trash2 size={13} />
-                                        </button>
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {/* MODULE 4: REGISTERED MEMBERS DIRECTORY & LOYALTY PROGRAM */}
-                  {(adminSubTab === 'all' || adminSubTab === 'users') && (
-                    <div className="admin-card" style={{ marginBottom: '24px' }}>
-                      <div
-                        style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          marginBottom: '16px',
-                          flexWrap: 'wrap',
-                          gap: '12px'
-                        }}
-                      >
+                    {/* 2. VIP Registration Promo Code (Only 1 Promo Code Shows) */}
+                    <div className="admin-card">
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
+                        <Ticket size={20} color="#fbbf24" />
                         <div>
-                          <h3 style={{ fontSize: '1.1rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '8px', color: '#ffffff' }}>
-                            <Users size={20} color="#00d2ff" />
-                            <span>Member Directory & Loyalty Program</span>
-                            <span className="badge" style={{ background: 'rgba(255, 255, 255, 0.08)', color: '#ffffff' }}>
-                              {users.length} Users
-                            </span>
+                          <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
+                            VIP Registration Promo Code
                           </h3>
-                          <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                            Manage permissions, loyalty tiers, one-click account activation, and deactivation.
+                          <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '2px 0 0 0' }}>
+                            Single active code required for new listener registrations.
                           </p>
                         </div>
                       </div>
 
-                      {/* Member Search Bar */}
-                      <div className="admin-search-wrapper">
-                        <div className="admin-search-input">
-                          <Search size={16} color="#94a3b8" />
-                          <input
-                            type="text"
-                            placeholder="Search members by username, email, or promo code..."
-                            value={adminUserSearch}
-                            onChange={(e) => setAdminUserSearch(e.target.value)}
-                          />
-                          {adminUserSearch && (
-                            <button
-                              type="button"
-                              onClick={() => setAdminUserSearch('')}
-                              style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: '#94a3b8' }}
-                            >
-                              <X size={14} />
-                            </button>
-                          )}
-                        </div>
-                      </div>
+                      {(() => {
+                        const primaryPromo = referralCodes[0] || {
+                          code: 'MARSHALL-VIP',
+                          description: 'Official Music Marshall VIP Access',
+                          uses: 0
+                        };
+                        const isEditing = editingPromoCode === primaryPromo.code;
 
-                      {/* Members List */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        {users
-                          .filter((u) => {
-                            if (!adminUserSearch.trim()) return true;
-                            const q = adminUserSearch.toLowerCase();
-                            return (
-                              u.username.toLowerCase().includes(q) ||
-                              u.email.toLowerCase().includes(q) ||
-                              (u.referralCode && u.referralCode.toLowerCase().includes(q))
-                            );
-                          })
-                          .map((u) => {
-                            return (
+                        return (
+                          <div>
+                            {isEditing ? (
                               <div
-                                key={u.id}
                                 style={{
-                                  fontSize: '0.84rem',
-                                  padding: '14px 16px',
-                                  background: 'rgba(15, 20, 36, 0.75)',
-                                  border: '1px solid rgba(255, 255, 255, 0.08)',
-                                  borderRadius: '12px',
                                   display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center',
+                                  flexDirection: 'column',
                                   gap: '12px',
-                                  flexWrap: 'wrap',
-                                  transition: 'all 0.2s ease'
+                                  background: 'rgba(255, 255, 255, 0.05)',
+                                  padding: '16px',
+                                  borderRadius: '12px',
+                                  border: '1px solid rgba(255, 255, 255, 0.12)'
                                 }}
                               >
-                                <div style={{ flex: 1, minWidth: '220px' }}>
-                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                                    <strong style={{ color: '#ffffff', fontSize: '0.92rem' }}>{u.username}</strong>
-                                    <span style={{ color: '#94a3b8', fontSize: '0.78rem' }}>({u.email})</span>
-                                    {u.role === 'admin' && (
-                                      <span className="badge" style={{ background: 'linear-gradient(135deg, rgba(255, 170, 0, 0.2), rgba(255, 200, 0, 0.1))', color: '#ffaa00', border: '1px solid rgba(255, 170, 0, 0.3)', fontSize: '0.68rem', fontWeight: 800 }}>
-                                        Admin
-                                      </span>
-                                    )}
-                                    {u.loyaltyTier && (
-                                      <span className="badge" style={{ background: 'rgba(0, 210, 255, 0.12)', color: '#00d2ff', border: '1px solid rgba(0, 210, 255, 0.25)', fontSize: '0.68rem', fontWeight: 700 }}>
-                                        ★ {u.loyaltyTier.toUpperCase()}
-                                      </span>
-                                    )}
-                                  </div>
-                                  <div style={{ color: '#94a3b8', fontSize: '0.76rem', marginTop: '4px' }}>
-                                    Ref Code: <span style={{ fontWeight: 700, color: '#fbbf24' }}>{u.referralCode}</span> • Email Verified:{' '}
-                                    <span style={{ color: u.isEmailVerified ? '#10b981' : '#f59e0b', fontWeight: 600 }}>
-                                      {u.isEmailVerified ? '✓ Verified' : '⏳ Pending'}
-                                    </span>
-                                  </div>
-                                </div>
-
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-                                  {u.accountStatus === 'deactivated' ? (
-                                    <span
-                                      style={{
-                                        background: 'rgba(239, 68, 68, 0.12)',
-                                        color: '#f87171',
-                                        border: '1px solid rgba(239, 68, 68, 0.25)',
-                                        padding: '4px 10px',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.74rem',
-                                        fontWeight: 800,
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px'
-                                      }}
-                                    >
-                                      <XCircle size={13} /> Deactivated
-                                    </span>
-                                  ) : (
-                                    <span
-                                      style={{
-                                        background: 'rgba(16, 185, 129, 0.12)',
-                                        color: '#34d399',
-                                        border: '1px solid rgba(16, 185, 129, 0.25)',
-                                        padding: '4px 10px',
-                                        borderRadius: '9999px',
-                                        fontSize: '0.74rem',
-                                        fontWeight: 800,
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '4px'
-                                      }}
-                                    >
-                                      <CheckCircle2 size={13} /> Active VIP
-                                    </span>
-                                  )}
-
-                                  {u.role !== 'admin' && (
-                                    <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap' }}>
-                                      {/* Edit User & Loyalty Program */}
-                                      <button
-                                        type="button"
-                                        className="btn btn-outline btn-sm"
-                                        style={{ padding: '5px 10px', fontSize: '0.74rem', color: '#ffffff', borderColor: 'rgba(255, 255, 255, 0.15)' }}
-                                        onClick={() => {
-                                          setEditingUser(u);
-                                          setEditUserModalOpen(true);
-                                        }}
-                                        title="Edit user info, account status & loyalty tier"
-                                      >
-                                        <Edit3 size={13} />
-                                        <span>Edit / Loyalty</span>
-                                      </button>
-
-                                      {/* Quick Deactivate / Reactivate */}
-                                      <button
-                                        type="button"
-                                        className="btn btn-outline btn-sm"
-                                        style={{
-                                          padding: '5px 10px',
-                                          fontSize: '0.74rem',
-                                          color: u.accountStatus === 'deactivated' ? '#10b981' : '#f87171',
-                                          borderColor: u.accountStatus === 'deactivated' ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)'
-                                        }}
-                                        onClick={() => {
-                                          const newStatus = u.accountStatus === 'deactivated' ? 'approved' : 'deactivated';
-                                          setUsers((prev) =>
-                                            prev.map((user) => (user.id === u.id ? { ...user, accountStatus: newStatus } : user))
-                                          );
-                                          setAdminToast(`User ${u.username} marked as ${newStatus}.`);
-                                          setTimeout(() => setAdminToast(null), 3000);
-                                        }}
-                                        title={u.accountStatus === 'deactivated' ? 'Reactivate user' : 'Deactivate user'}
-                                      >
-                                        {u.accountStatus === 'deactivated' ? 'Reactivate' : 'Deactivate'}
-                                      </button>
-
-                                      <button
-                                        type="button"
-                                        className="btn btn-danger btn-sm"
-                                        style={{ padding: '5px 8px' }}
-                                        onClick={() => handleDeleteUser(u.id)}
-                                        title="Delete user"
-                                      >
-                                        <Trash2 size={13} />
-                                      </button>
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* MODULE 5: MANAGE CATALOG TRACKS & MUSIC MIXES TABLE */}
-                  {(adminSubTab === 'all' || adminSubTab === 'catalog') && (
-                    <div style={{ marginBottom: '24px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px', flexWrap: 'wrap', gap: '8px' }}>
-                        <div>
-                          <h3 className="section-title" style={{ margin: 0 }}>
-                            Manage Catalog Tracks & Music Mixes ({songs.length})
-                          </h3>
-                          <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '4px 0 0 0' }}>
-                            1-Click toggles for downloadable files, continuous mix tags, and audio removal.
-                          </p>
-                        </div>
-                      </div>
-
-                      <div style={{ overflowX: 'auto', background: 'rgba(15, 20, 36, 0.75)', borderRadius: '14px', border: '1px solid rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(16px)', boxShadow: '0 4px 20px rgba(0,0,0,0.3)' }}>
-                        <table className="song-table" style={{ margin: 0 }}>
-                          <thead>
-                            <tr>
-                              <th className="col-num">#</th>
-                              <th>Title & Artist</th>
-                              <th>Category</th>
-                              <th>Mix Tag</th>
-                              <th>Downloadable Tag</th>
-                              <th style={{ textAlign: 'right' }}>Actions</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {songs.map((song, i) => (
-                              <tr key={song.id}>
-                                <td className="col-num">{i + 1}</td>
-                                <td>
-                                  <strong>{song.title}</strong>{song.artist?.trim() ? ` — ${song.artist}` : ''}
-                                </td>
-                                <td>
-                                  {song.isMmRelease ? (
-                                    <span className="badge" style={{ background: 'rgba(0, 245, 155, 0.12)', color: '#00f59b', border: '1px solid rgba(0, 245, 155, 0.25)' }}>MM Release (Free)</span>
-                                  ) : (
-                                    <span className="badge" style={{ background: 'rgba(245, 158, 11, 0.12)', color: '#fbbf24', border: '1px solid rgba(245, 158, 11, 0.25)' }}>VIP Vault</span>
-                                  )}
-                                </td>
-                                <td>
+                                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#ffffff' }}>
+                                  Update Active Promo Code
+                                </label>
+                                <input
+                                  type="text"
+                                  value={editPromoCodeVal}
+                                  onChange={(e) => setEditPromoCodeVal(e.target.value)}
+                                  className="form-control"
+                                  style={{ textTransform: 'uppercase', fontWeight: 800, fontSize: '0.95rem' }}
+                                  placeholder="PROMO CODE"
+                                />
+                                <input
+                                  type="text"
+                                  value={editPromoDescVal}
+                                  onChange={(e) => setEditPromoDescVal(e.target.value)}
+                                  className="form-control"
+                                  style={{ fontSize: '0.85rem' }}
+                                  placeholder="Campaign description"
+                                />
+                                <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
                                   <button
                                     type="button"
-                                    onClick={() => handleToggleMix(song.id)}
-                                    className="btn btn-sm btn-outline"
-                                    style={{
-                                      padding: '3px 8px',
-                                      fontSize: '0.72rem',
-                                      color: song.isMix ? '#00d2ff' : '#94a3b8',
-                                      borderColor: song.isMix ? 'rgba(0, 210, 255, 0.4)' : 'rgba(255, 255, 255, 0.1)',
-                                      background: song.isMix ? 'rgba(0, 210, 255, 0.12)' : 'transparent',
-                                      fontWeight: 700
-                                    }}
-                                    title="Click to toggle Music Mix / Track tag"
+                                    className="btn btn-primary btn-sm"
+                                    style={{ background: '#16a34a', borderColor: '#16a34a' }}
+                                    onClick={() => handleSaveEditPromo(primaryPromo.code)}
                                   >
-                                    {song.isMix ? '🔥 Music Mix' : 'Standard Track'}
+                                    <Save size={14} />
+                                    <span>Save Promo Code</span>
                                   </button>
-                                </td>
-                                <td>
-                                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                                    <button
-                                      type="button"
-                                      onClick={() => handleToggleDownloadable(song.id)}
-                                      className="btn btn-sm btn-outline"
+                                  <button
+                                    type="button"
+                                    className="btn btn-outline btn-sm"
+                                    onClick={() => setEditingPromoCode(null)}
+                                  >
+                                    <X size={14} />
+                                    <span>Cancel</span>
+                                  </button>
+                                </div>
+                              </div>
+                            ) : (
+                              <div
+                                style={{
+                                  padding: '24px 20px',
+                                  borderRadius: '14px',
+                                  border: '1px solid rgba(251, 191, 36, 0.35)',
+                                  background: 'linear-gradient(135deg, rgba(251, 191, 36, 0.1) 0%, rgba(15, 20, 36, 0.85) 100%)',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  gap: '16px'
+                                }}
+                              >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '10px' }}>
+                                  <div>
+                                    <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#fbbf24', fontWeight: 800 }}>
+                                      Active Code
+                                    </span>
+                                    <div style={{ fontSize: '1.6rem', fontWeight: 900, color: '#ffffff', letterSpacing: '0.06em', marginTop: '2px' }}>
+                                      {primaryPromo.code}
+                                    </div>
+                                  </div>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                    <span
+                                      className="badge"
                                       style={{
-                                        padding: '3px 8px',
-                                        fontSize: '0.72rem',
-                                        color: song.isDownloadable ? '#00f59b' : '#94a3b8',
-                                        borderColor: song.isDownloadable ? 'rgba(0, 245, 155, 0.4)' : 'rgba(255, 255, 255, 0.1)',
-                                        background: song.isDownloadable ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
+                                        background: 'rgba(0, 245, 155, 0.15)',
+                                        color: '#00f59b',
+                                        border: '1px solid rgba(0, 245, 155, 0.3)',
+                                        fontSize: '0.78rem',
+                                        padding: '6px 12px',
                                         fontWeight: 700
                                       }}
-                                      title="Click to toggle downloadable status"
                                     >
-                                      {song.isDownloadable ? '✓ Downloadable' : 'Stream Only'}
+                                      {primaryPromo.uses} Redemptions
+                                    </span>
+                                    <button
+                                      type="button"
+                                      className="btn btn-outline btn-sm"
+                                      style={{ padding: '6px 12px', fontSize: '0.78rem' }}
+                                      onClick={() => handleStartEditPromo(primaryPromo)}
+                                      title="Edit this promo code"
+                                    >
+                                      <Edit3 size={13} />
+                                      <span>Edit</span>
                                     </button>
-                                    {song.isDownloadable && (
-                                      <a
-                                        href={song.audioUrl}
-                                        download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
-                                        className="btn btn-outline btn-sm"
-                                        style={{ padding: '3px 6px', color: '#16a34a', borderColor: '#86efac' }}
-                                        title="Test download audio file"
-                                      >
-                                        <Download size={12} />
-                                      </a>
-                                    )}
                                   </div>
-                                </td>
-                                <td style={{ textAlign: 'right' }}>
+                                </div>
+
+                                <p style={{ fontSize: '0.85rem', color: '#94a3b8', margin: 0, lineHeight: 1.5 }}>
+                                  {primaryPromo.description}
+                                </p>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', paddingTop: '10px', borderTop: '1px solid rgba(255, 255, 255, 0.08)' }}>
                                   <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => handleDeleteSong(song.id)}
-                                    title="Delete Song"
+                                    type="button"
+                                    className="btn btn-outline btn-sm"
+                                    style={{ padding: '6px 12px', fontSize: '0.78rem' }}
+                                    onClick={() => {
+                                      navigator.clipboard.writeText(primaryPromo.code);
+                                      setAdminToast(`Copied promo code "${primaryPromo.code}" to clipboard!`);
+                                      setTimeout(() => setAdminToast(null), 3000);
+                                    }}
                                   >
-                                    <Trash2 size={14} />
-                                    <span>Delete</span>
+                                    <span>Copy Code</span>
                                   </button>
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
+                                  <span style={{ fontSize: '0.76rem', color: '#64748b' }}>
+                                    Share with listeners to register on the platform
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })()}
                     </div>
-                  )}
+                  </div>
 
-                  {/* MODULE 6: BRANDING & FLYERS */}
-                  {(adminSubTab === 'all' || adminSubTab === 'branding' || adminSubTab === 'flyers') && (
-                    <AdminFeatureImageCard
-                      landingFeatureImage={landingFeatureImage}
-                      onSaveLandingFeatureImage={(url) => setLandingFeatureImage(url)}
-                      dashboardFeatureImage={dashboardFeatureImage}
-                      onSaveDashboardFeatureImage={(url) => setDashboardFeatureImage(url)}
-                      onAddEventFlyer={handleAddFlyer}
-                      onToast={(msg) => {
-                        setAdminToast(msg);
-                        setTimeout(() => setAdminToast(null), 3500);
-                      }}
-                    />
-                  )}
-
-                  {/* MODULE 7: EMAIL BLAST BROADCAST CARD VIA GMAIL SMTP */}
-                  {(adminSubTab === 'all' || adminSubTab === 'blast') && (
-                    <AdminEmailBlastCard
-                      users={users}
-                      onToast={(msg) => {
-                        setAdminToast(msg);
-                        setTimeout(() => setAdminToast(null), 4000);
-                      }}
-                    />
-                  )}
+                  {/* 3. Branding & Banners + 4. Notice Board Flyers */}
+                  <AdminFeatureImageCard
+                    landingFeatureImage={landingFeatureImage}
+                    onSaveLandingFeatureImage={(url) => setLandingFeatureImage(url)}
+                    dashboardFeatureImage={dashboardFeatureImage}
+                    onSaveDashboardFeatureImage={(url) => setDashboardFeatureImage(url)}
+                    onAddEventFlyer={handleAddFlyer}
+                    onToast={(msg) => {
+                      setAdminToast(msg);
+                      setTimeout(() => setAdminToast(null), 3500);
+                    }}
+                  />
                 </div>
               ) : (
                 <div style={{ textAlign: 'center', padding: '80px 20px', maxWidth: '480px', margin: '0 auto' }}>
@@ -3398,17 +2808,6 @@ export function App() {
           setTimeout(() => setAdminToast(null), 3000);
         }}
         userRole={currentUser?.role}
-      />
-
-      {/* Admin Edit User & Loyalty Modal */}
-      <AdminEditUserModal
-        isOpen={editUserModalOpen}
-        onClose={() => {
-          setEditUserModalOpen(false);
-          setEditingUser(null);
-        }}
-        user={editingUser}
-        onSaveUser={handleSaveEditedUser}
       />
 
       {/* Welcome Email Modal (Triggered immediately after user registration) */}
