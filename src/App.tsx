@@ -161,8 +161,6 @@ export function App() {
   const [uploadedAudioUrl, setUploadedAudioUrl] = useState<string | null>(null);
   const [detectedDuration, setDetectedDuration] = useState<number>(240);
   const [uploadedCoverUrl, setUploadedCoverUrl] = useState<string | null>(null);
-  const [newGenre, setNewGenre] = useState('Reggae');
-  const [newMood, setNewMood] = useState<'chill' | 'workout' | 'focus' | 'party' | 'soul'>('chill');
   const [isNewMmRelease, setIsNewMmRelease] = useState<boolean>(true);
   const [isNewMix, setIsNewMix] = useState<boolean>(false);
   const [isNewDownloadable, setIsNewDownloadable] = useState<boolean>(true);
@@ -627,8 +625,8 @@ export function App() {
       duration: finalDuration,
       audioUrl: finalAudioUrl,
       coverUrl: finalCoverUrl,
-      genre: newGenre,
-      mood: newMood,
+      genre: 'Reggae',
+      mood: 'chill',
       bpm: 95,
       isMmRelease: isNewMmRelease,
       isMix: isNewMix,
@@ -2168,32 +2166,6 @@ export function App() {
                                   <ImageIcon size={14} />
                                   <span>{uploadedCoverUrl ? 'Change Cover' : 'Upload Cover Image'}</span>
                                 </button>
-                              </div>
-                            </div>
-
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                              <div className="form-group">
-                                <label>Genre</label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  value={newGenre}
-                                  onChange={(e) => setNewGenre(e.target.value)}
-                                />
-                              </div>
-                              <div className="form-group">
-                                <label>Mood</label>
-                                <select
-                                  className="form-control"
-                                  value={newMood}
-                                  onChange={(e) => setNewMood(e.target.value as any)}
-                                >
-                                  <option value="chill">Chill</option>
-                                  <option value="workout">Workout</option>
-                                  <option value="focus">Focus</option>
-                                  <option value="soul">Soul</option>
-                                  <option value="party">Party</option>
-                                </select>
                               </div>
                             </div>
 
