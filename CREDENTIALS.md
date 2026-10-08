@@ -96,5 +96,23 @@ In the **Admin Panel** (`⚙️ Admin Panel` in the navigation — visible only 
    - However, clicking **"Launch Music Lab"** requires a registered, approved account.
    - Once activated by the Admin, the user can log in and enter the full Spotify-style Music Lab!
 
+---
+
+## 7. Microsoft SQL Server Database Connection
+
+Live MS SQL Server database credentials connected to the project:
+
+| Configuration Parameter | Value |
+|---|---|
+| **Database Server** | `az1-wsq1.my-hosting-panel.com` (IP: `204.93.216.72`) |
+| **Database Name** | `ebayjaco_mmarshalldb` |
+| **Port** | `1433` |
+| **User ID** | `ebayjaco_ellivro` |
+| **Password** | `Passw0rd#2020` |
+| **Original Database File** | `ebayjaco_mmarshalldb_2026-10-08_17-54-39` (Preserved intact in root directory) |
+| **Connected Client Module** | `server/mssqlDb.ts` (`mssql` driver with connection pooling) |
+| **Imported Production Accounts** | 49 authentic user accounts + `buju` referral code from `ebayjaco_mmarshalldb` |
+
+
 
 

@@ -263,7 +263,10 @@ export const INITIAL_SONGS: Song[] = [
   }
 ];
 
+import { MSSQL_DATABASE_USERS } from './databaseUsers';
+
 export const INITIAL_REFERRAL_CODES: ReferralCode[] = [
+  { code: 'buju', description: 'Original Music Marshall Referral Code (ebayjaco_mmarshalldb)', uses: 49 },
   { code: 'MARSHALL-2026', description: 'Music Marshall Official Referral Access', uses: 0 },
   { code: 'MARSHALL-VIP', description: 'Music Marshall Official Referral Access', uses: 0 },
   { code: 'SPOTIFY-2026', description: 'Exclusive Spotify Switcher Invite', uses: 0 },
@@ -291,7 +294,8 @@ export const INITIAL_USERS: User[] = [
       repeatMixLoop: true,
       stopNewMixAlerts: false
     }
-  }
+  },
+  ...MSSQL_DATABASE_USERS
 ];
 
 export const INITIAL_PLAYLISTS: Playlist[] = [
