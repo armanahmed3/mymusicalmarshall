@@ -6,7 +6,6 @@ import {
   SkipForward,
   Volume2,
   VolumeX,
-  Repeat,
   Download,
   X,
   AlertCircle,
@@ -42,6 +41,7 @@ import { CreatePlaylistPage } from './components/CreatePlaylistPage';
 import { AdminPanelView } from './components/AdminPanelView';
 import { PreferencesModal } from './components/PreferencesModal';
 import { WelcomeEmailModal } from './components/WelcomeEmailModal';
+import { EditProfileModal } from './components/EditProfileModal';
 
 export function App() {
   // --- Persistent Storage State ---
@@ -131,6 +131,7 @@ export function App() {
 
   // Preferences modal
   const [preferencesModalOpen, setPreferencesModalOpen] = useState(false);
+  const [editProfileModalOpen, setEditProfileModalOpen] = useState(false);
   const [preferences, setPreferences] = useState<UserPreferences>(() => {
     const saved = localStorage.getItem('mm_user_preferences');
     return saved ? JSON.parse(saved) : { repeatMixLoop: true, stopNewMixAlerts: false };
@@ -415,7 +416,7 @@ export function App() {
     setWelcomeEmailUser(newUser);
     setWelcomeEmailModalOpen(true);
 
-    // Dispatch welcome email via SMTP in background
+    // 1. Dispatch welcome email to registered user (with BCC to admin)
     fetch('/api/send-welcome-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -426,7 +427,18 @@ export function App() {
       })
     }).catch((err) => console.log('Welcome email dispatch notice:', err));
 
-    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}!`);
+    // 2. Dispatch new registration notification directly to admin
+    fetch('/api/send-admin-notification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        username: newUser.username,
+        email: newUser.email,
+        referralCode: newUser.referralCode
+      })
+    }).catch((err) => console.log('Admin registration alert notice:', err));
+
+    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Email confirmation dispatched.`);
     setTimeout(() => setAdminToast(null), 4000);
 
     setRegFirstName('');
@@ -436,6 +448,34 @@ export function App() {
     setRegReferralCode('');
     setRegError(null);
     setAuthMessage(null);
+  };
+
+  const handleSaveProfile = async (updatedUser: User) => {
+    // 1. Update in users array and currentUser
+    setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
+    setCurrentUser(updatedUser);
+
+    // 2. Dispatch profile update notification email to BOTH user and admin
+    try {
+      await fetch('/api/send-profile-update-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userEmail: updatedUser.email,
+          username: updatedUser.username,
+          firstName: updatedUser.firstName,
+          lastName: updatedUser.lastName,
+          phone: updatedUser.phone,
+          favoriteGenre: updatedUser.favoriteGenre,
+          bio: updatedUser.bio
+        })
+      });
+    } catch (err) {
+      console.log('Profile update email notification notice:', err);
+    }
+
+    setAdminToast(`✓ Profile updated! Confirmation sent to ${updatedUser.email} & Admin.`);
+    setTimeout(() => setAdminToast(null), 4000);
   };
 
   const handleLogout = () => {
@@ -613,7 +653,7 @@ export function App() {
         }}
         onLogout={handleLogout}
         onOpenPreferences={() => setPreferencesModalOpen(true)}
-        repeatMixLoop={preferences.repeatMixLoop}
+        onOpenEditProfile={() => setEditProfileModalOpen(true)}
       />
 
       {/* Notification Toast Alert */}
@@ -701,8 +741,6 @@ export function App() {
               onAddToPlaylist={handleAddToPlaylist}
               playlists={playlists}
               currentUser={currentUser}
-              repeatMixLoop={preferences.repeatMixLoop}
-              onToggleLoop={() => setPreferences((p) => ({ ...p, repeatMixLoop: !p.repeatMixLoop }))}
             />
           </div>
         )}
@@ -838,17 +876,6 @@ export function App() {
           {/* Center: Playback Controls & Scrubber */}
           <div className="player-center">
             <div className="player-controls">
-              <button
-                type="button"
-                className={`ctrl-btn ${preferences.repeatMixLoop ? 'active-loop' : ''}`}
-                style={{ color: preferences.repeatMixLoop ? '#22c55e' : '#64748b' }}
-                onClick={() =>
-                  setPreferences((p) => ({ ...p, repeatMixLoop: !p.repeatMixLoop }))
-                }
-                title={preferences.repeatMixLoop ? 'Loop current track: ON' : 'Loop current track: OFF'}
-              >
-                <Repeat size={18} />
-              </button>
               <button type="button" className="ctrl-btn" onClick={handlePrevSong} title="Previous Track">
                 <SkipBack size={22} />
               </button>
@@ -1178,6 +1205,16 @@ export function App() {
             setTimeout(() => setAdminToast(null), 3000);
           }}
           userRole={currentUser?.role || 'user'}
+        />
+      )}
+
+      {/* Edit Profile Modal */}
+      {editProfileModalOpen && currentUser && (
+        <EditProfileModal
+          isOpen={editProfileModalOpen}
+          onClose={() => setEditProfileModalOpen(false)}
+          currentUser={currentUser}
+          onSaveProfile={handleSaveProfile}
         />
       )}
     </div>

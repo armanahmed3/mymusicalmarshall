@@ -38,6 +38,9 @@ export interface User {
   accountStatus: 'pending_approval' | 'approved' | 'rejected' | 'deactivated';
   approvedAt?: string;
   preferences?: UserPreferences;
+  phone?: string;
+  bio?: string;
+  favoriteGenre?: string;
   // Loyalty Program
   isLoyaltyEnrolled?: boolean;
   loyaltyTier?: 'Bronze Member' | 'Silver VIP' | 'Gold Elite' | 'Platinum Marshall';

@@ -180,6 +180,59 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       };
     }
 
+    // 4b. Send Profile Update Notification to Both User & Admin
+    if (event.httpMethod === 'POST' && path === '/send-profile-update-email') {
+      const { userEmail, username, firstName, lastName, phone, favoriteGenre, bio } = JSON.parse(event.body || '{}');
+
+      const emailHtml = `
+        <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; padding: 32px 16px; color: #f8fafc;">
+          <div style="max-width: 560px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
+            <div style="background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); padding: 28px 24px; text-align: center; border-bottom: 1px solid #047857;">
+              <h1 style="color: #00f59b; font-size: 22px; font-weight: 800; margin: 0;">Music Marshall VIP Portal</h1>
+              <p style="color: #94a3b8; font-size: 13px; margin: 4px 0 0 0;">Member Profile Information Update</p>
+            </div>
+            <div style="padding: 24px;">
+              <h2 style="color: #ffffff; font-size: 18px; margin: 0 0 10px 0;">Hello ${username || 'VIP Member'},</h2>
+              <p style="color: #cbd5e1; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
+                Your Music Marshall member profile and account details have been successfully updated.
+              </p>
+              <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 16px; margin: 16px 0; font-size: 13px; line-height: 1.6;">
+                <div><strong style="color: #94a3b8;">Username:</strong> <span style="color: #ffffff;">${username}</span></div>
+                <div><strong style="color: #94a3b8;">Full Name:</strong> <span style="color: #ffffff;">${firstName || ''} ${lastName || ''}</span></div>
+                <div><strong style="color: #94a3b8;">Account Email:</strong> <span style="color: #ffffff;">${userEmail}</span></div>
+                ${phone ? `<div><strong style="color: #94a3b8;">Phone:</strong> <span style="color: #ffffff;">${phone}</span></div>` : ''}
+                ${favoriteGenre ? `<div><strong style="color: #94a3b8;">Favorite Genre:</strong> <span style="color: #00f59b;">${favoriteGenre}</span></div>` : ''}
+                ${bio ? `<div><strong style="color: #94a3b8;">Bio:</strong> <span style="color: #e2e8f0;">${bio}</span></div>` : ''}
+                <div><strong style="color: #94a3b8;">Updated Timestamp:</strong> <span style="color: #cbd5e1;">${new Date().toUTCString()}</span></div>
+              </div>
+              <p style="color: #64748b; font-size: 12px; margin: 16px 0 0 0;">
+                Notice: A duplicate confirmation of this update has been transmitted to platform administrators.
+              </p>
+            </div>
+            <div style="background: #0b0f19; padding: 14px; text-align: center; font-size: 11px; color: #64748b; border-top: 1px solid #1f2937;">
+              &copy; ${new Date().getFullYear()} Music Marshall Platform.
+            </div>
+          </div>
+        </div>
+      `;
+
+      // Dispatch to user and copy admin
+      const mailOptions = {
+        from: '"Music Marshall Member Desk" <mymusicmarshall@gmail.com>',
+        to: userEmail,
+        bcc: 'mymusicmarshall@gmail.com',
+        subject: `👤 Music Marshall Profile Updated: ${username}`,
+        html: emailHtml
+      };
+
+      const result = await transporter.sendMail(mailOptions);
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({ success: true, messageId: result.messageId })
+      };
+    }
+
     // 5. Send Email Blast
     if (event.httpMethod === 'POST' && path === '/send-email-blast') {
       const { subject, headline, content, recipients } = JSON.parse(event.body || '{}');

@@ -356,76 +356,15 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
 
   return (
     <div className="page-container" style={{ maxWidth: '1360px', margin: '0 auto', paddingBottom: '120px' }}>
-      {/* Admin Control Center Header */}
+      {/* Quick Metrics Bar */}
       <div
-        className="section-header"
         style={{
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-          paddingBottom: '24px',
-          marginBottom: '28px'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+          gap: '14px',
+          marginBottom: '24px'
         }}
       >
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '16px' }}>
-          <div>
-            <div
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                background: 'linear-gradient(135deg, rgba(0, 245, 155, 0.15) 0%, rgba(0, 210, 255, 0.15) 100%)',
-                color: '#00f59b',
-                padding: '4px 14px',
-                borderRadius: '9999px',
-                fontSize: '0.78rem',
-                fontWeight: 800,
-                border: '1px solid rgba(0, 245, 155, 0.3)',
-                marginBottom: '10px'
-              }}
-            >
-              <ShieldCheck size={14} color="#00f59b" />
-              <span>ADMINISTRATIVE CONTROL CENTER</span>
-            </div>
-            <h1
-              style={{
-                fontSize: '2.1rem',
-                fontWeight: 800,
-                color: '#ffffff',
-                letterSpacing: '-0.025em',
-                margin: '0 0 6px 0'
-              }}
-            >
-              Music Marshall Admin Panel
-            </h1>
-            <p style={{ color: '#94a3b8', fontSize: '0.94rem', margin: 0, maxWidth: '720px' }}>
-              Clean, unified command desk to manage listener accounts, user approvals, event flyer notices, support inquiries, and music catalog.
-            </p>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <span
-              style={{
-                fontSize: '0.8rem',
-                color: '#94a3b8',
-                background: 'rgba(255, 255, 255, 0.05)',
-                padding: '8px 14px',
-                borderRadius: '10px',
-                border: '1px solid rgba(255, 255, 255, 0.08)'
-              }}
-            >
-              Logged in as: <strong style={{ color: '#00f59b' }}>{currentUser.username}</strong>
-            </span>
-          </div>
-        </div>
-
-        {/* Quick Metrics Bar */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: '14px',
-            marginTop: '24px'
-          }}
-        >
           <div
             style={{
               background: 'rgba(15, 20, 36, 0.8)',
@@ -546,7 +485,6 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
             </div>
           </div>
         </div>
-      </div>
 
       {/* Admin Feature Tabs */}
       <div

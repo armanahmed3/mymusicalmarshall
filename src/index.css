@@ -63,16 +63,24 @@
   padding: 0;
 }
 
-html, body, #root {
-  height: 100%;
+html, body {
+  min-height: 100%;
   width: 100%;
   font-family: var(--font-family);
   background-color: var(--bg-main);
   color: var(--text-main);
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+}
+
+#root {
+  min-height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ==========================================================================
@@ -121,9 +129,10 @@ h1, h2, h3, h4, .section-title, .landing-hero-title, .sidebar-logo-title, .hero-
 /* App Outer Shell */
 .app-layout {
   display: flex;
-  height: 100vh;
-  width: 100vw;
-  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
   flex-direction: column;
 }
 

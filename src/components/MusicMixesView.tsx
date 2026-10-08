@@ -5,7 +5,6 @@ import {
   Plus,
   Download,
   Clock,
-  Repeat,
   CheckCircle2,
   FolderPlus,
   Search,
@@ -22,8 +21,8 @@ interface MusicMixesViewProps {
   onAddToPlaylist: (mixId: string, playlistId: string) => void;
   playlists: Playlist[];
   currentUser?: User | null;
-  repeatMixLoop: boolean;
-  onToggleLoop: () => void;
+  repeatMixLoop?: boolean;
+  onToggleLoop?: () => void;
 }
 
 export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
@@ -34,9 +33,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   onOpenCreatePlaylist,
   onAddToPlaylist,
   playlists,
-  currentUser,
-  repeatMixLoop,
-  onToggleLoop
+  currentUser
 }) => {
   // Filter mixes: explicitly marked isMix OR duration >= 240 seconds
   const mixes = songs.filter((s) => s.isMix || s.duration >= 240);
@@ -83,27 +80,6 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
             <p className="section-subtitle">
               Authentic sound system DJ jugglings, dancehall sessions, Rocksteady tributes, and extended studio mixes.
             </p>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Quick Loop toggle button */}
-            <button
-              type="button"
-              className="btn btn-outline btn-sm"
-              style={{
-                borderColor: repeatMixLoop ? '#00f59b' : 'rgba(255,255,255,0.2)',
-                color: repeatMixLoop ? '#00f59b' : '#ffffff',
-                background: repeatMixLoop ? 'rgba(0, 245, 155, 0.12)' : 'transparent',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-              onClick={onToggleLoop}
-              title="Toggle automatic mix repeating on finish"
-            >
-              <Repeat size={14} />
-              <span>Loop: {repeatMixLoop ? 'ON' : 'OFF'}</span>
-            </button>
           </div>
         </div>
       </div>

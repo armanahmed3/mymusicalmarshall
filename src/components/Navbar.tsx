@@ -10,7 +10,8 @@ import {
   Menu,
   X,
   Settings,
-  Home
+  Home,
+  User as UserIcon
 } from 'lucide-react';
 import type { User, AppPage } from '../types';
 
@@ -21,7 +22,7 @@ interface NavbarProps {
   onOpenAuth: (mode?: 'login' | 'register') => void;
   onLogout: () => void;
   onOpenPreferences: () => void;
-  repeatMixLoop?: boolean;
+  onOpenEditProfile: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -31,7 +32,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenAuth,
   onLogout,
   onOpenPreferences,
-  repeatMixLoop = false
+  onOpenEditProfile
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -175,60 +176,45 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* Studio Loop / Preferences quick button */}
+              {/* User Identity Profile Button (Clickable to Edit Profile) */}
               <button
                 type="button"
-                className="btn btn-outline btn-sm"
-                onClick={onOpenPreferences}
-                title={`Studio Preferences (Loop: ${repeatMixLoop ? 'ON' : 'OFF'})`}
-                style={{
-                  padding: '6px 10px',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  color: repeatMixLoop ? '#00f59b' : '#94a3b8',
-                  borderColor: repeatMixLoop ? 'rgba(0, 245, 155, 0.4)' : 'rgba(255, 255, 255, 0.12)'
-                }}
-              >
-                <Settings size={14} />
-                <span style={{ fontSize: '0.74rem', fontWeight: 700 }}>
-                  {repeatMixLoop ? 'Loop ON' : 'Prefs'}
-                </span>
-              </button>
-
-              {/* User Identity Badge */}
-              <div
+                onClick={onOpenEditProfile}
+                title="Click to view & edit your profile details"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '6px',
-                  padding: '5px 10px',
+                  gap: '8px',
+                  padding: '5px 12px',
                   borderRadius: '9999px',
                   background: isAdmin ? 'rgba(0, 245, 155, 0.12)' : 'rgba(255, 255, 255, 0.06)',
-                  border: `1px solid ${isAdmin ? 'rgba(0, 245, 155, 0.3)' : 'rgba(255, 255, 255, 0.12)'}`,
-                  fontSize: '0.8rem'
+                  border: `1px solid ${isAdmin ? 'rgba(0, 245, 155, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  color: '#ffffff',
+                  transition: 'all 0.2s ease'
                 }}
               >
                 <div
                   style={{
-                    width: '22px',
-                    height: '22px',
+                    width: '24px',
+                    height: '24px',
                     borderRadius: '50%',
-                    background: isAdmin ? 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)' : '#334155',
-                    color: isAdmin ? '#07090e' : '#ffffff',
+                    background: isAdmin ? 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)' : 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)',
+                    color: '#07090e',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 800,
-                    fontSize: '0.72rem'
+                    fontSize: '0.74rem'
                   }}
                 >
                   {currentUser.username.charAt(0).toUpperCase()}
                 </div>
-                <span style={{ fontWeight: 600, color: '#f8fafc' }}>
+                <span style={{ fontWeight: 700, color: '#f8fafc' }}>
                   {currentUser.username}
                 </span>
-                {isAdmin && (
+                {isAdmin ? (
                   <span
                     style={{
                       background: 'rgba(0, 245, 155, 0.2)',
@@ -241,8 +227,10 @@ export const Navbar: React.FC<NavbarProps> = ({
                   >
                     Admin 🛡️
                   </span>
+                ) : (
+                  <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 600 }}>Profile ⚙️</span>
                 )}
-              </div>
+              </button>
 
               {/* Logout Button */}
               <button
@@ -372,6 +360,27 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '100%', marginTop: '8px' }}>
+                <button
+                  type="button"
+                  className="btn btn-outline"
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '8px',
+                    borderColor: 'rgba(0, 245, 155, 0.4)',
+                    color: '#00f59b'
+                  }}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenEditProfile();
+                  }}
+                >
+                  <UserIcon size={15} />
+                  <span>Edit Profile ({currentUser.username})</span>
+                </button>
+
                 <button
                   type="button"
                   className="btn btn-outline"
