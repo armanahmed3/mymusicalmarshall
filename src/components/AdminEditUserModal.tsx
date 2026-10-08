@@ -15,18 +15,32 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
   onClose,
   onSaveUser
 }) => {
-  if (!isOpen || !user) return null;
-
-  const [username, setUsername] = useState(user.username);
-  const [email, setEmail] = useState(user.email);
-  const [role, setRole] = useState<'admin' | 'user'>(user.role);
-  const [referralCode, setReferralCode] = useState(user.referralCode);
-  const [accountStatus, setAccountStatus] = useState<User['accountStatus']>(user.accountStatus || 'approved');
+  const [username, setUsername] = useState(user?.username || '');
+  const [email, setEmail] = useState(user?.email || '');
+  const [role, setRole] = useState<'admin' | 'user'>(user?.role || 'user');
+  const [referralCode, setReferralCode] = useState(user?.referralCode || '');
+  const [accountStatus, setAccountStatus] = useState<User['accountStatus']>(user?.accountStatus || 'approved');
 
   // Loyalty Program fields
-  const [isLoyaltyEnrolled, setIsLoyaltyEnrolled] = useState(user.isLoyaltyEnrolled ?? false);
-  const [loyaltyTier, setLoyaltyTier] = useState<User['loyaltyTier']>(user.loyaltyTier || 'Bronze Member');
-  const [loyaltyPoints, setLoyaltyPoints] = useState<number>(user.loyaltyPoints ?? 100);
+  const [isLoyaltyEnrolled, setIsLoyaltyEnrolled] = useState(user?.isLoyaltyEnrolled ?? false);
+  const [loyaltyTier, setLoyaltyTier] = useState<User['loyaltyTier']>(user?.loyaltyTier || 'Bronze Member');
+  const [loyaltyPoints, setLoyaltyPoints] = useState<number>(user?.loyaltyPoints ?? 100);
+
+  // Sync state whenever user changes
+  React.useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setEmail(user.email);
+      setRole(user.role);
+      setReferralCode(user.referralCode);
+      setAccountStatus(user.accountStatus || 'approved');
+      setIsLoyaltyEnrolled(user.isLoyaltyEnrolled ?? false);
+      setLoyaltyTier(user.loyaltyTier || 'Bronze Member');
+      setLoyaltyPoints(user.loyaltyPoints ?? 100);
+    }
+  }, [user]);
+
+  if (!isOpen || !user) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

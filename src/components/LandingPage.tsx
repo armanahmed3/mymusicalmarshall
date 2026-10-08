@@ -32,6 +32,8 @@ interface LandingPageProps {
   onOpenAuth: (mode?: 'login' | 'register') => void;
   onLogout?: () => void;
   onOpenAdmin?: () => void;
+  hideNav?: boolean;
+  onPlaySong?: (song: Song) => void;
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
@@ -44,7 +46,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   onOpenApp,
   onOpenAuth,
   onLogout,
-  onOpenAdmin
+  onOpenAdmin,
+  hideNav = false,
+  onPlaySong
 }) => {
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -125,6 +129,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   }, [activeTrack, mmReleases]);
 
   const handleSelectRelease = (song: Song) => {
+    if (onPlaySong) {
+      onPlaySong(song);
+      setActiveTrack(song);
+      return;
+    }
     if (activeTrack?.id === song.id) {
       if (audioRef.current) {
         if (audioRef.current.paused) {
@@ -170,9 +179,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       />
 
       {/* ==========================================================================
-          ANCHORED NAVIGATION BAR (Sticky, always visible)
+          ANCHORED NAVIGATION BAR (Sticky, always visible when not hidden by parent)
           ========================================================================== */}
-      <header className="landing-nav" id="top-nav">
+      {!hideNav && (
+        <header className="landing-nav" id="top-nav">
         <div className="landing-nav-inner">
           {/* Logo with Animated Headphone and Authentic Audio in italics */}
           <div className="landing-logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -333,6 +343,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
         )}
       </header>
+      )}
 
       {/* ==========================================================================
           HERO SECTION (Simplified, attractive, uncluttered)

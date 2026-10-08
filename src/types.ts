@@ -99,4 +99,14 @@ export type ActiveTab =
   | 'ai'
   | 'admin';
 
+export type AppPage =
+  | 'home'
+  | 'mixes'
+  | 'releases'
+  | 'notices'
+  | 'support'
+  | 'create-playlist'
+  | 'admin';
+
 export type AppMode = 'landing' | 'app';
+
