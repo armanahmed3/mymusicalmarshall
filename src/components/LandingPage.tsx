@@ -396,10 +396,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <button
                 className="btn btn-primary btn-lg"
                 onClick={() => onOpenApp && onOpenApp('mixes')}
-                title="Listen to Music (VIP Player)"
+                title="Listen to Music (Music Player)"
               >
                 <Headphones size={18} />
-                <span>Listen to Music (VIP Player)</span>
+                <span>Listen to Music (Music Player)</span>
               </button>
             )}
           </div>

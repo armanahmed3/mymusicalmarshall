@@ -43,7 +43,7 @@ export interface User {
   favoriteGenre?: string;
   // Loyalty Program
   isLoyaltyEnrolled?: boolean;
-  loyaltyTier?: 'Bronze Member' | 'Silver VIP' | 'Gold Elite' | 'Platinum Marshall';
+  loyaltyTier?: 'Bronze Member' | 'Silver Member' | 'Gold Elite' | 'Platinum Marshall';
   loyaltyPoints?: number;
   loyaltyEnrolledAt?: string;
 }

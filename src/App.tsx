@@ -258,7 +258,7 @@ export function App() {
   // Playback Handlers
   const handlePlaySong = (song: Song) => {
     if (!song.isMmRelease && !currentUser) {
-      setAuthMessage('🔒 Sign in or register to stream full VIP studio tracks.');
+      setAuthMessage('🔒 Sign in or register to stream full master studio tracks.');
       setAuthTab('login');
       setAuthModalOpen(true);
       return;
@@ -284,7 +284,7 @@ export function App() {
     }
 
     if (!currentSong.isMmRelease && !currentUser) {
-      setAuthMessage('🔒 Please log in to stream VIP audio catalog.');
+      setAuthMessage('🔒 Please log in to stream full audio catalog.');
       setAuthTab('login');
       setAuthModalOpen(true);
       return;
@@ -337,7 +337,7 @@ export function App() {
     const user = users.find((u) => u.email.toLowerCase() === emailClean);
 
     if (!user) {
-      setAuthMessage('Account not found. Please register with a VIP referral code.');
+      setAuthMessage('Account not found. Please register with a referral code.');
       return;
     }
 
@@ -375,7 +375,7 @@ export function App() {
 
     const codeExists = referralCodes.some((rc) => rc.code.toUpperCase() === cleanCode);
     if (!codeExists) {
-      setRegError(`Invalid promo code "${cleanCode}". Membership is strictly by invitation.`);
+      setRegError(`Invalid referral code "${cleanCode}". Membership is strictly by invitation.`);
       return;
     }
 
@@ -954,7 +954,7 @@ export function App() {
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {authTab === 'login' ? 'Music Marshall Sign In' : 'Exclusive VIP Registration'}
+                {authTab === 'login' ? 'Music Marshall Sign In' : 'Member Registration'}
               </h3>
               <button
                 type="button"
@@ -1093,18 +1093,18 @@ export function App() {
                   </div>
 
                   <div className="form-group">
-                    <label>Compulsory VIP Promo Code *</label>
+                    <label>Referral Code *</label>
                     <input
                       type="text"
                       required
                       className="form-control"
-                      placeholder="e.g. MARSHALL-VIP"
+                      placeholder="e.g. MARSHALL-2026"
                       value={regReferralCode}
                       onChange={(e) => setRegReferralCode(e.target.value.toUpperCase())}
                       style={{ textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}
                     />
                     <small style={{ color: '#94a3b8', fontSize: '0.74rem', marginTop: '4px', display: 'block' }}>
-                      (Active Promo Code: <strong style={{ color: '#00f59b' }}>{referralCodes[0]?.code || 'MARSHALL-VIP'}</strong>)
+                      (Active Referral Code: <strong style={{ color: '#00f59b' }}>{referralCodes[0]?.code || 'MARSHALL-2026'}</strong>)
                     </small>
                   </div>
 

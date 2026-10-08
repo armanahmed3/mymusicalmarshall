@@ -249,7 +249,7 @@ export const INITIAL_SONGS: Song[] = [
     id: 'song-mm-master-vault',
     title: 'Studio Vocals Master Sample Mix (Extended Stems)',
     artist: 'Music Marshall Lab',
-    album: 'VIP Master Vault (Login Required)',
+    album: 'Master Sound Vault (Login Required)',
     duration: 1440,
     audioUrl: '/audio/vocals_Mixx_01222201457.mp3',
     coverUrl: '/mm_logo.jpg',
@@ -259,12 +259,13 @@ export const INITIAL_SONGS: Song[] = [
     isMmRelease: false,
     isMix: true,
     isDownloadable: true,
-    description: 'Master soundboard stems and unreleased acoustic vocals — VIP Members Only.'
+    description: 'Master soundboard stems and unreleased acoustic vocals — Members Only.'
   }
 ];
 
 export const INITIAL_REFERRAL_CODES: ReferralCode[] = [
-  { code: 'MARSHALL-VIP', description: 'Music Marshall Official VIP Access', uses: 0 },
+  { code: 'MARSHALL-2026', description: 'Music Marshall Official Referral Access', uses: 0 },
+  { code: 'MARSHALL-VIP', description: 'Music Marshall Official Referral Access', uses: 0 },
   { code: 'SPOTIFY-2026', description: 'Exclusive Spotify Switcher Invite', uses: 0 },
   { code: 'SOUND-ELITE', description: 'Master Sound Platform Invite', uses: 0 }
 ];

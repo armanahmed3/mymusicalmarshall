@@ -112,7 +112,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontWeight: 800, fontSize: '1rem', color: '#ffffff' }}>
-                  Music Marshall VIP Portal
+                  Music Marshall Portal
                 </span>
                 <span
                   style={{
@@ -132,7 +132,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
                 <strong>To:</strong> {user.email} &lt;{user.username}&gt;
               </div>
               <div style={{ fontSize: '0.82rem', color: '#00f59b', fontWeight: 700, marginTop: '4px' }}>
-                Subject: 🎵 Welcome to Music Marshall VIP — Lifetime Stream Access Pass!
+                Subject: 🎵 Welcome to Music Marshall — Lifetime Stream Access Pass!
               </div>
             </div>
           </div>
@@ -170,7 +170,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
               Welcome, {user.username}!
             </h2>
             <p style={{ color: '#94a3b8', fontSize: '0.9rem', maxWidth: '440px', margin: '0 auto', lineHeight: 1.5 }}>
-              Thank you for registering with Music Marshall. Your VIP account is active and verified for unlimited streaming access.
+              Thank you for registering with Music Marshall. Your account is active and verified for unlimited streaming access.
             </p>
           </div>
 
@@ -185,7 +185,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
             }}
           >
             <div style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748b', fontWeight: 800, marginBottom: '12px' }}>
-              VIP Pass Details
+              Member Pass Details
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
@@ -198,7 +198,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
                 <span style={{ fontSize: '0.92rem', fontWeight: 700, color: '#00f59b', wordBreak: 'break-all' }}>{user.email}</span>
               </div>
               <div>
-                <span style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block' }}>Assigned Promo / Ref Code</span>
+                <span style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block' }}>Assigned Referral Code</span>
                 <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#fbbf24', letterSpacing: '0.05em' }}>
                   {user.referralCode}
                 </span>
@@ -206,7 +206,7 @@ export const WelcomeEmailModal: React.FC<WelcomeEmailModalProps> = ({
               <div>
                 <span style={{ fontSize: '0.74rem', color: '#94a3b8', display: 'block' }}>Streaming Status</span>
                 <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#34d399', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                  <CheckCircle2 size={14} /> VIP Active
+                  <CheckCircle2 size={14} /> Active
                 </span>
               </div>
             </div>

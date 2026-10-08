@@ -101,7 +101,7 @@ export const SupportView: React.FC<SupportViewProps> = ({
           </div>
           <h2 className="section-title">Technical & Admin Support</h2>
           <p className="section-subtitle">
-            Direct assistance for playback streaming, account approvals, master stems, VIP access, and administrative queries.
+            Direct assistance for playback streaming, account approvals, master stems, membership access, and administrative queries.
           </p>
         </div>
       </div>
@@ -303,7 +303,7 @@ export const SupportView: React.FC<SupportViewProps> = ({
                 Estimated Response Times
               </div>
               <ul style={{ margin: 0, paddingLeft: '18px', fontSize: '0.8rem', color: '#94a3b8', lineHeight: 1.6 }}>
-                <li><strong style={{ color: '#ffffff' }}>Urgent VIP Issues:</strong> Within 1-2 hours</li>
+                <li><strong style={{ color: '#ffffff' }}>Urgent Account Issues:</strong> Within 1-2 hours</li>
                 <li><strong style={{ color: '#ffffff' }}>Audio Downloads & Stems:</strong> Same business day</li>
                 <li><strong style={{ color: '#ffffff' }}>General Questions:</strong> Within 24 hours</li>
               </ul>

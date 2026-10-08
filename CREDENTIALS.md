@@ -19,7 +19,7 @@ Use these credentials to access the **Admin Panel** where you can upload new son
 - Anyone can click Play on any of the 16 downloaded official releases and listen immediately with zero restrictions or authentication prompt.
 - Includes tracks by **Wayne Armond**, **Stevie Malekuu**, **Luciano**, **Yishka**, **Teacha Barnes**, and **The Greaves Brothers**.
 
-### Category B: Extended VIP Catalog (Requires Account & Login)
+### Category B: Extended Member Catalog (Requires Account & Login)
 - Unreleased studio dubs, acoustic stems, and custom user uploads.
 - Guests can browse the titles, artists, and duration, but playback requires logging in.
 - Registration enforces referral codes: (Membership is by referral only).
@@ -31,16 +31,16 @@ Registration on Music Marshall is by referral only:
 
 | Referral Code | Description |
 |---|---|
-| `MARSHALL-VIP` | Official Music Marshall VIP Access |
+| `MARSHALL-2026` | Official Music Marshall Referral Access |
 | `SPOTIFY-2026` | Spotify Switcher Tier Code |
 | `SOUND-ELITE` | High-Fidelity Master Code |
 
 ---
 
 ## 4. Audio & Song File Upload Feature
-In the **Admin Panel** (`⚙️ Admin Panel` on the sidebar — visible only to admins):
+In the **Admin Panel** (`⚙️ Admin Panel` in the navigation — visible only to admins):
 - **Upload Audio Files**: Directly from your computer (`.mp3`, `.wav`, `.flac`, `.m4a`).
-- **Release Category Selection**: Choose whether the song is published as a free **My MM Release** or an account-gated **VIP Vault** track.
+- **Release Category Selection**: Choose whether the song is published as a free **My MM Release** or an account-gated **Master Sound Vault** track.
 - **Auto-Detection**: Extracts song duration and title automatically.
 - **Cover Image Upload**: Upload custom cover artwork with live image preview.
 

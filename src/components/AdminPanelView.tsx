@@ -278,10 +278,10 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
     onToast(`✓ Published track "${newSong.title}" to catalog!`);
   };
 
-  // --- 5. PROMO CODE STATE ---
+  // --- 5. REFERRAL CODE STATE ---
   const primaryPromo = referralCodes[0] || {
-    code: 'MARSHALL-VIP',
-    description: 'Official Music Marshall VIP Access',
+    code: 'MARSHALL-2026',
+    description: 'Official Music Marshall Referral Access',
     uses: 0
   };
   const [isEditingPromo, setIsEditingPromo] = useState(false);
@@ -293,7 +293,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
     if (!editPromoCodeVal.trim()) return;
     onUpdateReferralCode(primaryPromo.code, editPromoCodeVal.trim().toUpperCase(), editPromoDescVal.trim());
     setIsEditingPromo(false);
-    onToast(`✓ VIP Registration promo code updated to "${editPromoCodeVal.trim().toUpperCase()}".`);
+    onToast(`✓ Registration referral code updated to "${editPromoCodeVal.trim().toUpperCase()}".`);
   };
 
   // Banners input state
@@ -637,7 +637,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
           }}
         >
           <Ticket size={16} />
-          <span>VIP Promo & Banners</span>
+          <span>Referral Codes & Banners</span>
         </button>
       </div>
 
@@ -1735,11 +1735,11 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
       )}
 
       {/* =========================================================================
-          TAB 5: VIP REGISTRATION PROMO CODE & BANNERS
+          TAB 5: REGISTRATION REFERRAL CODE & BANNERS
           ========================================================================= */}
       {adminTab === 'promo' && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px' }}>
-          {/* VIP Promo Code Card */}
+          {/* Referral Code Card */}
           <div
             style={{
               background: 'rgba(15, 20, 36, 0.85)',
@@ -1754,10 +1754,10 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               </div>
               <div>
                 <h3 style={{ fontSize: '1.15rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-                  Active VIP Registration Promo Code
+                  Active Registration Referral Code
                 </h3>
                 <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                  Listeners must provide this promo code to complete registration
+                  Listeners must provide this referral code to complete registration
                 </span>
               </div>
             </div>
@@ -1765,7 +1765,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
             {isEditingPromo ? (
               <form onSubmit={handleSavePromoCode} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <div className="form-group">
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Promo Code *</label>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Referral Code *</label>
                   <input
                     type="text"
                     required
@@ -1789,7 +1789,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                 <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
                   <button type="submit" className="btn btn-primary btn-sm" style={{ background: '#16a34a', borderColor: '#16a34a' }}>
                     <Save size={14} />
-                    <span>Save Promo Code</span>
+                    <span>Save Referral Code</span>
                   </button>
                   <button type="button" className="btn btn-outline btn-sm" onClick={() => setIsEditingPromo(false)}>
                     Cancel
@@ -1829,7 +1829,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                     className="btn btn-primary btn-sm"
                     onClick={() => {
                       navigator.clipboard.writeText(primaryPromo.code);
-                      onToast(`✓ Copied promo code "${primaryPromo.code}" to clipboard!`);
+                      onToast(`✓ Copied referral code "${primaryPromo.code}" to clipboard!`);
                     }}
                   >
                     <span>Copy Code</span>

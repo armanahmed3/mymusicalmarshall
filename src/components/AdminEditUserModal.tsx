@@ -106,7 +106,7 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
               </div>
               <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
                 {accountStatus === 'deactivated'
-                  ? 'User cannot log in or stream VIP master audio.'
+                  ? 'User cannot log in or stream master audio.'
                   : 'User has full authenticated player access.'}
               </div>
             </div>
@@ -167,13 +167,13 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
                 value={role}
                 onChange={(e) => setRole(e.target.value as any)}
               >
-                <option value="user">VIP Member (Listener)</option>
+                <option value="user">Member (Listener)</option>
                 <option value="admin">Administrator (Full Control)</option>
               </select>
             </div>
 
             <div className="form-group">
-              <label>VIP Referral Code</label>
+              <label>Referral Code</label>
               <input
                 type="text"
                 required
@@ -191,7 +191,7 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <Award size={18} color="#fbbf24" />
                 <span style={{ fontWeight: 800, fontSize: '0.92rem', color: '#ffffff' }}>
-                  VIP Loyalty Program
+                  Member Loyalty Program
                 </span>
               </div>
               <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.8rem', fontWeight: 700, cursor: 'pointer', color: '#ffffff' }}>
@@ -216,7 +216,7 @@ export const AdminEditUserModal: React.FC<AdminEditUserModalProps> = ({
                     style={{ fontSize: '0.82rem' }}
                   >
                     <option value="Bronze Member">Bronze Member (Entry)</option>
-                    <option value="Silver VIP">Silver VIP (500+ Pts)</option>
+                    <option value="Silver Member">Silver Member (500+ Pts)</option>
                     <option value="Gold Elite">Gold Elite (1000+ Pts)</option>
                     <option value="Platinum Marshall">Platinum Marshall (Master)</option>
                   </select>

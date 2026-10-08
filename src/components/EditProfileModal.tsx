@@ -201,7 +201,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     letterSpacing: '0.02em'
                   }}
                 >
-                  {isAdmin ? 'Admin 🛡️' : 'VIP Member ⭐'}
+                  {isAdmin ? 'Admin 🛡️' : 'Member'}
                 </span>
               </div>
               <p style={{ margin: '3px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
@@ -270,7 +270,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           >
             <div>
               <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <Tag size={11} color="#00f59b" /> Promo Code
+                <Tag size={11} color="#00f59b" /> Referral Code
               </div>
               <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#00f59b', fontFamily: 'monospace', marginTop: '2px' }}>
                 {currentUser.referralCode || 'N/A'}
@@ -291,7 +291,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 <CheckCircle2 size={11} color="#22c55e" /> Status
               </div>
               <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#22c55e', marginTop: '2px' }}>
-                {currentUser.accountStatus === 'approved' ? 'Active VIP' : currentUser.accountStatus}
+                {currentUser.accountStatus === 'approved' ? 'Active' : currentUser.accountStatus}
               </div>
             </div>
 

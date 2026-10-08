@@ -11,7 +11,7 @@ export const AdminEmailBlastCard: React.FC<AdminEmailBlastCardProps> = ({ users,
   const [subject, setSubject] = useState('🎵 New Music Mixes & Studio Releases Available on Music Marshall!');
   const [headline, setHeadline] = useState('Exclusive Studio Mixes & Rocksteady Masters Just Dropped');
   const [bodyContent, setBodyContent] = useState(
-    'Greetings VIP Member,\n\nWe have just updated the Music Marshall Master Vault with brand new continuous music mixes, Rocksteady tribute sessions by Wayne Armond, and live soundclash jugglings.\n\nLog in now to stream or download these exclusive studio tracks.'
+    'Greetings Member,\n\nWe have just updated the Music Marshall Master Vault with brand new continuous music mixes, Rocksteady tribute sessions by Wayne Armond, and live soundclash jugglings.\n\nLog in now to stream or download these exclusive studio tracks.'
   );
   const [targetAudience, setTargetAudience] = useState<'all' | 'approved' | 'loyalty'>('approved');
   const [isSending, setIsSending] = useState(false);
@@ -77,7 +77,7 @@ export const AdminEmailBlastCard: React.FC<AdminEmailBlastCardProps> = ({ users,
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <Mail size={20} color="#00d2ff" />
           <h3 style={{ fontSize: '1.05rem', fontWeight: 800, margin: 0, color: '#ffffff' }}>
-            VIP Member Email Blast (SMTP Broadcast)
+            Member Email Blast (SMTP Broadcast)
           </h3>
         </div>
         <span style={{ fontSize: '0.74rem', background: 'rgba(0, 210, 255, 0.12)', color: '#00d2ff', border: '1px solid rgba(0, 210, 255, 0.25)', padding: '3px 8px', borderRadius: '9999px', fontWeight: 800 }}>
@@ -86,7 +86,7 @@ export const AdminEmailBlastCard: React.FC<AdminEmailBlastCardProps> = ({ users,
       </div>
 
       <p style={{ fontSize: '0.82rem', color: '#94a3b8', margin: '0 0 16px 0', lineHeight: 1.4 }}>
-        Broadcast customized announcements, new music mix drop alerts, or VIP notices directly to members' inboxes using the verified Gmail SMTP connection.
+        Broadcast customized announcements, new music mix drop alerts, or updates directly to members' inboxes using the verified Gmail SMTP connection.
       </p>
 
       {blastResult && (

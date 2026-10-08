@@ -194,7 +194,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
   const subtitleText =
     mode === 'admin_2fa'
       ? `A high-security 6-digit authorization code was dispatched to ${email}. Confirm identity to access administrative features.`
-      : `We sent a 6-digit confirmation code to ${email}. Enter the code below to complete VIP onboarding.`;
+      : `We sent a 6-digit confirmation code to ${email}. Enter the code below to complete account onboarding.`;
 
   return (
     <div className="modal-overlay">
@@ -324,7 +324,7 @@ export const EmailVerificationModal: React.FC<EmailVerificationModalProps> = ({
                 <span>
                   {mode === 'admin_2fa'
                     ? '✓ Admin identity authorized! Loading control center...'
-                    : '✓ Email successfully verified! Welcome to Music Marshall VIP.'}
+                    : '✓ Email successfully verified! Welcome to Music Marshall.'}
                 </span>
               </div>
             )}

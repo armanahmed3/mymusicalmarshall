@@ -44,10 +44,10 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       const is2fa = mode === 'admin_2fa';
       const subject = is2fa
         ? '🔒 Music Marshall Admin Security — 2FA Authorization Passcode'
-        : '🎵 Welcome to Music Marshall — Your VIP Verification Code';
+        : '🎵 Welcome to Music Marshall — Your Verification Code';
 
       const mailOptions = {
-        from: '"Music Marshall VIP Portal" <mymusicmarshall@gmail.com>',
+        from: '"Music Marshall Portal" <mymusicmarshall@gmail.com>',
         to,
         subject,
         html: `
@@ -74,15 +74,15 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
           <body>
             <div class="container">
               <div class="header">
-                <h1 class="logo">Music Marshall VIP</h1>
+                <h1 class="logo">Music Marshall</h1>
                 <p class="tagline">High-Fidelity Audio Vault</p>
               </div>
               <div class="content">
-                <h2 class="greeting">Hello ${username || 'VIP Member'},</h2>
+                <h2 class="greeting">Hello ${username || 'Member'},</h2>
                 <p class="text">
                   ${is2fa
                     ? 'An administrator login authorization request was initiated for your Music Marshall account. Please enter the passcode below to authorize access.'
-                    : 'Use the following One-Time Passcode (OTP) to complete your VIP account registration.'}
+                    : 'Use the following One-Time Passcode (OTP) to complete your account registration.'}
                 </p>
                 <div class="otp-card">
                   <span class="otp-label">ONE-TIME PASSCODE (OTP)</span>
@@ -114,24 +114,24 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
         from: '"Music Marshall" <mymusicmarshall@gmail.com>',
         to,
         bcc: 'mymusicmarshall@gmail.com',
-        subject: '🎵 Welcome to Music Marshall VIP — Lifetime Stream Access Pass!',
+        subject: '🎵 Welcome to Music Marshall — Lifetime Stream Access Pass!',
         html: `
           <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; padding: 32px 16px; color: #f8fafc;">
             <div style="max-width: 560px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
               <div style="background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); padding: 32px 24px; text-align: center; border-bottom: 1px solid #047857;">
-                <h1 style="color: #00f59b; font-size: 24px; font-weight: 800; margin: 0;">Music Marshall VIP Portal</h1>
+                <h1 style="color: #00f59b; font-size: 24px; font-weight: 800; margin: 0;">Music Marshall Portal</h1>
                 <p style="color: #94a3b8; font-size: 13px; margin: 6px 0 0 0;">High-Fidelity Studio Sound & DJ Jugglings</p>
               </div>
               <div style="padding: 28px 24px;">
-                <h2 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Welcome, ${username || 'VIP Member'}!</h2>
+                <h2 style="color: #ffffff; font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Welcome, ${username || 'Member'}!</h2>
                 <p style="color: #cbd5e1; font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">
-                  Your Music Marshall VIP registration is officially active! You have full, unrestricted streaming access to all authentic sound system mixes, dancehall jugglings, Rocksteady tributes, and official MY MM Productions releases.
+                  Your Music Marshall registration is officially active! You have full, unrestricted streaming access to all authentic sound system mixes, dancehall jugglings, Rocksteady tributes, and official MY MM Productions releases.
                 </p>
                 <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 12px; padding: 18px; margin: 20px 0;">
                   <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #00f59b; font-weight: 800; margin-bottom: 10px;">Membership Pass</div>
                   <div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;"><strong>Email:</strong> ${to}</div>
-                  <div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;"><strong>Promo / Referral Code:</strong> <span style="font-family: monospace; font-weight: 800; color: #fbbf24;">${referralCode}</span></div>
-                  <div style="color: #34d399; font-size: 14px; font-weight: 700;"><strong>Status:</strong> ✓ Active VIP Listener</div>
+                  <div style="color: #ffffff; font-size: 14px; margin-bottom: 6px;"><strong>Referral Code:</strong> <span style="font-family: monospace; font-weight: 800; color: #fbbf24;">${referralCode}</span></div>
+                  <div style="color: #34d399; font-size: 14px; font-weight: 700;"><strong>Status:</strong> ✓ Active Listener</div>
                 </div>
                 <p style="color: #94a3b8; font-size: 13px; line-height: 1.5; margin: 16px 0 0 0;">
                   Feel free to curate custom playlists, explore upcoming sound system flyers on our Notice Board, or loop extended mixes on your sound setup.
@@ -159,10 +159,10 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       const mailOptions = {
         from: '"Music Marshall Security" <mymusicmarshall@gmail.com>',
         to: 'mymusicmarshall@gmail.com',
-        subject: `🔔 New VIP Registration Pending Approval: ${username}`,
+        subject: `🔔 New Registration Pending Approval: ${username}`,
         html: `
           <div style="font-family: sans-serif; padding: 20px; color: #0f172a;">
-            <h2>New VIP Registration Pending Approval</h2>
+            <h2>New Registration Pending Approval</h2>
             <ul>
               <li><strong>Username:</strong> ${username}</li>
               <li><strong>Email:</strong> ${email}</li>
@@ -188,11 +188,11 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #0b0f19; padding: 32px 16px; color: #f8fafc;">
           <div style="max-width: 560px; margin: 0 auto; background: #111827; border: 1px solid #1f2937; border-radius: 16px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.5);">
             <div style="background: linear-gradient(135deg, #064e3b 0%, #0f172a 100%); padding: 28px 24px; text-align: center; border-bottom: 1px solid #047857;">
-              <h1 style="color: #00f59b; font-size: 22px; font-weight: 800; margin: 0;">Music Marshall VIP Portal</h1>
+              <h1 style="color: #00f59b; font-size: 22px; font-weight: 800; margin: 0;">Music Marshall Portal</h1>
               <p style="color: #94a3b8; font-size: 13px; margin: 4px 0 0 0;">Member Profile Information Update</p>
             </div>
             <div style="padding: 24px;">
-              <h2 style="color: #ffffff; font-size: 18px; margin: 0 0 10px 0;">Hello ${username || 'VIP Member'},</h2>
+              <h2 style="color: #ffffff; font-size: 18px; margin: 0 0 10px 0;">Hello ${username || 'Member'},</h2>
               <p style="color: #cbd5e1; font-size: 14px; line-height: 1.5; margin: 0 0 16px 0;">
                 Your Music Marshall member profile and account details have been successfully updated.
               </p>
@@ -248,13 +248,13 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
       for (const recipient of recipients) {
         try {
           await transporter.sendMail({
-            from: '"Music Marshall VIP Broadcast" <mymusicmarshall@gmail.com>',
+            from: '"Music Marshall Broadcast" <mymusicmarshall@gmail.com>',
             to: recipient.email,
-            subject: subject || '🎵 Music Marshall VIP Announcement',
+            subject: subject || '🎵 Music Marshall Announcement',
             html: `
               <div style="font-family: sans-serif; padding: 24px; color: #0f172a;">
                 <h2>${headline || subject}</h2>
-                <p>Hello ${recipient.username || 'VIP Member'},</p>
+                <p>Hello ${recipient.username || 'Member'},</p>
                 <div style="white-space: pre-line;">${content}</div>
               </div>
             `

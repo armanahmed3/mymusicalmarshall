@@ -191,7 +191,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                     {currentUser.username}
                   </span>
                   <span className={`nav-profile-role ${!isAdmin ? 'is-member' : ''}`}>
-                    {isAdmin ? '🛡️ Admin' : '⭐ VIP Member'}
+                    {isAdmin ? '🛡️ Admin' : 'Member'}
                   </span>
                 </div>
               </button>

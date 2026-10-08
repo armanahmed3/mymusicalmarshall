@@ -86,7 +86,7 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
             Exclusive Member Feature
           </h2>
           <p style={{ color: '#94a3b8', fontSize: '0.95rem', lineHeight: 1.6, marginBottom: '24px' }}>
-            Curating and saving custom music mix playlists is available to verified Music Marshall members. Sign in or register with your VIP promo code to begin creating playlists.
+            Curating and saving custom music mix playlists is available to verified Music Marshall members. Sign in or register with your referral code to begin creating playlists.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
             <button
