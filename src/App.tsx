@@ -9,7 +9,6 @@ import {
   Download,
   X,
   AlertCircle,
-  Lock,
   CheckCircle2
 } from 'lucide-react';
 import type {
@@ -906,45 +905,8 @@ export function App() {
             </div>
           </div>
 
-          {/* Right: Volume & Tier Actions */}
+          {/* Right: Volume & Actions */}
           <div className="player-right">
-            {!currentUser ? (
-              <button
-                type="button"
-                className="badge"
-                style={{
-                  cursor: 'pointer',
-                  background: '#fee2e2',
-                  color: '#b91c1c',
-                  border: 'none',
-                  padding: '6px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px'
-                }}
-                onClick={() => {
-                  setAuthMessage('Login to play full VIP catalog tracks.');
-                  setAuthTab('login');
-                  setAuthModalOpen(true);
-                }}
-              >
-                <Lock size={12} />
-                <span>Login to Stream</span>
-              </button>
-            ) : (
-              <span
-                className="badge"
-                style={{
-                  background: '#f1f5f9',
-                  color: '#0f172a',
-                  padding: '5px 10px',
-                  fontSize: '0.74rem',
-                  fontWeight: 700
-                }}
-              >
-                VIP Stream
-              </span>
-            )}
 
             {currentSong?.isDownloadable && (
               <a
