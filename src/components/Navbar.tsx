@@ -175,70 +175,33 @@ export const Navbar: React.FC<NavbarProps> = ({
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              {/* User Identity Profile Button (Clickable to Edit Profile) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+              {/* Luxury User Profile Capsule Button */}
               <button
                 type="button"
+                className="nav-profile-chip"
                 onClick={onOpenEditProfile}
                 title="Click to view & edit your profile details"
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '5px 12px',
-                  borderRadius: '9999px',
-                  background: isAdmin ? 'rgba(0, 245, 155, 0.12)' : 'rgba(255, 255, 255, 0.06)',
-                  border: `1px solid ${isAdmin ? 'rgba(0, 245, 155, 0.35)' : 'rgba(255, 255, 255, 0.15)'}`,
-                  fontSize: '0.8rem',
-                  cursor: 'pointer',
-                  color: '#ffffff',
-                  transition: 'all 0.2s ease'
-                }}
               >
-                <div
-                  style={{
-                    width: '24px',
-                    height: '24px',
-                    borderRadius: '50%',
-                    background: isAdmin ? 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)' : 'linear-gradient(135deg, #38bdf8 0%, #818cf8 100%)',
-                    color: '#07090e',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 800,
-                    fontSize: '0.74rem'
-                  }}
-                >
+                <div className={`nav-profile-avatar ${!isAdmin ? 'user-avatar' : ''}`}>
                   {currentUser.username.charAt(0).toUpperCase()}
                 </div>
-                <span style={{ fontWeight: 700, color: '#f8fafc' }}>
-                  {currentUser.username}
-                </span>
-                {isAdmin ? (
-                  <span
-                    style={{
-                      background: 'rgba(0, 245, 155, 0.2)',
-                      color: '#00f59b',
-                      padding: '2px 6px',
-                      borderRadius: '4px',
-                      fontSize: '0.68rem',
-                      fontWeight: 800
-                    }}
-                  >
-                    Admin 🛡️
+                <div className="nav-profile-info">
+                  <span className="nav-profile-name">
+                    {currentUser.username}
                   </span>
-                ) : (
-                  <span style={{ fontSize: '0.7rem', color: '#38bdf8', fontWeight: 600 }}>Profile ⚙️</span>
-                )}
+                  <span className={`nav-profile-role ${!isAdmin ? 'is-member' : ''}`}>
+                    {isAdmin ? '🛡️ Admin' : '⭐ VIP Member'}
+                  </span>
+                </div>
               </button>
 
               {/* Logout Button */}
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="nav-logout-btn"
                 onClick={onLogout}
                 title="Log out from Music Marshall"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
               >
                 <LogOut size={13} />
                 <span>Logout</span>

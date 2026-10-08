@@ -9,7 +9,6 @@ import {
   CheckCircle2,
   Tag,
   Save,
-  Music,
   Phone,
   AlertCircle
 } from 'lucide-react';
@@ -34,7 +33,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [bio, setBio] = useState('');
-  const [favoriteGenre, setFavoriteGenre] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
@@ -48,7 +46,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       setEmail(currentUser.email || '');
       setPhone(currentUser.phone || '');
       setBio(currentUser.bio || '');
-      setFavoriteGenre(currentUser.favoriteGenre || 'Reggae');
       setNewPassword('');
       setConfirmPassword('');
       setStatusMessage(null);
@@ -67,7 +64,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanFirstName || !cleanUsername || !cleanEmail) {
-      setStatusMessage({ type: 'error', text: 'First name, username, and email are required.' });
+      setStatusMessage({ type: 'error', text: 'First name, display username, and email are required.' });
       return;
     }
 
@@ -88,17 +85,16 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       username: cleanUsername,
       email: cleanEmail,
       phone: phone.trim() || undefined,
-      bio: bio.trim() || undefined,
-      favoriteGenre: favoriteGenre.trim() || undefined
+      bio: bio.trim() || undefined
     };
 
     setIsSubmitting(true);
     try {
       await onSaveProfile(updatedUser, newPassword || undefined);
-      setStatusMessage({ type: 'success', text: 'Profile successfully updated! Confirmation dispatched to both user and admin emails.' });
+      setStatusMessage({ type: 'success', text: 'Profile updated! Confirmation email dispatched to you and platform administrator.' });
       setTimeout(() => {
         onClose();
-      }, 1500);
+      }, 1400);
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: err?.message || 'Failed to update profile. Please try again.' });
     } finally {
@@ -114,12 +110,13 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
         position: 'fixed',
         inset: 0,
         zIndex: 99999,
-        background: 'rgba(5, 7, 12, 0.88)',
-        backdropFilter: 'blur(8px)',
+        background: 'rgba(3, 6, 12, 0.85)',
+        backdropFilter: 'blur(10px)',
+        WebkitBackdropFilter: 'blur(10px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '20px',
+        padding: '16px',
         overflowY: 'auto'
       }}
       onClick={(e) => {
@@ -129,33 +126,35 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       <div
         style={{
           width: '100%',
-          maxWidth: '680px',
-          background: 'linear-gradient(145deg, #0e1526 0%, #080c16 100%)',
-          border: '1px solid rgba(0, 245, 155, 0.35)',
-          borderRadius: '24px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.75), 0 0 35px rgba(0, 245, 155, 0.15)',
+          maxWidth: '560px',
+          background: '#0c111d',
+          border: '1px solid rgba(0, 245, 155, 0.3)',
+          borderRadius: '20px',
+          boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(0, 245, 155, 0.12)',
           overflow: 'hidden',
           display: 'flex',
           flexDirection: 'column',
-          maxHeight: '90vh'
+          maxHeight: '92vh',
+          animation: 'fadeInUp 0.25s ease-out'
         }}
       >
-        {/* Header */}
+        {/* Header Section */}
         <div
           style={{
-            padding: '24px 28px',
+            padding: '20px 24px',
             borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            background: 'rgba(15, 22, 38, 0.6)'
+            background: 'linear-gradient(180deg, rgba(16, 24, 40, 0.95) 0%, rgba(12, 17, 29, 0.9) 100%)'
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
             <div
               style={{
-                width: '46px',
-                height: '46px',
+                position: 'relative',
+                width: '48px',
+                height: '48px',
                 borderRadius: '50%',
                 background: isAdmin
                   ? 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)'
@@ -166,31 +165,47 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 justifyContent: 'center',
                 fontWeight: 900,
                 fontSize: '1.25rem',
-                boxShadow: '0 4px 14px rgba(0, 245, 155, 0.3)'
+                boxShadow: '0 4px 14px rgba(0, 245, 155, 0.35)',
+                flexShrink: 0
               }}
             >
               {currentUser.username.charAt(0).toUpperCase()}
+              <span
+                style={{
+                  position: 'absolute',
+                  bottom: '-1px',
+                  right: '-1px',
+                  width: '14px',
+                  height: '14px',
+                  borderRadius: '50%',
+                  background: '#00f59b',
+                  border: '2.5px solid #0c111d'
+                }}
+              />
             </div>
+
             <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 800, color: '#ffffff' }}>
-                  Member Profile & Settings
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+                <h2 style={{ margin: 0, fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+                  {currentUser.username}
                 </h2>
                 <span
                   style={{
-                    background: isAdmin ? 'rgba(0, 245, 155, 0.2)' : 'rgba(56, 189, 248, 0.2)',
+                    background: isAdmin ? 'rgba(0, 245, 155, 0.18)' : 'rgba(56, 189, 248, 0.18)',
                     color: isAdmin ? '#00f59b' : '#38bdf8',
-                    padding: '3px 8px',
-                    borderRadius: '6px',
-                    fontSize: '0.72rem',
-                    fontWeight: 800
+                    border: `1px solid ${isAdmin ? 'rgba(0, 245, 155, 0.35)' : 'rgba(56, 189, 248, 0.35)'}`,
+                    padding: '2px 8px',
+                    borderRadius: '9999px',
+                    fontSize: '0.7rem',
+                    fontWeight: 800,
+                    letterSpacing: '0.02em'
                   }}
                 >
-                  {isAdmin ? '🛡️ Admin Account' : '⭐ VIP Member'}
+                  {isAdmin ? 'Admin 🛡️' : 'VIP Member ⭐'}
                 </span>
               </div>
-              <p style={{ margin: '4px 0 0 0', fontSize: '0.82rem', color: '#94a3b8' }}>
-                View and update all listener details. Any changes will dispatch confirmation emails to both you and the administrator.
+              <p style={{ margin: '3px 0 0 0', fontSize: '0.8rem', color: '#94a3b8' }}>
+                Edit your listener profile & credentials
               </p>
             </div>
           </div>
@@ -203,98 +218,98 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               border: '1px solid rgba(255, 255, 255, 0.1)',
               color: '#94a3b8',
               borderRadius: '50%',
-              width: '36px',
-              height: '36px',
+              width: '34px',
+              height: '34px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               cursor: 'pointer',
-              transition: 'all 0.2s ease'
+              transition: 'all 0.18s ease'
             }}
-            aria-label="Close Profile"
+            aria-label="Close Profile Modal"
           >
-            <X size={18} />
+            <X size={17} />
           </button>
         </div>
 
         {/* Scrollable Form Body */}
-        <div style={{ padding: '24px 28px', overflowY: 'auto', flex: 1 }}>
+        <div style={{ padding: '20px 24px', overflowY: 'auto', flex: 1 }}>
           {statusMessage && (
             <div
               style={{
-                marginBottom: '20px',
-                padding: '12px 16px',
-                borderRadius: '12px',
-                background: statusMessage.type === 'error' ? 'rgba(239, 68, 68, 0.15)' : 'rgba(0, 245, 155, 0.15)',
-                border: `1px solid ${statusMessage.type === 'error' ? 'rgba(239, 68, 68, 0.4)' : 'rgba(0, 245, 155, 0.4)'}`,
+                marginBottom: '18px',
+                padding: '11px 14px',
+                borderRadius: '10px',
+                background: statusMessage.type === 'error' ? 'rgba(239, 68, 68, 0.14)' : 'rgba(0, 245, 155, 0.14)',
+                border: `1px solid ${statusMessage.type === 'error' ? 'rgba(239, 68, 68, 0.35)' : 'rgba(0, 245, 155, 0.35)'}`,
                 color: statusMessage.type === 'error' ? '#fca5a5' : '#00f59b',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '10px',
-                fontSize: '0.88rem',
+                gap: '9px',
+                fontSize: '0.84rem',
                 fontWeight: 600
               }}
             >
-              {statusMessage.type === 'error' ? <AlertCircle size={18} /> : <CheckCircle2 size={18} />}
+              {statusMessage.type === 'error' ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
               <span>{statusMessage.text}</span>
             </div>
           )}
 
-          {/* Quick Account Metadata Overview Card */}
+          {/* Membership Metadata Overview Card */}
           <div
             style={{
-              background: 'rgba(15, 20, 36, 0.7)',
+              background: 'rgba(16, 24, 40, 0.65)',
               border: '1px solid rgba(255, 255, 255, 0.08)',
-              borderRadius: '16px',
-              padding: '16px 20px',
-              marginBottom: '24px',
+              borderRadius: '14px',
+              padding: '12px 16px',
+              marginBottom: '20px',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))',
-              gap: '14px'
+              gridTemplateColumns: 'repeat(auto-fit, minmax(115px, 1fr))',
+              gap: '12px'
             }}
           >
             <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Tag size={12} color="#00f59b" /> Referral Code
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Tag size={11} color="#00f59b" /> Promo Code
               </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 800, color: '#00f59b', fontFamily: 'monospace', marginTop: '2px' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#00f59b', fontFamily: 'monospace', marginTop: '2px' }}>
                 {currentUser.referralCode || 'N/A'}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Shield size={12} color="#38bdf8" /> Invited By
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Shield size={11} color="#38bdf8" /> Invited By
               </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#f8fafc', marginTop: '2px' }}>
                 {currentUser.referredBy || 'Direct'}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <CheckCircle2 size={12} color="#22c55e" /> Status
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <CheckCircle2 size={11} color="#22c55e" /> Status
               </div>
-              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: '#22c55e', marginTop: '2px' }}>
+              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#22c55e', marginTop: '2px' }}>
                 {currentUser.accountStatus === 'approved' ? 'Active VIP' : currentUser.accountStatus}
               </div>
             </div>
 
             <div>
-              <div style={{ fontSize: '0.72rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Calendar size={12} color="#f59e0b" /> Member Since
+              <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <Calendar size={11} color="#f59e0b" /> Member Since
               </div>
-              <div style={{ fontSize: '0.92rem', fontWeight: 600, color: '#cbd5e1', marginTop: '2px' }}>
+              <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#cbd5e1', marginTop: '2px' }}>
                 {currentUser.createdAt || 'Recent'}
               </div>
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-            {/* Row 1: First Name & Last Name */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            {/* First & Last Name */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
                   First Name <span style={{ color: '#00f59b' }}>*</span>
                 </label>
                 <input
@@ -304,12 +319,20 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   onChange={(e) => setFirstName(e.target.value)}
                   placeholder="First Name"
                   required
-                  style={{ width: '100%' }}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '10px',
+                    padding: '10px 14px',
+                    color: '#ffffff',
+                    fontSize: '0.88rem'
+                  }}
                 />
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
                   Last Name
                 </label>
                 <input
@@ -318,19 +341,27 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   value={lastName}
                   onChange={(e) => setLastName(e.target.value)}
                   placeholder="Last Name"
-                  style={{ width: '100%' }}
+                  style={{
+                    width: '100%',
+                    background: 'rgba(15, 23, 42, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '10px',
+                    padding: '10px 14px',
+                    color: '#ffffff',
+                    fontSize: '0.88rem'
+                  }}
                 />
               </div>
             </div>
 
-            {/* Row 2: Display Username & Email */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
+            {/* Username & Email */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
                   Display Username <span style={{ color: '#00f59b' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <UserIcon size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <UserIcon size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                   <input
                     type="text"
                     className="input-field"
@@ -338,17 +369,27 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Username"
                     required
-                    style={{ width: '100%', paddingLeft: '38px' }}
+                    style={{
+                      width: '100%',
+                      paddingLeft: '36px',
+                      background: 'rgba(15, 23, 42, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      paddingTop: '10px',
+                      paddingBottom: '10px',
+                      color: '#ffffff',
+                      fontSize: '0.88rem'
+                    }}
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
                   Email Address <span style={{ color: '#00f59b' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Mail size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                   <input
                     type="email"
                     className="input-field"
@@ -356,85 +397,90 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="name@domain.com"
                     required
-                    style={{ width: '100%', paddingLeft: '38px' }}
+                    style={{
+                      width: '100%',
+                      paddingLeft: '36px',
+                      background: 'rgba(15, 23, 42, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      paddingTop: '10px',
+                      paddingBottom: '10px',
+                      color: '#ffffff',
+                      fontSize: '0.88rem'
+                    }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Row 3: Phone & Favorite Genre */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
-              <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
-                  Phone Number (Optional)
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <Phone size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                  <input
-                    type="tel"
-                    className="input-field"
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="+1 (555) 000-0000"
-                    style={{ width: '100%', paddingLeft: '38px' }}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
-                  Favorite Genre / Style
-                </label>
-                <div style={{ position: 'relative' }}>
-                  <Music size={16} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
-                  <select
-                    className="input-field"
-                    value={favoriteGenre}
-                    onChange={(e) => setFavoriteGenre(e.target.value)}
-                    style={{ width: '100%', paddingLeft: '38px' }}
-                  >
-                    <option value="Reggae">Reggae / Roots</option>
-                    <option value="Rocksteady">Rocksteady Classics</option>
-                    <option value="Dancehall">Dancehall Jugglings</option>
-                    <option value="Dub">Studio Dub & Stems</option>
-                    <option value="Lovers Rock">Lovers Rock</option>
-                    <option value="Ska">Original Ska</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-
-            {/* Row 4: Bio / Listener Note */}
+            {/* Phone Number */}
             <div>
-              <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1', marginBottom: '6px' }}>
-                Listener Bio / Sound System Note
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
+                Phone Number (Optional)
+              </label>
+              <div style={{ position: 'relative' }}>
+                <Phone size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                <input
+                  type="tel"
+                  className="input-field"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="+1 (555) 000-0000"
+                  style={{
+                    width: '100%',
+                    paddingLeft: '36px',
+                    background: 'rgba(15, 23, 42, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.1)',
+                    borderRadius: '10px',
+                    paddingTop: '10px',
+                    paddingBottom: '10px',
+                    color: '#ffffff',
+                    fontSize: '0.88rem'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Listener Bio */}
+            <div>
+              <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
+                Listener Bio / Note
               </label>
               <textarea
                 className="input-field"
                 rows={2}
                 value={bio}
                 onChange={(e) => setBio(e.target.value)}
-                placeholder="Share your favorite sound system, selectors, or musical interests..."
-                style={{ width: '100%', resize: 'vertical' }}
+                placeholder="Share your favorite selectors, sound systems, or musical tastes..."
+                style={{
+                  width: '100%',
+                  resize: 'vertical',
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: '10px',
+                  padding: '10px 14px',
+                  color: '#ffffff',
+                  fontSize: '0.88rem'
+                }}
               />
             </div>
 
-            {/* Row 5: Change Password Section */}
+            {/* Change Password Card */}
             <div
               style={{
-                background: 'rgba(255, 255, 255, 0.03)',
+                background: 'rgba(15, 23, 42, 0.45)',
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '16px',
-                padding: '16px 20px'
+                borderRadius: '12px',
+                padding: '14px 16px'
               }}
             >
-              <div style={{ fontSize: '0.88rem', fontWeight: 800, color: '#ffffff', marginBottom: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Key size={16} color="#00f59b" /> Change Password (Leave blank to keep current)
+              <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '7px' }}>
+                <Key size={14} color="#00f59b" /> Change Password <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 400 }}>(Leave blank to keep current)</span>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '14px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '4px' }}>
+                  <label style={{ display: 'block', fontSize: '0.74rem', color: '#94a3b8', marginBottom: '4px' }}>
                     New Password
                   </label>
                   <input
@@ -443,13 +489,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    style={{ width: '100%' }}
+                    style={{
+                      width: '100%',
+                      background: 'rgba(11, 16, 28, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                      color: '#ffffff',
+                      fontSize: '0.84rem'
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.78rem', color: '#94a3b8', marginBottom: '4px' }}>
-                    Confirm New Password
+                  <label style={{ display: 'block', fontSize: '0.74rem', color: '#94a3b8', marginBottom: '4px' }}>
+                    Confirm Password
                   </label>
                   <input
                     type="password"
@@ -457,20 +511,28 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    style={{ width: '100%' }}
+                    style={{
+                      width: '100%',
+                      background: 'rgba(11, 16, 28, 0.8)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '8px',
+                      padding: '8px 12px',
+                      color: '#ffffff',
+                      fontSize: '0.84rem'
+                    }}
                   />
                 </div>
               </div>
             </div>
 
-            {/* Actions */}
+            {/* Bottom Actions */}
             <div
               style={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
                 gap: '12px',
-                marginTop: '10px'
+                marginTop: '6px'
               }}
             >
               <button
@@ -478,6 +540,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 className="btn btn-outline"
                 onClick={onClose}
                 disabled={isSubmitting}
+                style={{
+                  padding: '9px 18px',
+                  borderRadius: '10px',
+                  fontSize: '0.84rem',
+                  fontWeight: 600
+                }}
               >
                 Cancel
               </button>
@@ -489,13 +557,20 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: '8px',
-                  padding: '12px 24px',
-                  fontWeight: 800
+                  gap: '7px',
+                  padding: '10px 22px',
+                  borderRadius: '10px',
+                  fontWeight: 800,
+                  fontSize: '0.86rem',
+                  background: 'linear-gradient(135deg, #00f59b 0%, #00d2ff 100%)',
+                  color: '#07090e',
+                  border: 'none',
+                  boxShadow: '0 4px 14px rgba(0, 245, 155, 0.35)',
+                  cursor: 'pointer'
                 }}
               >
-                <Save size={16} />
-                <span>{isSubmitting ? 'Saving & Sending Emails...' : 'Save Profile Changes'}</span>
+                <Save size={15} />
+                <span>{isSubmitting ? 'Saving...' : 'Save Profile Changes'}</span>
               </button>
             </div>
           </form>

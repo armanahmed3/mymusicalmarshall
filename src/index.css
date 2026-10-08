@@ -2366,14 +2366,15 @@ select:disabled {
 }
 
 .landing-nav-inner {
-  max-width: 1360px;
+  max-width: 1460px;
+  width: 100%;
   margin: 0 auto;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  gap: 20px;
+  padding: 0 24px;
+  gap: 16px;
 }
 
 .landing-logo {
@@ -2459,12 +2460,13 @@ select:disabled {
 .landing-links {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   background: rgba(255, 255, 255, 0.035);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 5px 8px;
+  padding: 4px 6px;
   border-radius: var(--radius-full);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  flex-shrink: 1;
 }
 
 .landing-links a,
@@ -2472,10 +2474,10 @@ select:disabled {
 .landing-nav-link-btn {
   text-decoration: none;
   font-family: var(--font-family);
-  font-size: 0.86rem;
+  font-size: 0.81rem;
   font-weight: 600;
   color: #94a3b8;
-  padding: 7px 14px;
+  padding: 6px 11px;
   border-radius: var(--radius-full);
   white-space: nowrap;
   transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
@@ -2483,7 +2485,7 @@ select:disabled {
   border: 1px solid transparent;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
   cursor: pointer;
 }
 
@@ -2509,12 +2511,109 @@ select:disabled {
 .landing-nav-actions {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-shrink: 0;
 }
 
 .landing-nav-actions .btn {
   white-space: nowrap;
+}
+
+/* Luxury Profile Chip */
+.nav-profile-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  padding: 4px 12px 4px 5px;
+  border-radius: 9999px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(0, 245, 155, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  color: #ffffff;
+  user-select: none;
+}
+
+.nav-profile-chip:hover {
+  background: rgba(0, 245, 155, 0.12);
+  border-color: #00f59b;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(0, 245, 155, 0.25);
+}
+
+.nav-profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #00f59b 0%, #00d2ff 100%);
+  color: #07090e;
+  font-weight: 800;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 2px rgba(0, 245, 155, 0.35);
+  flex-shrink: 0;
+}
+
+.nav-profile-avatar.user-avatar {
+  background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.35);
+}
+
+.nav-profile-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.15;
+  text-align: left;
+}
+
+.nav-profile-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.nav-profile-role {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #00f59b;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.nav-profile-role.is-member {
+  color: #38bdf8;
+}
+
+.nav-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #f87171;
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.nav-logout-btn:hover {
+  background: #ef4444;
+  color: #ffffff;
+  border-color: #ef4444;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
 }
 
 /* Section Smooth Anchor Offsets */

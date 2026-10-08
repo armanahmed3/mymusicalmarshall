@@ -9,7 +9,6 @@ import {
   Download,
   X,
   AlertCircle,
-  Headphones,
   Lock,
   CheckCircle2
 } from 'lucide-react';
@@ -466,7 +465,6 @@ export function App() {
           firstName: updatedUser.firstName,
           lastName: updatedUser.lastName,
           phone: updatedUser.phone,
-          favoriteGenre: updatedUser.favoriteGenre,
           bio: updatedUser.bio
         })
       });
@@ -910,24 +908,7 @@ export function App() {
 
           {/* Right: Volume & Tier Actions */}
           <div className="player-right">
-            {currentSong?.isMmRelease ? (
-              <span
-                className="badge"
-                style={{
-                  background: '#dcfce7',
-                  color: '#15803d',
-                  padding: '5px 10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: '0.74rem',
-                  fontWeight: 700
-                }}
-              >
-                <Headphones size={12} />
-                <span>Free MM Release</span>
-              </span>
-            ) : !currentUser ? (
+            {!currentUser ? (
               <button
                 type="button"
                 className="badge"
