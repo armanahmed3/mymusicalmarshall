@@ -113,3 +113,8 @@ export type AppPage =
 
 export type AppMode = 'landing' | 'app';
 
+export interface AppParameters {
+  Feat_MixName: string;
+  Feat_MixPath: string;
+}
+

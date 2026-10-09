@@ -18,9 +18,10 @@ import {
   ExternalLink,
   CheckCircle2
 } from 'lucide-react';
-import type { Song, User, EventFlyer, SupportTicket } from '../types';
+import type { Song, User, EventFlyer, SupportTicket, AppParameters } from '../types';
 
 interface LandingPageProps {
+  parameters?: AppParameters;
   mmReleases: Song[];
   allMixes?: Song[];
   currentUser: User | null;
@@ -37,6 +38,7 @@ interface LandingPageProps {
 }
 
 export const LandingPage: React.FC<LandingPageProps> = ({
+  parameters,
   mmReleases,
   allMixes = [],
   currentUser,
@@ -92,12 +94,32 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Featured Mix for Home Screen (PDF Item 4)
-  const featuredMix = allMixes.length > 0
-    ? allMixes[0]
-    : mmReleases.find(s => s.isMix || s.title.toLowerCase().includes('mix') || s.title.toLowerCase().includes('juggling') || s.title.toLowerCase().includes('medley')) || mmReleases[0];
-  
-  const isPlayingFeaturedMix = isPlaying && activeTrack?.id === featuredMix?.id;
+  // Featured Mix from Parameters Table (Feat_MixName: Easy_Flow_Mix, Feat_MixPath)
+  const targetMixName = parameters?.Feat_MixName || 'Easy_Flow_Mix';
+  const targetMixPath = parameters?.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
+
+  const featuredMix: Song = allMixes.find(
+    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
+  ) || mmReleases.find(
+    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
+  ) || {
+    id: 'song-mm-easy-flow',
+    title: targetMixName,
+    artist: 'DJ Music Marshall',
+    album: 'Master DJ Mixes & Jugglings',
+    duration: 1800,
+    audioUrl: targetMixPath,
+    coverUrl: '/headphone_logo.png',
+    genre: 'Reggae',
+    mood: 'chill',
+    bpm: 88,
+    isMmRelease: false,
+    isMix: true,
+    isDownloadable: true,
+    description: "Lover's rock and conscious reggae music"
+  };
+
+  const isPlayingFeaturedMix = isPlaying && (activeTrack?.id === featuredMix?.id || activeTrack?.title === targetMixName);
 
   const handleToggleFeaturedMix = () => {
     if (!featuredMix) return;
@@ -457,7 +479,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
-                  Music Marshall Featured Mix -
+                  Music Marshall Featured Mix - {targetMixName}
                 </div>
                 <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
                   Stream Free Without Login

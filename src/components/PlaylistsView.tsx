@@ -383,7 +383,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                   type="text"
                   required
                   className="form-control"
-                  placeholder="e.g., Weekend Soundclash Marathon"
+                  placeholder="e.g., Weekend Reggae Mixes"
                   value={newPlName}
                   onChange={(e) => setNewPlName(e.target.value)}
                 />

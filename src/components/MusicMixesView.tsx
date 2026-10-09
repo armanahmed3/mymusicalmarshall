@@ -35,7 +35,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   playlists,
   currentUser
 }) => {
-  // Filter mixes: strictly tracks marked as isMix (continuous mixes, jugglings & soundclashes)
+  // Filter mixes: strictly tracks marked as isMix (continuous mixes & jugglings)
   const mixes = songs.filter((s) => s.isMix);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchMixQuery, setSearchMixQuery] = useState<string>('');

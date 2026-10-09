@@ -1,4 +1,4 @@
-import type { Song, ReferralCode, User, Playlist, EventFlyer, SupportTicket } from '../types';
+import type { Song, ReferralCode, User, Playlist, EventFlyer, SupportTicket, AppParameters } from '../types';
 
 // All official audio tracks downloaded directly from https://mymusicmarshall.com/
 export const INITIAL_SONGS: Song[] = [
@@ -78,13 +78,13 @@ export const INITIAL_SONGS: Song[] = [
     duration: 240,
     audioUrl: '/audio/Righteous_People223901125.mp3',
     coverUrl: '/headphone_logo.png',
-    genre: 'Gospel Reggae',
+    genre: 'R&B',
     mood: 'chill',
     bpm: 88,
     isMmRelease: true,
     isMix: false,
     isDownloadable: false,
-    description: 'Heritage & Faith gospel reggae anthem by Wayne Armond — Free MM Release.'
+    description: 'Righteous People - Wayne Armond — Free MM Release.'
   },
   {
     id: 'song-mm-3025',
@@ -217,23 +217,39 @@ export const INITIAL_SONGS: Song[] = [
 
   // ==========================================
   // LISTEN TO MUSIC & CONTINUOUS MIXES
-  // Continuous DJ sets, jugglings, dubs & stems (Requires Login)
+  // Continuous DJ sets & jugglings from mixes database (Requires Login)
   // ==========================================
+  {
+    id: 'song-mm-easy-flow',
+    title: 'Easy_Flow_Mix',
+    artist: 'DJ Music Marshall',
+    album: 'Master DJ Mixes & Jugglings',
+    duration: 1800,
+    audioUrl: '/audio/Easy_Flow_23v1241026820.mp3',
+    coverUrl: '/headphone_logo.png',
+    genre: 'Reggae',
+    mood: 'chill',
+    bpm: 88,
+    isMmRelease: false,
+    isMix: true,
+    isDownloadable: true,
+    description: "Lover's rock and conscious reggae music"
+  },
   {
     id: 'song-mm-2012',
     title: 'Wayne Armond Picks on Alton Ellis (Full Continuous Mixx)',
-    artist: 'Wayne Armond & DJ Marshall',
+    artist: 'Wayne Armond',
     album: 'Master DJ Mixes & Jugglings',
     duration: 2730,
     audioUrl: '/audio/Wayne_Alton_Full_Mixx220453461.mp3',
     coverUrl: '/headphone_logo.png',
-    genre: 'Rocksteady / Classic',
+    genre: 'Reggae',
     mood: 'focus',
     bpm: 86,
     isMmRelease: false,
     isMix: true,
     isDownloadable: true,
-    description: 'Full 45-minute continuous tribute mix to Alton Ellis by Wayne Armond.'
+    description: 'Wayne Armond Picks on Alton Ellis'
   },
   {
     id: 'song-mm-3015',
@@ -243,111 +259,52 @@ export const INITIAL_SONGS: Song[] = [
     duration: 292,
     audioUrl: '/audio/Afrobeat_Medley221610074.mp3',
     coverUrl: '/headphone_logo.png',
-    genre: 'Afrobeat / R&B',
+    genre: 'Afrobeat',
     mood: 'workout',
     bpm: 116,
     isMmRelease: false,
     isMix: true,
     isDownloadable: true,
-    description: 'Continuous upbeat Afrobeat meets R&B party mix session.'
+    description: 'Afrobeat Meets R&B'
   },
   {
     id: 'song-mm-3017',
     title: 'Positive Transfusion EP Juggling (Continuous Set)',
     artist: 'DJ Music Marshall',
-    album: 'Marshall Soundclash Series',
+    album: 'Master DJ Mixes & Jugglings',
     duration: 1800,
     audioUrl: '/audio/Positive_Transfusion_Juggling_v2222755873.mp3',
     coverUrl: '/headphone_logo.png',
-    genre: 'Dancehall / Juggling',
+    genre: 'Reggae',
     mood: 'party',
     bpm: 104,
     isMmRelease: false,
     isMix: true,
     isDownloadable: true,
-    description: '30-minute nonstop authentic dancehall soundclash juggling session.'
+    description: 'Positive Transfusion EP Juggling'
   },
   {
     id: 'song-mm-master-vault',
-    title: 'Studio Vocals Master Sample Mix (Extended Stems)',
+    title: 'Party Vocals Mixx (Extended Studio Stems)',
     artist: 'Music Marshall Lab',
     album: 'Master Sound Vault',
     duration: 1440,
     audioUrl: '/audio/vocals_Mixx_01222201457.mp3',
     coverUrl: '/headphone_logo.png',
-    genre: 'Dub / Vocals',
+    genre: 'Reggae',
     mood: 'soul',
     bpm: 90,
     isMmRelease: false,
     isMix: true,
     isDownloadable: true,
-    description: 'Master soundboard stems and unreleased acoustic vocals — Members Only.'
-  },
-  {
-    id: 'song-mm-mix-soundclash',
-    title: 'Marshall Soundclash 90s Dancehall Juggle (Live Set)',
-    artist: 'DJ Music Marshall',
-    album: 'Marshall Soundclash Series',
-    duration: 1800,
-    audioUrl: '/audio/Positive_Transfusion_Juggling_v2222755873.mp3',
-    coverUrl: '/headphone_logo.png',
-    genre: 'Dancehall / Juggling',
-    mood: 'party',
-    bpm: 104,
-    isMmRelease: false,
-    isMix: true,
-    isDownloadable: true,
-    description: 'Hardcore 90s dancehall juggling and soundclash audio master.'
-  },
-  {
-    id: 'song-mm-mix-tribute',
-    title: 'Rocksteady & Lovers Rock Tribute Session',
-    artist: 'Wayne Armond & DJ Marshall',
-    album: 'Master DJ Mixes & Jugglings',
-    duration: 2730,
-    audioUrl: '/audio/Wayne_Alton_Full_Mixx220453461.mp3',
-    coverUrl: '/headphone_logo.png',
-    genre: 'Rocksteady / Classic',
-    mood: 'chill',
-    bpm: 86,
-    isMmRelease: false,
-    isMix: true,
-    isDownloadable: true,
-    description: 'Extended acoustic lovers rock and classic rocksteady medley session.'
-  },
-  {
-    id: 'song-mm-mix-dub',
-    title: 'Dubwise Foundation Sound System Tape',
-    artist: 'Music Marshall Lab',
-    album: 'Master Sound Vault',
-    duration: 1440,
-    audioUrl: '/audio/vocals_Mixx_01222201457.mp3',
-    coverUrl: '/headphone_logo.png',
-    genre: 'Dub / Vocals',
-    mood: 'chill',
-    bpm: 90,
-    isMmRelease: false,
-    isMix: true,
-    isDownloadable: true,
-    description: 'Deep heavy bassline dub versions and vocal isolation master session.'
-  },
-  {
-    id: 'song-mm-mix-afrobeat',
-    title: 'Afrobeats & Caribbean Fusion Party Mix',
-    artist: 'DJ Music Marshall',
-    album: 'Master DJ Mixes & Jugglings',
-    duration: 292,
-    audioUrl: '/audio/Afrobeat_Medley221610074.mp3',
-    coverUrl: '/headphone_logo.png',
-    genre: 'Afrobeat / R&B',
-    mood: 'party',
-    bpm: 116,
-    isMmRelease: false,
-    isMix: true,
-    isDownloadable: true,
-    description: 'High-energy fusion of modern Afrobeat rhythms and Caribbean dancehall.'
+    description: 'Reggae & Dancehall Vocals — Members Only'
   }
 ];
+
+export const INITIAL_PARAMETERS: AppParameters = {
+  Feat_MixName: 'Easy_Flow_Mix',
+  Feat_MixPath: '/audio/Easy_Flow_23v1241026820.mp3'
+};
 
 import { MSSQL_DATABASE_USERS } from './databaseUsers';
 
@@ -387,11 +344,11 @@ export const INITIAL_USERS: User[] = [
 export const INITIAL_PLAYLISTS: Playlist[] = [
   {
     id: 'pl-marshall-select',
-    name: 'Marshall Soundclash & Juggling Sessions',
+    name: 'Master Mixes & Jugglings',
     description: 'Continuous party energy and live juggle sets handpicked by DJ Music Marshall.',
     createdBy: 'AdminMarshall',
     createdAt: '2026-03-01',
-    songIds: ['song-mm-3017', 'song-mm-2012', 'song-mm-3015', 'song-mm-master-vault'],
+    songIds: ['song-mm-easy-flow', 'song-mm-3017', 'song-mm-2012', 'song-mm-3015', 'song-mm-master-vault'],
     coverUrl: '/mm_banner.png'
   },
   {

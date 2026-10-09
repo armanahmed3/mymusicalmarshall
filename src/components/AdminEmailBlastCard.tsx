@@ -11,7 +11,7 @@ export const AdminEmailBlastCard: React.FC<AdminEmailBlastCardProps> = ({ users,
   const [subject, setSubject] = useState('🎵 New Music Mixes & Studio Releases Available on Music Marshall!');
   const [headline, setHeadline] = useState('Exclusive Studio Mixes & Rocksteady Masters Just Dropped');
   const [bodyContent, setBodyContent] = useState(
-    'Greetings Member,\n\nWe have just updated the Music Marshall Master Vault with brand new continuous music mixes, Rocksteady tribute sessions by Wayne Armond, and live soundclash jugglings.\n\nLog in now to stream or download these exclusive studio tracks.'
+    'Greetings Member,\n\nWe have just updated the Music Marshall Master Vault with brand new continuous music mixes, Rocksteady tribute sessions by Wayne Armond, and continuous DJ jugglings.\n\nLog in now to stream or download these exclusive studio tracks.'
   );
   const [targetAudience, setTargetAudience] = useState<'all' | 'approved' | 'loyalty'>('approved');
   const [isSending, setIsSending] = useState(false);

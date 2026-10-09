@@ -19,7 +19,8 @@ import type {
   Playlist,
   EventFlyer,
   SupportTicket,
-  UserPreferences
+  UserPreferences,
+  AppParameters
 } from './types';
 import {
   INITIAL_SONGS,
@@ -27,7 +28,8 @@ import {
   INITIAL_USERS,
   INITIAL_PLAYLISTS,
   INITIAL_FLYERS,
-  INITIAL_SUPPORT_TICKETS
+  INITIAL_SUPPORT_TICKETS,
+  INITIAL_PARAMETERS
 } from './data/initialSongs';
 import { Navbar } from './components/Navbar';
 import { LandingPage } from './components/LandingPage';
@@ -49,8 +51,16 @@ export function App() {
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) {
+          // Remove fake tracks (Marshall Soundclash and duplicates)
+          const filtered = parsed.filter((s: Song) =>
+            s.id !== 'song-mm-mix-soundclash' &&
+            !s.title.toLowerCase().includes('soundclash') &&
+            s.id !== 'song-mm-mix-tribute' &&
+            s.id !== 'song-mm-mix-dub' &&
+            s.id !== 'song-mm-mix-afrobeat'
+          );
           // Sync canonical release & mix flags and metadata from INITIAL_SONGS
-          const updated = parsed.map((s: Song) => {
+          const updated = filtered.map((s: Song) => {
             const initSong = INITIAL_SONGS.find((init) => init.id === s.id);
             if (initSong) {
               return {
@@ -60,7 +70,7 @@ export function App() {
                 description: initSong.description,
                 album: initSong.album,
                 coverUrl: '/headphone_logo.png',
-                genre: initSong.genre || s.genre,
+                genre: initSong.genre, // strictly enforce authentic genre from table
                 isMmRelease: initSong.isMmRelease,
                 isMix: initSong.isMix
               };
@@ -69,7 +79,9 @@ export function App() {
           });
           const existingIds = new Set(updated.map((s: Song) => s.id));
           const missingInitSongs = INITIAL_SONGS.filter((s) => !existingIds.has(s.id));
-          return [...updated, ...missingInitSongs];
+          const finalSongs = [...updated, ...missingInitSongs];
+          localStorage.setItem('mm_songs', JSON.stringify(finalSongs));
+          return finalSongs;
         }
       } catch {
         // fallback
@@ -146,8 +158,46 @@ export function App() {
   // Playlists, Event Flyers & Support Tickets
   const [playlists, setPlaylists] = useState<Playlist[]>(() => {
     const saved = localStorage.getItem('mm_playlists');
-    return saved ? JSON.parse(saved) : INITIAL_PLAYLISTS;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          const cleaned = parsed.map((p: Playlist) => {
+            let name = p.name;
+            if (name.includes('Soundclash')) {
+              name = 'Master Mixes & Jugglings';
+            }
+            const cleanSongIds = (p.songIds || []).filter(
+              (id) => id !== 'song-mm-mix-soundclash' && id !== 'song-mm-mix-tribute' && id !== 'song-mm-mix-dub' && id !== 'song-mm-mix-afrobeat'
+            );
+            if (!cleanSongIds.includes('song-mm-easy-flow')) {
+              cleanSongIds.unshift('song-mm-easy-flow');
+            }
+            return { ...p, name, songIds: cleanSongIds };
+          });
+          localStorage.setItem('mm_playlists', JSON.stringify(cleaned));
+          return cleaned;
+        }
+      } catch {}
+    }
+    return INITIAL_PLAYLISTS;
   });
+
+  // Parameters table state (Feat_MixName & Feat_MixPath)
+  const [parameters] = useState<AppParameters>(() => {
+    const saved = localStorage.getItem('mm_parameters');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.Feat_MixName) return parsed;
+      } catch {}
+    }
+    return INITIAL_PARAMETERS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mm_parameters', JSON.stringify(parameters));
+  }, [parameters]);
 
   const [flyers, setFlyers] = useState<EventFlyer[]>(() => {
     const saved = localStorage.getItem('mm_flyers');
@@ -709,8 +759,9 @@ export function App() {
         {currentPage === 'home' && (
           <LandingPage
             hideNav={true}
+            parameters={parameters}
             mmReleases={mmReleases}
-            allMixes={songs.filter((s) => s.isMix || s.duration >= 240)}
+            allMixes={songs.filter((s) => s.isMix)}
             currentUser={currentUser}
             landingFeatureImage={landingFeatureImage}
             flyers={flyers}

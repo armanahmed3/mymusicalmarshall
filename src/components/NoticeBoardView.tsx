@@ -37,7 +37,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
           </div>
           <h2 className="section-title">Notice Board & Event Flyers</h2>
           <p className="section-subtitle">
-            Upcoming soundclashes, live studio master sessions, dub yard sessions, and official announcements.
+            Upcoming live studio master sessions, dub yard sessions, and official announcements.
           </p>
         </div>
 

@@ -216,7 +216,7 @@ export const AdminFeatureImageCard: React.FC<AdminFeatureImageCardProps> = ({
           </h3>
         </div>
         <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '0 0 16px 0' }}>
-          Post upcoming live sessions, soundclashes, dub yards, and announcements to the public & member Notice Board.
+          Post upcoming live sessions, concerts, dub yards, and announcements to the public & member Notice Board.
         </p>
 
         <form onSubmit={handlePostFlyer} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>

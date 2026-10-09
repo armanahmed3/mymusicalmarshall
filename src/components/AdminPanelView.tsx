@@ -1009,7 +1009,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                   Post Event Flyer & Notice
                 </h3>
                 <span style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                  Announce upcoming sessions, soundclashes, and concerts on the Notice Board
+                  Announce upcoming sessions, live shows, and concerts on the Notice Board
                 </span>
               </div>
             </div>
@@ -1020,7 +1020,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Kingston Dub Club & Soundclash Festival"
+                  placeholder="e.g. Kingston Dub Club & Reggae Festival"
                   value={flyerTitle}
                   onChange={(e) => setFlyerTitle(e.target.value)}
                   className="form-control"
