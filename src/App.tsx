@@ -48,8 +48,9 @@ export function App() {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= INITIAL_SONGS.length) {
-          return parsed.map((s: Song) => {
+        if (Array.isArray(parsed)) {
+          // Sync canonical release & mix flags and metadata from INITIAL_SONGS
+          const updated = parsed.map((s: Song) => {
             const initSong = INITIAL_SONGS.find((init) => init.id === s.id);
             if (initSong) {
               return {
@@ -60,11 +61,15 @@ export function App() {
                 album: initSong.album,
                 coverUrl: '/headphone_logo.png',
                 genre: initSong.genre || s.genre,
-                isMmRelease: initSong.isMmRelease
+                isMmRelease: initSong.isMmRelease,
+                isMix: initSong.isMix
               };
             }
             return s;
           });
+          const existingIds = new Set(updated.map((s: Song) => s.id));
+          const missingInitSongs = INITIAL_SONGS.filter((s) => !existingIds.has(s.id));
+          return [...updated, ...missingInitSongs];
         }
       } catch {
         // fallback
@@ -162,8 +167,8 @@ export function App() {
     return localStorage.getItem('mm_dashboard_feature_image') || '/mm_banner.png';
   });
 
-  // Audio Playback Engine
-  const mmReleases = songs.filter((s) => s.isMmRelease);
+  // Audio Playback Engine (Strict separation: mmReleases are solo singles, NOT mixes)
+  const mmReleases = songs.filter((s) => s.isMmRelease && !s.isMix);
   const [currentSong, setCurrentSong] = useState<Song | null>(() => mmReleases[0] || songs[0] || null);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(0.8);
@@ -254,6 +259,13 @@ export function App() {
       audioRef.current.volume = isMuted ? 0 : volume;
     }
   }, [volume, isMuted]);
+
+  // Ensure unauthenticated users are never stuck on mixes view
+  useEffect(() => {
+    if (currentPage === 'mixes' && !currentUser) {
+      setCurrentPage('home');
+    }
+  }, [currentPage, currentUser]);
 
   // Playback Handlers
   const handlePlaySong = (song: Song) => {
@@ -640,6 +652,12 @@ export function App() {
             setAuthModalOpen(true);
             return;
           }
+          if (page === 'mixes' && !currentUser) {
+            setAuthMessage('🔒 Please sign in to access Listen to Music & Continuous Mixes.');
+            setAuthTab('login');
+            setAuthModalOpen(true);
+            return;
+          }
           setCurrentPage(page);
         }}
         currentUser={currentUser}
@@ -718,8 +736,8 @@ export function App() {
           />
         )}
 
-        {/* VIEW 2: LISTEN TO MUSIC & MIXES */}
-        {currentPage === 'mixes' && (
+        {/* VIEW 2: LISTEN TO MUSIC & MIXES (Members Only — Requires Login) */}
+        {currentPage === 'mixes' && currentUser && (
           <div className="page-container" style={{ maxWidth: '1360px', margin: '0 auto', paddingTop: '28px' }}>
             <MusicMixesView
               songs={songs}

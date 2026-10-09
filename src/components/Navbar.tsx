@@ -76,15 +76,18 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>Home</span>
           </button>
 
-          <button
-            type="button"
-            className={`landing-nav-link-btn ${currentPage === 'mixes' ? 'is-active' : ''}`}
-            onClick={() => handleNavClick('mixes')}
-            title="Listen to Music & Continuous Mixes"
-          >
-            <Headphones size={15} />
-            <span>Listen to Music</span>
-          </button>
+          {/* LISTEN TO MUSIC: Strictly visible only when logged in */}
+          {isLoggedIn && (
+            <button
+              type="button"
+              className={`landing-nav-link-btn ${currentPage === 'mixes' ? 'is-active' : ''}`}
+              onClick={() => handleNavClick('mixes')}
+              title="Listen to Music & Continuous Mixes"
+            >
+              <Headphones size={15} />
+              <span>Listen to Music</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -232,14 +235,17 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span>Home</span>
           </button>
 
-          <button
-            type="button"
-            className="landing-mobile-menu-item"
-            onClick={() => handleNavClick('mixes')}
-          >
-            <Headphones size={18} />
-            <span>Listen to Music</span>
-          </button>
+          {/* Mobile Listen to Music (Strictly visible only when logged in) */}
+          {isLoggedIn && (
+            <button
+              type="button"
+              className="landing-mobile-menu-item"
+              onClick={() => handleNavClick('mixes')}
+            >
+              <Headphones size={18} />
+              <span>Listen to Music</span>
+            </button>
+          )}
 
           <button
             type="button"

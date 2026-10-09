@@ -35,8 +35,8 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   playlists,
   currentUser
 }) => {
-  // Filter mixes: explicitly marked isMix OR duration >= 240 seconds
-  const mixes = songs.filter((s) => s.isMix || s.duration >= 240);
+  // Filter mixes: strictly tracks marked as isMix (continuous mixes, jugglings & soundclashes)
+  const mixes = songs.filter((s) => s.isMix);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchMixQuery, setSearchMixQuery] = useState<string>('');
   const [playlistDropdownMixId, setPlaylistDropdownMixId] = useState<string | null>(null);
