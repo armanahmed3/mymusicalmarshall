@@ -25,6 +25,8 @@ interface LandingPageProps {
   mmReleases: Song[];
   allMixes?: Song[];
   currentUser: User | null;
+  currentSong?: Song | null;
+  isPlayingGlobal?: boolean;
   landingFeatureImage?: string;
   flyers?: EventFlyer[];
   supportTickets?: SupportTicket[];
@@ -42,6 +44,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   mmReleases,
   allMixes = [],
   currentUser,
+  currentSong,
+  isPlayingGlobal,
   landingFeatureImage: _landingFeatureImage,
   flyers = [],
   onSubmitTicket,
@@ -94,6 +98,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
+  // Synchronize playback with global audio player if provided
+  const isPlaybackActive = isPlayingGlobal !== undefined ? isPlayingGlobal : isPlaying;
+  const currentPlaybackTrack = currentSong !== undefined ? currentSong : activeTrack;
+
   // Featured Mix from Parameters Table (Feat_MixName: Easy_Flow_Mix, Feat_MixPath)
   const targetMixName = parameters?.Feat_MixName || 'Easy_Flow_Mix';
   const targetMixPath = parameters?.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
@@ -119,11 +127,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     description: "Lover's rock and conscious reggae music"
   };
 
-  const isPlayingFeaturedMix = isPlaying && (activeTrack?.id === featuredMix?.id || activeTrack?.title === targetMixName);
+  const isPlayingFeaturedMix = isPlaybackActive && Boolean(
+    currentPlaybackTrack?.id === featuredMix?.id ||
+    currentPlaybackTrack?.title.toLowerCase() === targetMixName.toLowerCase() ||
+    currentPlaybackTrack?.title.toLowerCase().replace(/_/g, ' ') === targetMixName.toLowerCase().replace(/_/g, ' ') ||
+    currentPlaybackTrack?.audioUrl === targetMixPath ||
+    currentPlaybackTrack?.title.toLowerCase().includes('easy_flow')
+  );
 
   const handleToggleFeaturedMix = () => {
     if (!featuredMix) return;
-    handleSelectRelease(featuredMix);
+    if (onPlaySong) {
+      onPlaySong(featuredMix);
+    } else {
+      handleSelectRelease(featuredMix);
+    }
   };
 
   // Audio element listeners
@@ -562,7 +580,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       </span>
                       {flyer.externalLink ? (
                         <a
-                          href={flyer.externalLink}
+                          href={flyer.externalLink.startsWith('http') ? flyer.externalLink : `https://${flyer.externalLink}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="btn btn-outline btn-sm"
@@ -600,7 +618,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
           <div className="releases-list-box">
             {mmReleases.map((song) => {
-              const isSelected = activeTrack?.id === song.id;
+              const isSelected = currentPlaybackTrack?.id === song.id || currentPlaybackTrack?.audioUrl === song.audioUrl;
+              const isSongPlaying = isSelected && isPlaybackActive;
               return (
                 <div
                   key={song.id}
@@ -609,7 +628,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 >
                   <div style={{ position: 'relative', width: '44px', height: '44px', flexShrink: 0 }}>
                     <img src="/headphone_logo.png" alt={song.title} className="release-thumb" style={{ width: '100%', height: '100%', display: 'block' }} />
-                    {isSelected && isPlaying && (
+                    {isSongPlaying && (
                       <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.65)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <div className="mini-equalizer">
                           <span className="eq-bar"></span>
@@ -652,9 +671,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                           e.stopPropagation();
                           handleSelectRelease(song);
                         }}
-                        title={isSelected && isPlaying ? 'Pause' : 'Play'}
+                        title={isSongPlaying ? 'Pause' : 'Play'}
                       >
-                        {isSelected && isPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" />}
+                        {isSongPlaying ? <Pause size={14} fill="white" /> : <Play size={14} fill="white" />}
                       </button>
                     </div>
                   </div>

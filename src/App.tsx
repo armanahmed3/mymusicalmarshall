@@ -317,9 +317,24 @@ export function App() {
     }
   }, [currentPage, currentUser]);
 
+  // Check if track is free to stream without authentication
+  const isFreeTrack = (song: Song | null) => {
+    if (!song) return false;
+    const targetMix = (parameters.Feat_MixName || 'Easy_Flow_Mix').toLowerCase();
+    const targetPath = parameters.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
+    return (
+      Boolean(song.isMmRelease) ||
+      song.id === 'song-mm-easy-flow' ||
+      song.title.toLowerCase() === targetMix ||
+      song.title.toLowerCase().replace(/_/g, ' ') === targetMix.replace(/_/g, ' ') ||
+      song.audioUrl === targetPath ||
+      song.title.toLowerCase().includes('easy_flow')
+    );
+  };
+
   // Playback Handlers
   const handlePlaySong = (song: Song) => {
-    if (!song.isMmRelease && !currentUser) {
+    if (!isFreeTrack(song) && !currentUser) {
       setAuthMessage('🔒 Sign in or register to stream full master studio tracks.');
       setAuthTab('login');
       setAuthModalOpen(true);
@@ -345,7 +360,7 @@ export function App() {
       return;
     }
 
-    if (!currentSong.isMmRelease && !currentUser) {
+    if (!isFreeTrack(currentSong) && !currentUser) {
       setAuthMessage('🔒 Please log in to stream full audio catalog.');
       setAuthTab('login');
       setAuthModalOpen(true);
@@ -763,6 +778,8 @@ export function App() {
             mmReleases={mmReleases}
             allMixes={songs.filter((s) => s.isMix)}
             currentUser={currentUser}
+            currentSong={currentSong}
+            isPlayingGlobal={isPlaying}
             landingFeatureImage={landingFeatureImage}
             flyers={flyers}
             supportTickets={supportTickets}

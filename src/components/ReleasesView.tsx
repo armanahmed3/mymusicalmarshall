@@ -1,4 +1,4 @@
-import { Play, Pause, Home } from 'lucide-react';
+import { Play, Pause, Home, Download } from 'lucide-react';
 import type { Song } from '../types';
 
 interface ReleasesViewProps {
@@ -140,21 +140,36 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                       {formatTime(song.duration)}
                     </td>
                     <td style={{ textAlign: 'center' }}>
-                      <button
-                        type="button"
-                        className="btn-play-table"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          onPlaySong(song);
-                        }}
-                        title="Play Free (No Login Needed)"
-                      >
-                        {isCurrent && isPlaying ? (
-                          <Pause size={18} fill="white" />
-                        ) : (
-                          <Play size={18} fill="white" />
+                      <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                        {song.isDownloadable && (
+                          <a
+                            href={song.audioUrl}
+                            download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
+                            className="btn btn-outline btn-sm"
+                            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', fontSize: '0.78rem', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
+                            title={`Download ${song.title}`}
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Download size={13} />
+                            <span>Download</span>
+                          </a>
                         )}
-                      </button>
+                        <button
+                          type="button"
+                          className="btn-play-table"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onPlaySong(song);
+                          }}
+                          title="Play Free (No Login Needed)"
+                        >
+                          {isCurrent && isPlaying ? (
+                            <Pause size={18} fill="white" />
+                          ) : (
+                            <Play size={18} fill="white" />
+                          )}
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

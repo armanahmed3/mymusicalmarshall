@@ -178,7 +178,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
 
                   {flyer.externalLink ? (
                     <a
-                      href={flyer.externalLink}
+                      href={flyer.externalLink.startsWith('http') ? flyer.externalLink : `https://${flyer.externalLink}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="btn btn-outline btn-sm"
