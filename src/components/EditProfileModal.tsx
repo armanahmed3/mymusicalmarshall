@@ -4,7 +4,6 @@ import {
   User as UserIcon,
   Mail,
   Shield,
-  Key,
   Calendar,
   CheckCircle2,
   Tag,
@@ -18,7 +17,7 @@ interface EditProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentUser: User | null;
-  onSaveProfile: (updatedUser: User, newPassword?: string) => Promise<void> | void;
+  onSaveProfile: (updatedUser: User) => Promise<void> | void;
 }
 
 export const EditProfileModal: React.FC<EditProfileModalProps> = ({
@@ -33,8 +32,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [bio, setBio] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'error' | 'success'; text: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -46,8 +43,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       setEmail(currentUser.email || '');
       setPhone(currentUser.phone || '');
       setBio(currentUser.bio || '');
-      setNewPassword('');
-      setConfirmPassword('');
       setStatusMessage(null);
     }
   }, [currentUser, isOpen]);
@@ -64,17 +59,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanFirstName || !cleanUsername || !cleanEmail) {
-      setStatusMessage({ type: 'error', text: 'First name, display username, and email are required.' });
+      setStatusMessage({ type: 'error', text: 'First name, display username, and email address are required.' });
       return;
     }
 
-    if (newPassword && newPassword.length < 6) {
-      setStatusMessage({ type: 'error', text: 'New password must be at least 6 characters.' });
-      return;
-    }
-
-    if (newPassword && newPassword !== confirmPassword) {
-      setStatusMessage({ type: 'error', text: 'New password and confirmation do not match.' });
+    if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
+      setStatusMessage({ type: 'error', text: 'Please enter a valid email address (e.g. user@domain.com).' });
       return;
     }
 
@@ -90,8 +80,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
     setIsSubmitting(true);
     try {
-      await onSaveProfile(updatedUser, newPassword || undefined);
-      setStatusMessage({ type: 'success', text: 'Profile updated! Confirmation email dispatched to you and platform administrator.' });
+      await onSaveProfile(updatedUser);
+      setStatusMessage({
+        type: 'success',
+        text: `Profile updated! Email address confirmed as ${cleanEmail}.`
+      });
       setTimeout(() => {
         onClose();
       }, 1400);
@@ -386,10 +379,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
               <div>
                 <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
-                  Email Address <span style={{ color: '#00f59b' }}>*</span>
+                  Email Address (Login Identity) <span style={{ color: '#00f59b' }}>*</span>
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={15} color="#94a3b8" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Mail size={15} color="#00f59b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                   <input
                     type="email"
                     className="input-field"
@@ -401,7 +394,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       width: '100%',
                       paddingLeft: '36px',
                       background: 'rgba(15, 23, 42, 0.7)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      border: '1px solid rgba(0, 245, 155, 0.3)',
                       borderRadius: '10px',
                       paddingTop: '10px',
                       paddingBottom: '10px',
@@ -409,6 +402,9 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                       fontSize: '0.88rem'
                     }}
                   />
+                </div>
+                <div style={{ fontSize: '0.72rem', color: '#00f59b', marginTop: '4px' }}>
+                  ✓ You can update your email address anytime here
                 </div>
               </div>
             </div>
@@ -463,66 +459,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                   fontSize: '0.88rem'
                 }}
               />
-            </div>
-
-            {/* Change Password Card */}
-            <div
-              style={{
-                background: 'rgba(15, 23, 42, 0.45)',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '12px',
-                padding: '14px 16px'
-              }}
-            >
-              <div style={{ fontSize: '0.84rem', fontWeight: 800, color: '#ffffff', marginBottom: '10px', display: 'flex', alignItems: 'center', gap: '7px' }}>
-                <Key size={14} color="#00f59b" /> Change Password <span style={{ fontSize: '0.72rem', color: '#94a3b8', fontWeight: 400 }}>(Leave blank to keep current)</span>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '12px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.74rem', color: '#94a3b8', marginBottom: '4px' }}>
-                    New Password
-                  </label>
-                  <input
-                    type="password"
-                    className="input-field"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="••••••••"
-                    style={{
-                      width: '100%',
-                      background: 'rgba(11, 16, 28, 0.8)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      padding: '8px 12px',
-                      color: '#ffffff',
-                      fontSize: '0.84rem'
-                    }}
-                  />
-                </div>
-
-                <div>
-                  <label style={{ display: 'block', fontSize: '0.74rem', color: '#94a3b8', marginBottom: '4px' }}>
-                    Confirm Password
-                  </label>
-                  <input
-                    type="password"
-                    className="input-field"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••"
-                    style={{
-                      width: '100%',
-                      background: 'rgba(11, 16, 28, 0.8)',
-                      border: '1px solid rgba(255, 255, 255, 0.1)',
-                      borderRadius: '8px',
-                      padding: '8px 12px',
-                      color: '#ffffff',
-                      fontSize: '0.84rem'
-                    }}
-                  />
-                </div>
-              </div>
             </div>
 
             {/* Bottom Actions */}

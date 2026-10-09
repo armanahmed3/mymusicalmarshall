@@ -200,6 +200,7 @@ export const handler: Handler = async (event: HandlerEvent, _context: HandlerCon
                 <div><strong style="color: #94a3b8;">Username:</strong> <span style="color: #ffffff;">${username}</span></div>
                 <div><strong style="color: #94a3b8;">Full Name:</strong> <span style="color: #ffffff;">${firstName || ''} ${lastName || ''}</span></div>
                 <div><strong style="color: #94a3b8;">Account Email:</strong> <span style="color: #ffffff;">${userEmail}</span></div>
+                ${previousEmail && previousEmail !== userEmail ? `<div><strong style="color: #94a3b8;">Previous Email:</strong> <span style="color: #94a3b8; text-decoration: line-through;">${previousEmail}</span></div>` : ''}
                 ${phone ? `<div><strong style="color: #94a3b8;">Phone:</strong> <span style="color: #ffffff;">${phone}</span></div>` : ''}
                 ${favoriteGenre ? `<div><strong style="color: #94a3b8;">Favorite Genre:</strong> <span style="color: #00f59b;">${favoriteGenre}</span></div>` : ''}
                 ${bio ? `<div><strong style="color: #94a3b8;">Bio:</strong> <span style="color: #e2e8f0;">${bio}</span></div>` : ''}

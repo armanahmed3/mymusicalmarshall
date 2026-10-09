@@ -526,29 +526,63 @@ export function App() {
   };
 
   const handleSaveProfile = async (updatedUser: User) => {
-    // 1. Update in users array and currentUser
-    setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
-    setCurrentUser(updatedUser);
+    const prevEmail = currentUser?.email?.toLowerCase();
+    const newEmail = updatedUser.email.trim().toLowerCase();
+    const syncedUser: User = { ...updatedUser, email: newEmail };
 
-    // 2. Dispatch profile update notification email to BOTH user and admin
+    // 1. Update in users array matching by id OR previous email address
+    setUsers((prev) => {
+      const exists = prev.some((u) => u.id === syncedUser.id || (prevEmail && u.email.toLowerCase() === prevEmail));
+      if (exists) {
+        return prev.map((u) =>
+          u.id === syncedUser.id || (prevEmail && u.email.toLowerCase() === prevEmail)
+            ? syncedUser
+            : u
+        );
+      }
+      return [syncedUser, ...prev];
+    });
+
+    // 2. Immediately sync active user in state and localStorage
+    setCurrentUser(syncedUser);
+    localStorage.setItem('mm_current_user', JSON.stringify(syncedUser));
+
+    try {
+      const savedUsersRaw = localStorage.getItem('mm_users');
+      let currentUsersList: User[] = savedUsersRaw ? JSON.parse(savedUsersRaw) : users;
+      const index = currentUsersList.findIndex(
+        (u) => u.id === syncedUser.id || (prevEmail && u.email.toLowerCase() === prevEmail)
+      );
+      if (index !== -1) {
+        currentUsersList[index] = syncedUser;
+      } else {
+        currentUsersList = [syncedUser, ...currentUsersList];
+      }
+      localStorage.setItem('mm_users', JSON.stringify(currentUsersList));
+    } catch (e) {
+      console.warn('localStorage users sync notice:', e);
+    }
+
+    // 3. Dispatch profile update notification email to user and admin
     try {
       await fetch('/api/send-profile-update-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          userEmail: updatedUser.email,
-          username: updatedUser.username,
-          firstName: updatedUser.firstName,
-          lastName: updatedUser.lastName,
-          phone: updatedUser.phone,
-          bio: updatedUser.bio
+          userEmail: syncedUser.email,
+          previousEmail: prevEmail,
+          username: syncedUser.username,
+          firstName: syncedUser.firstName,
+          lastName: syncedUser.lastName,
+          phone: syncedUser.phone,
+          bio: syncedUser.bio
         })
       });
     } catch (err) {
       console.log('Profile update email notification notice:', err);
     }
 
-    setAdminToast(`✓ Profile updated! Confirmation sent to ${updatedUser.email} & Admin.`);
+    setAdminToast(`✓ Email updated to ${syncedUser.email}! Profile saved.`);
     setTimeout(() => setAdminToast(null), 4000);
   };
 
