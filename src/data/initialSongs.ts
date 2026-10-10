@@ -35,7 +35,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 98,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Heavy conscious roots rhythm by Stevie Malekuu — Free MM Release.'
   },
   {
@@ -51,7 +51,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 92,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'The messenger Luciano calling for universal harmony — Free MM Release.'
   },
   {
@@ -83,7 +83,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 88,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Righteous People - Wayne Armond — Free MM Release.'
   },
   {
@@ -115,7 +115,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 84,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Sensational saxophone & lovers melody recorded exclusively for Music Marshall.'
   },
   {
@@ -147,7 +147,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 90,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Pure instrumental saxophone performance by Yishka.'
   },
   {
@@ -163,7 +163,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 86,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Heartfelt lovers rock ballad by Jamaican sensation Teacha Barnes.'
   },
   {
@@ -195,7 +195,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 106,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Fast energetic dancehall rhythm by Teacha Barnes.'
   },
   {
@@ -211,7 +211,7 @@ export const INITIAL_SONGS: Song[] = [
     bpm: 90,
     isMmRelease: true,
     isMix: false,
-    isDownloadable: false,
+    isDownloadable: true,
     description: 'Harmonious family roots vocal performance by The Greaves Brothers.'
   },
 

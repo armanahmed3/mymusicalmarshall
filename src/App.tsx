@@ -73,7 +73,8 @@ export function App() {
                 genre: initSong.genre, // strictly enforce authentic genre from table
                 audioUrl: initSong.audioUrl, // strictly enforce correct audio file path
                 isMmRelease: initSong.isMmRelease,
-                isMix: initSong.isMix
+                isMix: initSong.isMix,
+                isDownloadable: initSong.isDownloadable !== undefined ? initSong.isDownloadable : true
               };
             }
             return s;
