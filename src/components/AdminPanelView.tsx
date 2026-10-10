@@ -668,21 +668,10 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
               </button>
               <button
                 type="button"
-                className={`btn btn-sm ${userStatusFilter === 'pending' ? 'btn-primary' : 'btn-outline'}`}
-                onClick={() => setUserStatusFilter('pending')}
-                style={{
-                  color: userStatusFilter === 'pending' ? undefined : '#fbbf24',
-                  borderColor: userStatusFilter === 'pending' ? undefined : 'rgba(251, 191, 36, 0.3)'
-                }}
-              >
-                Pending Review ({pendingUsersCount})
-              </button>
-              <button
-                type="button"
                 className={`btn btn-sm ${userStatusFilter === 'approved' ? 'btn-primary' : 'btn-outline'}`}
                 onClick={() => setUserStatusFilter('approved')}
               >
-                Approved ({approvedUsersCount})
+                Active Listeners ({approvedUsersCount})
               </button>
               <button
                 type="button"

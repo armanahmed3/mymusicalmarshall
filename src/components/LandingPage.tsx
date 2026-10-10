@@ -107,9 +107,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const targetMixPath = parameters?.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
 
   const featuredMix: Song = allMixes.find(
-    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
-  ) || mmReleases.find(
-    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
+    (s) => s.id === 'song-mm-easy-flow' || s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
   ) || {
     id: 'song-mm-easy-flow',
     title: targetMixName,
@@ -139,8 +137,6 @@ export const LandingPage: React.FC<LandingPageProps> = ({
     if (!featuredMix) return;
     if (onPlaySong) {
       onPlaySong(featuredMix);
-    } else {
-      handleSelectRelease(featuredMix);
     }
   };
 
@@ -211,12 +207,14 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   return (
     <div className="landing-wrap">
-      {/* Hidden public audio element for My MM Releases */}
-      <audio
-        ref={audioRef}
-        src={activeTrack?.audioUrl}
-        preload="metadata"
-      />
+      {/* Hidden public audio element for My MM Releases when used standalone */}
+      {!onPlaySong && (
+        <audio
+          ref={audioRef}
+          src={activeTrack?.audioUrl}
+          preload="none"
+        />
+      )}
 
       {/* ==========================================================================
           ANCHORED NAVIGATION BAR (Sticky, always visible when not hidden by parent)

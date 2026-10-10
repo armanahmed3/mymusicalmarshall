@@ -37,8 +37,21 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
   useEffect(() => {
     if (currentUser && isOpen) {
-      setFirstName(currentUser.firstName || currentUser.username.split(' ')[0] || '');
-      setLastName(currentUser.lastName || currentUser.username.split(' ').slice(1).join(' ') || '');
+      // Map firstName only if explicitly present or if username is a human name (does not contain @)
+      const derivedFirstName = currentUser.firstName
+        ? currentUser.firstName
+        : currentUser.username && !currentUser.username.includes('@') && currentUser.username.includes(' ')
+        ? currentUser.username.split(' ')[0]
+        : '';
+
+      const derivedLastName = currentUser.lastName
+        ? currentUser.lastName
+        : currentUser.username && !currentUser.username.includes('@') && currentUser.username.includes(' ')
+        ? currentUser.username.split(' ').slice(1).join(' ')
+        : '';
+
+      setFirstName(derivedFirstName);
+      setLastName(derivedLastName);
       setUsername(currentUser.username || '');
       setEmail(currentUser.email || '');
       setPhone(currentUser.phone || '');
@@ -56,24 +69,19 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
     const cleanFirstName = firstName.trim();
     const cleanLastName = lastName.trim();
     const cleanUsername = username.trim();
-    const cleanEmail = email.trim().toLowerCase();
 
-    if (!cleanFirstName || !cleanUsername || !cleanEmail) {
-      setStatusMessage({ type: 'error', text: 'First name, display username, and email address are required.' });
+    if (!cleanUsername) {
+      setStatusMessage({ type: 'error', text: 'Display username is required.' });
       return;
     }
 
-    if (!cleanEmail.includes('@') || !cleanEmail.includes('.')) {
-      setStatusMessage({ type: 'error', text: 'Please enter a valid email address (e.g. user@domain.com).' });
-      return;
-    }
-
+    // User is NOT allowed to change email address; keep currentUser.email
     const updatedUser: User = {
       ...currentUser,
-      firstName: cleanFirstName,
+      firstName: cleanFirstName || undefined,
       lastName: cleanLastName || undefined,
       username: cleanUsername,
-      email: cleanEmail,
+      email: currentUser.email,
       phone: phone.trim() || undefined,
       bio: bio.trim() || undefined
     };
@@ -83,11 +91,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       await onSaveProfile(updatedUser);
       setStatusMessage({
         type: 'success',
-        text: `Profile updated! Email address confirmed as ${cleanEmail}.`
+        text: 'Profile details saved successfully!'
       });
       setTimeout(() => {
         onClose();
-      }, 1400);
+      }, 1200);
     } catch (err: any) {
       setStatusMessage({ type: 'error', text: err?.message || 'Failed to update profile. Please try again.' });
     } finally {
@@ -281,15 +289,6 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
 
             <div>
               <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
-                <CheckCircle2 size={11} color="#22c55e" /> Status
-              </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#22c55e', marginTop: '2px' }}>
-                {currentUser.accountStatus === 'approved' ? 'Active' : currentUser.accountStatus}
-              </div>
-            </div>
-
-            <div>
-              <div style={{ fontSize: '0.68rem', color: '#94a3b8', textTransform: 'uppercase', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <Calendar size={11} color="#f59e0b" /> Member Since
               </div>
               <div style={{ fontSize: '0.84rem', fontWeight: 600, color: '#cbd5e1', marginTop: '2px' }}>
@@ -378,33 +377,34 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '6px' }}>
-                  Email Address (Login Identity) <span style={{ color: '#00f59b' }}>*</span>
+                <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 700, color: '#94a3b8', marginBottom: '6px' }}>
+                  Email Address (Account Identity)
                 </label>
                 <div style={{ position: 'relative' }}>
-                  <Mail size={15} color="#00f59b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
+                  <Mail size={15} color="#64748b" style={{ position: 'absolute', left: '12px', top: '12px' }} />
                   <input
                     type="email"
                     className="input-field"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="name@domain.com"
-                    required
+                    readOnly
+                    disabled
                     style={{
                       width: '100%',
                       paddingLeft: '36px',
-                      background: 'rgba(15, 23, 42, 0.7)',
-                      border: '1px solid rgba(0, 245, 155, 0.3)',
+                      background: 'rgba(15, 23, 42, 0.45)',
+                      border: '1px solid rgba(255, 255, 255, 0.08)',
                       borderRadius: '10px',
                       paddingTop: '10px',
                       paddingBottom: '10px',
-                      color: '#ffffff',
-                      fontSize: '0.88rem'
+                      color: '#94a3b8',
+                      fontSize: '0.88rem',
+                      cursor: 'not-allowed',
+                      userSelect: 'none'
                     }}
                   />
                 </div>
-                <div style={{ fontSize: '0.72rem', color: '#00f59b', marginTop: '4px' }}>
-                  ✓ You can update your email address anytime here
+                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '4px' }}>
+                  🔒 Email address is linked to your account and cannot be changed
                 </div>
               </div>
             </div>

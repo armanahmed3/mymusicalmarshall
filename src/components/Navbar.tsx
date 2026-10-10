@@ -159,38 +159,51 @@ export const Navbar: React.FC<NavbarProps> = ({
         </nav>
 
         {/* Right Navigation Actions */}
-        <div className="landing-nav-actions">
+        <div className="landing-nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
           {!isLoggedIn ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
               <button
                 type="button"
-                className="btn btn-outline btn-sm"
+                className="btn btn-primary btn-sm"
                 onClick={() => onOpenAuth('login')}
+                title="Log In to your Music Marshall account"
               >
                 Login
               </button>
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="btn btn-outline btn-sm"
                 onClick={() => onOpenAuth('register')}
+                title="Register with a Referral Code"
               >
                 Register
               </button>
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
-              {/* Luxury User Profile Capsule Button */}
+              {/* User Profile Capsule Button */}
               <button
                 type="button"
                 className="nav-profile-chip"
                 onClick={onOpenEditProfile}
                 title="Click to view & edit your profile details"
+                style={{ maxWidth: '170px' }}
               >
                 <div className={`nav-profile-avatar ${!isAdmin ? 'user-avatar' : ''}`}>
                   {currentUser.username.charAt(0).toUpperCase()}
                 </div>
-                <div className="nav-profile-info">
-                  <span className="nav-profile-name">
+                <div className="nav-profile-info" style={{ maxWidth: '110px', overflow: 'hidden' }}>
+                  <span
+                    className="nav-profile-name"
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      display: 'block',
+                      maxWidth: '105px'
+                    }}
+                    title={currentUser.username}
+                  >
                     {currentUser.username}
                   </span>
                   <span className={`nav-profile-role ${!isAdmin ? 'is-member' : ''}`}>
@@ -199,12 +212,22 @@ export const Navbar: React.FC<NavbarProps> = ({
                 </div>
               </button>
 
-              {/* Logout Button */}
+              {/* Dedicated Prominent Logout Button */}
               <button
                 type="button"
-                className="nav-logout-btn"
+                className="btn btn-outline btn-sm nav-logout-btn"
                 onClick={onLogout}
                 title="Log out from Music Marshall"
+                style={{
+                  borderColor: 'rgba(239, 68, 68, 0.45)',
+                  color: '#f87171',
+                  background: 'rgba(239, 68, 68, 0.12)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  fontWeight: 700,
+                  flexShrink: 0
+                }}
               >
                 <LogOut size={13} />
                 <span>Logout</span>

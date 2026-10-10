@@ -2533,6 +2533,8 @@ select:disabled {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   color: #ffffff;
   user-select: none;
+  max-width: 175px;
+  flex-shrink: 1;
 }
 
 .nav-profile-chip:hover {
@@ -2569,6 +2571,8 @@ select:disabled {
   align-items: flex-start;
   line-height: 1.15;
   text-align: left;
+  max-width: 115px;
+  overflow: hidden;
 }
 
 .nav-profile-name {
@@ -2577,6 +2581,9 @@ select:disabled {
   color: #ffffff;
   letter-spacing: -0.01em;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 .nav-profile-role {

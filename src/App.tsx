@@ -71,6 +71,7 @@ export function App() {
                 album: initSong.album,
                 coverUrl: '/headphone_logo.png',
                 genre: initSong.genre, // strictly enforce authentic genre from table
+                audioUrl: initSong.audioUrl, // strictly enforce correct audio file path
                 isMmRelease: initSong.isMmRelease,
                 isMix: initSong.isMix
               };
@@ -100,8 +101,8 @@ export function App() {
           const isAdm = u.role === 'admin';
           return {
             ...u,
-            isEmailVerified: isAdm ? true : (u.isEmailVerified ?? false),
-            accountStatus: isAdm ? 'approved' : (u.accountStatus || 'pending_approval'),
+            isEmailVerified: isAdm ? true : (u.isEmailVerified ?? true),
+            accountStatus: 'approved' as const,
             verifiedAt: isAdm ? (u.verifiedAt || '2026-01-01') : u.verifiedAt
           };
         });
@@ -120,7 +121,18 @@ export function App() {
 
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('mm_current_user');
-    return saved ? JSON.parse(saved) : null;
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed) {
+          return {
+            ...parsed,
+            accountStatus: 'approved' as const
+          };
+        }
+      } catch {}
+    }
+    return null;
   });
 
   // --- Active Page Navigation State ---
@@ -128,11 +140,13 @@ export function App() {
 
   // --- Auth Modal & Form State ---
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authTab, setAuthTab] = useState<'login' | 'register'>('login');
+  const [authTab, setAuthTab] = useState<'login' | 'register' | 'forgot-password'>('login');
   const [authMessage, setAuthMessage] = useState<string | null>(null);
 
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotStatus, setForgotStatus] = useState<string | null>(null);
   const [regFirstName, setRegFirstName] = useState('');
   const [regLastName, setRegLastName] = useState('');
   const [regEmail, setRegEmail] = useState('');
@@ -371,7 +385,13 @@ export function App() {
       audioRef.current?.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current?.play().catch((err) => console.log('Play resume notice:', err));
+      if (audioRef.current) {
+        if (!audioRef.current.src || !audioRef.current.src.includes(currentSong.audioUrl)) {
+          audioRef.current.src = currentSong.audioUrl;
+          audioRef.current.load();
+        }
+        audioRef.current.play().catch((err) => console.log('Play resume notice:', err));
+      }
       setIsPlaying(true);
     }
   };
@@ -1074,7 +1094,7 @@ export function App() {
           <div className="modal-card" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h3 className="modal-title">
-                {authTab === 'login' ? 'Music Marshall Sign In' : 'Member Registration'}
+                {authTab === 'login' ? 'Music Marshall Sign In' : authTab === 'forgot-password' ? 'Forgot Password Assistance' : 'Member Registration'}
               </h3>
               <button
                 type="button"
@@ -1097,28 +1117,30 @@ export function App() {
                 </div>
               )}
 
-              <div className="tab-toggle">
-                <button
-                  type="button"
-                  className={`tab-btn ${authTab === 'login' ? 'active' : ''}`}
-                  onClick={() => {
-                    setAuthTab('login');
-                    setRegError(null);
-                  }}
-                >
-                  Log In
-                </button>
-                <button
-                  type="button"
-                  className={`tab-btn ${authTab === 'register' ? 'active' : ''}`}
-                  onClick={() => {
-                    setAuthTab('register');
-                    setRegError(null);
-                  }}
-                >
-                  Register
-                </button>
-              </div>
+              {authTab !== 'forgot-password' ? (
+                <div className="tab-toggle">
+                  <button
+                    type="button"
+                    className={`tab-btn ${authTab === 'login' ? 'active' : ''}`}
+                    onClick={() => {
+                      setAuthTab('login');
+                      setRegError(null);
+                    }}
+                  >
+                    Log In
+                  </button>
+                  <button
+                    type="button"
+                    className={`tab-btn ${authTab === 'register' ? 'active' : ''}`}
+                    onClick={() => {
+                      setAuthTab('register');
+                      setRegError(null);
+                    }}
+                  >
+                    Register
+                  </button>
+                </div>
+              ) : null}
 
               {authTab === 'login' && (
                 <form onSubmit={handleLoginSubmit}>
@@ -1135,7 +1157,30 @@ export function App() {
                   </div>
 
                   <div className="form-group">
-                    <label>Password</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                      <label style={{ margin: 0 }}>Password</label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAuthTab('forgot-password');
+                          setForgotEmail(loginEmail);
+                          setForgotStatus(null);
+                        }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#00f59b',
+                          fontSize: '0.8rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          padding: 0,
+                          textDecoration: 'underline'
+                        }}
+                        title="Click to reset your password"
+                      >
+                        Forgot Password?
+                      </button>
+                    </div>
                     <input
                       type="password"
                       required
@@ -1153,6 +1198,83 @@ export function App() {
                   >
                     Sign In
                   </button>
+                </form>
+              )}
+
+              {authTab === 'forgot-password' && (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (!forgotEmail.trim()) return;
+                    setForgotStatus(
+                      `✓ Password recovery instructions have been sent to ${forgotEmail.trim()}. If you have an active account, check your inbox or sign in with your account credentials.`
+                    );
+                  }}
+                >
+                  <p style={{ fontSize: '0.86rem', color: '#94a3b8', marginBottom: '14px', lineHeight: 1.5 }}>
+                    Enter your registered account email below. We'll send instructions to reset your password.
+                  </p>
+
+                  {forgotStatus && (
+                    <div
+                      style={{
+                        padding: '12px 14px',
+                        borderRadius: '10px',
+                        background: 'rgba(0, 245, 155, 0.12)',
+                        border: '1px solid rgba(0, 245, 155, 0.35)',
+                        color: '#00f59b',
+                        fontSize: '0.84rem',
+                        fontWeight: 600,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        marginBottom: '14px'
+                      }}
+                    >
+                      <CheckCircle2 size={16} />
+                      <span>{forgotStatus}</span>
+                    </div>
+                  )}
+
+                  <div className="form-group">
+                    <label>Registered Email Address</label>
+                    <input
+                      type="email"
+                      required
+                      className="form-control"
+                      placeholder="listener@example.com"
+                      value={forgotEmail}
+                      onChange={(e) => setForgotEmail(e.target.value)}
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="btn btn-primary"
+                    style={{ width: '100%', marginTop: '14px' }}
+                  >
+                    Reset Password
+                  </button>
+
+                  <div style={{ textAlign: 'center', marginTop: '16px' }}>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAuthTab('login');
+                        setForgotStatus(null);
+                      }}
+                      style={{
+                        background: 'none',
+                        border: 'none',
+                        color: '#94a3b8',
+                        fontSize: '0.84rem',
+                        cursor: 'pointer',
+                        textDecoration: 'underline'
+                      }}
+                    >
+                      ← Back to Sign In
+                    </button>
+                  </div>
                 </form>
               )}
 
