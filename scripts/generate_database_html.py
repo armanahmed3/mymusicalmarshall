@@ -59,7 +59,9 @@ for r in mixes_raw:
     
     mixes_data.append({
         'mixId': mix_id,
-        'songTitle': song_title,
+        'mixName': name,
+        'mixDesc': desc,
+        'siteTitle': song_title,
         'mixCategory': cat,
         'genre': genre,
         'mixLength': f"{mix_len_val:.2f} min ({dur_formatted})",
@@ -596,7 +598,9 @@ html_content = f"""<!DOCTYPE html>
             <thead>
               <tr>
                 <th>mixId</th>
-                <th>Song Title</th>
+                <th>mixName (DB Backup)</th>
+                <th>mixDesc (DB Description Backup)</th>
+                <th>Main Site Title (Singer Removed)</th>
                 <th>Category</th>
                 <th>Genre</th>
                 <th>Duration</th>
@@ -611,7 +615,9 @@ for m in mixes_data:
     cat_badge = 'badge-release' if m['isRelease'] else 'badge-mix'
     html_content += f"""              <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">{m['mixId']}</td>
-                <td style="font-weight: 700; color: #fff;">{m['songTitle']}</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">{m['mixName']}</td>
+                <td style="color: #cbd5e1;">{m['mixDesc']}</td>
+                <td style="font-weight: 700; color: #fff;">{m['siteTitle']}</td>
                 <td><span class="badge {cat_badge}">{m['mixCategory']}</span></td>
                 <td><span class="badge badge-genre">{m['genre']}</span></td>
                 <td class="mono">{m['mixLength']}</td>

@@ -64,7 +64,7 @@ for r in mixes_raw:
         'isMmRelease': is_release,
         'isMix': not is_release,
         'isDownloadable': True,
-        'description': cleaned_title
+        'description': desc
     })
 
 # 2. USERS

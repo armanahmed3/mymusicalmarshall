@@ -239,7 +239,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "MM Mix"
+    "description": "Luciano MM Mix"
   },
   {
     "id": "song-db-2006",
@@ -256,7 +256,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "What Will Be"
+    "description": "What Will Be - Stevie Malekuu"
   },
   {
     "id": "song-db-2007",
@@ -273,7 +273,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Don't Trust Dem"
+    "description": "Don't Trust Dem - Stevie Malekuu"
   },
   {
     "id": "song-db-2008",
@@ -290,7 +290,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "War A Gwaan"
+    "description": "War A Gwaan by Luciano"
   },
   {
     "id": "song-db-2010",
@@ -307,7 +307,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Tennessee Whiskey"
+    "description": "Tennessee Whiskey - Wayne Armond"
   },
   {
     "id": "song-db-2011",
@@ -324,7 +324,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Righteous People"
+    "description": "Righteous People - Wayne Armond"
   },
   {
     "id": "song-db-2012",
@@ -341,7 +341,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Picks on Alton Ellis"
+    "description": "Wayne Armond Picks on Alton Ellis"
   },
   {
     "id": "song-db-2014",
@@ -460,7 +460,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Kush"
+    "description": "Kush by Wayne Armond"
   },
   {
     "id": "song-db-3026",
@@ -477,7 +477,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Chances Are"
+    "description": "Yishka"
   },
   {
     "id": "song-db-3027",
@@ -494,7 +494,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Hello Africa"
+    "description": "Hello Africa by Stevie Malekuu"
   },
   {
     "id": "song-db-3028",
@@ -511,7 +511,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Groovy Reggae"
+    "description": "Groovy Reggae - Sax by Yishka"
   },
   {
     "id": "song-db-3029",
@@ -528,7 +528,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Your Eyes"
+    "description": "Your Eyes by Teacha Barnes"
   },
   {
     "id": "song-db-3030",
@@ -545,7 +545,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Who's Loving You"
+    "description": "Who's Loving You by Wayne Armond"
   },
   {
     "id": "song-db-3031",
@@ -562,7 +562,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Heart Attack"
+    "description": "Heart Attack by Teacha Barnes"
   },
   {
     "id": "song-db-3032",
@@ -579,7 +579,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Take A Chance"
+    "description": "Take A Chance by The Greaves Brothers"
   }
 ];
 
