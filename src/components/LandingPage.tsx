@@ -107,23 +107,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const targetMixPath = parameters?.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
 
   const featuredMix: Song = allMixes.find(
-    (s) => s.id === 'song-mm-easy-flow' || s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl === targetMixPath
-  ) || {
-    id: 'song-mm-easy-flow',
-    title: targetMixName,
-    artist: 'DJ Music Marshall',
-    album: 'Master DJ Mixes & Jugglings',
-    duration: 1800,
-    audioUrl: targetMixPath,
-    coverUrl: '/headphone_logo.png',
-    genre: 'Reggae',
-    mood: 'chill',
-    bpm: 88,
-    isMmRelease: false,
-    isMix: true,
-    isDownloadable: true,
-    description: "Lover's rock and conscious reggae music"
-  };
+    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl.toLowerCase().includes('easy_flow') || s.title.toLowerCase().includes('easy_flow')
+  ) || allMixes[0];
 
   const isPlayingFeaturedMix = isPlaybackActive && Boolean(
     currentPlaybackTrack?.id === featuredMix?.id ||

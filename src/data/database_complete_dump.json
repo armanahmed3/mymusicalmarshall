@@ -1,0 +1,437 @@
+{
+  "mixes": [
+    {
+      "db_id": 1,
+      "mixName": "Disco_MixV01_Branded",
+      "mixDesc": "Disco Mix ",
+      "mixCategory": "RetroDisco",
+      "genre": "Disco",
+      "mixLength": 404.49,
+      "audioPath": "/AudioFileUpload/Disco_MixV01_Branded1194021647.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2,
+      "mixName": "Classic Vintage_V01",
+      "mixDesc": "Classic Vintage R&B",
+      "mixCategory": "Vintage",
+      "genre": "R&B Vintage",
+      "mixLength": 445.45,
+      "audioPath": "/AudioFileUpload/ClassicVintage_V01.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 4,
+      "mixName": "Rocksteady Love Pt 1",
+      "mixDesc": "Rocksteady Love Pt 1",
+      "mixCategory": "Rocksteady Love",
+      "genre": "Rocksteady",
+      "mixLength": 87.05,
+      "audioPath": "/AudioFileUpload/RocksteadyLovePt1.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 5,
+      "mixName": "Old_Bounce_V01",
+      "mixDesc": "Old_Bounce Reggae",
+      "mixCategory": "Reggae",
+      "genre": "Reggae",
+      "mixLength": 230.41,
+      "audioPath": "/AudioFileUpload/Old_Bounce_V01.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 6,
+      "mixName": "Bad_Soul_V01",
+      "mixDesc": "Retro Soul Vol 1",
+      "mixCategory": "Bad Soul",
+      "genre": "Soul",
+      "mixLength": 296.97,
+      "audioPath": "/AudioFileUpload/Bad_Soul_V01.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 7,
+      "mixName": "Disco_90s_V01",
+      "mixDesc": "Disco around the 90s",
+      "mixCategory": "Party Disco",
+      "genre": "Disco",
+      "mixLength": 340.49,
+      "audioPath": "/AudioFileUpload/Disco_90s_V01192748095.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 8,
+      "mixName": "Dwalli_Salsa_SexyLady",
+      "mixDesc": "Reggae/Dance Mix",
+      "mixCategory": "Rhythm Mix",
+      "genre": "Reggae",
+      "mixLength": 337.93,
+      "audioPath": "/AudioFileUpload/Dwalli_Salsa_SexyLady190910023.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1002,
+      "mixName": "Bandelero Mix",
+      "mixDesc": "Reggae Mix - Bandelero Rhythm with MM Dub",
+      "mixCategory": "Reggae Rhythm Mix",
+      "genre": "Reggae",
+      "mixLength": 261.13,
+      "audioPath": "/AudioFileUpload/BandeleroMix192124723.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1003,
+      "mixName": "LR_Smooth_Singles_V01",
+      "mixDesc": "Smooth Lovers Rock Singles",
+      "mixCategory": "Lovers Rock Singles",
+      "genre": "Reggae",
+      "mixLength": 87.05,
+      "audioPath": "/AudioFileUpload/LoversRock_Smooth_V01190150535.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1005,
+      "mixName": "soca_blend_V01",
+      "mixDesc": "Soca Dancehall Blend",
+      "mixCategory": "Party Mix",
+      "genre": "Soca",
+      "mixLength": 133.13,
+      "audioPath": "/AudioFileUpload/Soca_Blend_V01192137629.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1006,
+      "mixName": "loversrock_RV01",
+      "mixDesc": "Loversrock Rhythm Mix ",
+      "mixCategory": "Rhythm Mix",
+      "genre": "Reggae",
+      "mixLength": 133.13,
+      "audioPath": "/AudioFileUpload/LoversRock_RV01192758459.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1007,
+      "mixName": "Dancehall_90s_V02",
+      "mixDesc": "90s Dancehall Party Mix",
+      "mixCategory": "Dancehall Party Mix",
+      "genre": "Reggae",
+      "mixLength": 133.13,
+      "audioPath": "/AudioFileUpload/Dancehall_90s_V02190942052.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 1008,
+      "mixName": "Culture_V01",
+      "mixDesc": "Culture Mix Vol I",
+      "mixCategory": "Culture",
+      "genre": "Reggae",
+      "mixLength": 358.41,
+      "audioPath": "/AudioFileUpload/Culture_V01191203580.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2002,
+      "mixName": "Luciano_Dub_Mix",
+      "mixDesc": "Luciano MM Mix ",
+      "mixCategory": "Juggling on Riddim",
+      "genre": "Reggae",
+      "mixLength": 296.97,
+      "audioPath": "/AudioFileUpload/Luciano_MM01X222931331.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2006,
+      "mixName": "What Will Be",
+      "mixDesc": "What Will Be - Stevie Malekuu",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 368.65,
+      "audioPath": "/AudioFileUpload/WhatWillBe222604854.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2007,
+      "mixName": "Don't Trust Dem",
+      "mixDesc": "Don't Trust Dem - Stevie Malekuu",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 496.65,
+      "audioPath": "/AudioFileUpload/Dont_Trust_Them220406320.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2008,
+      "mixName": "War A Gwaan",
+      "mixDesc": "War A Gwaan by Luciano",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 368.65,
+      "audioPath": "/AudioFileUpload/War_A_Gwaan220459279.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2010,
+      "mixName": "Tennessee Whiskey",
+      "mixDesc": "Tennessee Whiskey - Wayne Armond",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 368.65,
+      "audioPath": "/AudioFileUpload/TENNESSEE_WHISKEY220827858.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2011,
+      "mixName": "Righteous People",
+      "mixDesc": "Righteous People - Wayne Armond",
+      "mixCategory": "release",
+      "genre": "R&B",
+      "mixLength": 368.65,
+      "audioPath": "/AudioFileUpload/Righteous_People223901125.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2012,
+      "mixName": "Wayne_Alton",
+      "mixDesc": "Wayne Armond Picks on Alton Ellis",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 506.89,
+      "audioPath": "/AudioFileUpload/Wayne_Alton_Full_Mixx220453461.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2014,
+      "mixName": "Party Mix Part 1",
+      "mixDesc": "Reggae, Dancehall, Afrobeat, Soca & Disco",
+      "mixCategory": "regular",
+      "genre": "Various",
+      "mixLength": 112.65,
+      "audioPath": "/AudioFileUpload/Party_Mix_Pt1222950815.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 2015,
+      "mixName": "Party_Vocals_Mixx_V1",
+      "mixDesc": "Reggae & Dancehall Vocals ",
+      "mixCategory": "Juggling on Riddim",
+      "genre": "reggae",
+      "mixLength": 286.73,
+      "audioPath": "/AudioFileUpload/vocals_Mixx_01222201457.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3015,
+      "mixName": "Afrobeat Medley",
+      "mixDesc": "Afrobeat Meets R&B",
+      "mixCategory": "release",
+      "genre": "Afrobeat",
+      "mixLength": 591.37,
+      "audioPath": "/AudioFileUpload/Afrobeat_Medley221610074.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3017,
+      "mixName": "Positive Transfusion EP",
+      "mixDesc": "Positive Transfusion EP Juggling",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 471.05,
+      "audioPath": "/AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3023,
+      "mixName": "Test",
+      "mixDesc": "Test",
+      "mixCategory": "Test",
+      "genre": "Test",
+      "mixLength": 368.65,
+      "audioPath": "/AudioFileUpload/BUJU243133596.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3024,
+      "mixName": "Easy_Flow_Mix",
+      "mixDesc": "Lover's rock and conscious reggae music",
+      "mixCategory": "Riddim_Mix",
+      "genre": "reggae",
+      "mixLength": 634.89,
+      "audioPath": "/AudioFileUpload/Easy_Flow_23v1241026820.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3025,
+      "mixName": "Kush",
+      "mixDesc": "Kush by Wayne Armond",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 284.17,
+      "audioPath": "/AudioFileUpload/Kush-WayneArmond255935568.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3026,
+      "mixName": "Chances Are",
+      "mixDesc": "Yishka",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 560.65,
+      "audioPath": "/AudioFileUpload/CHANCES_ARE-Yishka251130187.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3027,
+      "mixName": "Hello Africa",
+      "mixDesc": "Hello Africa by Stevie Malekuu",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 112.65,
+      "audioPath": "/AudioFileUpload/Hello_Africa-StevieMalekuu252025093.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3028,
+      "mixName": "Groovy Reggae",
+      "mixDesc": "Groovy Reggae - Sax by Yishka",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 112.65,
+      "audioPath": "/AudioFileUpload/Groovy_Reggae_Sax-Yishka252426431.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3029,
+      "mixName": "Your Eyes",
+      "mixDesc": "Your Eyes by Teacha Barnes",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 424.97,
+      "audioPath": "/AudioFileUpload/Your_Eyes-TeachaBarnes252816585.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3030,
+      "mixName": "Who's Loving You",
+      "mixDesc": "Who's Loving You by Wayne Armond",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 79.37,
+      "audioPath": "/AudioFileUpload/Who's_Loving_You-WayneArmond253149479.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3031,
+      "mixName": "Heart Attack",
+      "mixDesc": "Heart Attack by Teacha Barnes",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 232.97,
+      "audioPath": "/AudioFileUpload/Heart_Attack-TeachaBarnes250526382.mp3",
+      "status": "active"
+    },
+    {
+      "db_id": 3032,
+      "mixName": "Take A Chance",
+      "mixDesc": "Take A Chance by The Greaves Brothers",
+      "mixCategory": "release",
+      "genre": "Reggae",
+      "mixLength": 296.97,
+      "audioPath": "/AudioFileUpload/Take_a_Chance-TheGreavesBrothers250853064.mp3",
+      "status": "active"
+    }
+  ],
+  "notices": [
+    {
+      "db_id": 1,
+      "title": "Retro Party",
+      "location": "Pembroke Pines",
+      "details": "Every 3rd Friday",
+      "image": "/Notices/E690A2AB-5D96-47C2-9726-996F3B45BA8F190510558.jpeg",
+      "status": "active"
+    },
+    {
+      "db_id": 2,
+      "title": "Party",
+      "location": "Hollywood",
+      "details": "Event ends at 2AM",
+      "image": "/Notices/HomeFeature.jpg",
+      "status": "active"
+    },
+    {
+      "db_id": 3,
+      "title": "Dance Party",
+      "location": "Cooper City, Florida",
+      "details": "For tickets: 786 295-3619.",
+      "image": "/Notices/image192157396.jpg",
+      "status": "active"
+    },
+    {
+      "db_id": 4,
+      "title": "Retro Party",
+      "location": "Hialeah/Miami",
+      "details": "Labor Day Weekend",
+      "image": "/Notices/image193709453.jpg",
+      "status": "active"
+    },
+    {
+      "db_id": 5,
+      "title": "Party",
+      "location": "Lauderhill",
+      "details": "Until 4AM",
+      "image": "/Notices/image191009909.jpg",
+      "status": "active"
+    },
+    {
+      "db_id": 1001,
+      "title": "Party with Fab 5",
+      "location": "Dania Beach",
+      "details": "Call: 305-794-8782 or 561-333-8853",
+      "image": "/Notices/Fab 5 Independence Jam222928559.jpg",
+      "status": "active"
+    },
+    {
+      "db_id": 1002,
+      "title": "Special Event",
+      "location": "Margate",
+      "details": "Jamaica Independence Tribute",
+      "image": "/Notices/E908FF55-20D7-45BD-9046-6398265DB53A220234462.jpeg",
+      "status": "active"
+    },
+    {
+      "db_id": 1003,
+      "title": "Live Show",
+      "location": "Miami",
+      "details": "",
+      "image": "/Notices/874420B1-1289-4EBE-924E-D7D6ED9FCC0C224407400.jpeg",
+      "status": "active"
+    },
+    {
+      "db_id": 1004,
+      "title": "Live Reggae Concert",
+      "location": "Miami",
+      "details": "",
+      "image": "/Notices/1EC98F82-D487-478E-AA9C-BD664AB3EB89225246152.jpeg",
+      "status": "active"
+    }
+  ],
+  "parameters": [
+    {
+      "announcementNotice": "New Music Mix added.  Check out the new look screen and win a prize !!",
+      "featuredMix": "Culture_V01 and Dancehall_90s_V02",
+      "genre": "Reggae"
+    }
+  ],
+  "referralCodes": [
+    "buju",
+    "latus",
+    "industry",
+    "patrick",
+    "musicmarshall",
+    "mymm",
+    "mwm"
+  ],
+  "playlists": [
+    "Culture Mix Vol I"
+  ]
+}

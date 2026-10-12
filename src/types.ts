@@ -13,6 +13,7 @@ export interface Song {
   description?: string;
   isMix?: boolean; // Tag for music mixes / DJ juggling sets
   isDownloadable?: boolean; // Tag for downloadable songs/mixes
+  db_id?: number; // Authentic database ID (mixId) from MS SQL
   uploadedAt?: string;
 }
 

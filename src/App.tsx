@@ -46,49 +46,8 @@ import { EditProfileModal } from './components/EditProfileModal';
 export function App() {
   // --- Persistent Storage State ---
   const [songs, setSongs] = useState<Song[]>(() => {
-    const saved = localStorage.getItem('mm_songs');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed)) {
-          // Remove fake tracks (Marshall Soundclash and duplicates)
-          const filtered = parsed.filter((s: Song) =>
-            s.id !== 'song-mm-mix-soundclash' &&
-            !s.title.toLowerCase().includes('soundclash') &&
-            s.id !== 'song-mm-mix-tribute' &&
-            s.id !== 'song-mm-mix-dub' &&
-            s.id !== 'song-mm-mix-afrobeat'
-          );
-          // Sync canonical release & mix flags and metadata from INITIAL_SONGS
-          const updated = filtered.map((s: Song) => {
-            const initSong = INITIAL_SONGS.find((init) => init.id === s.id);
-            if (initSong) {
-              return {
-                ...s,
-                title: initSong.title,
-                artist: initSong.artist,
-                description: initSong.description,
-                album: initSong.album,
-                coverUrl: '/headphone_logo.png',
-                genre: initSong.genre, // strictly enforce authentic genre from table
-                audioUrl: initSong.audioUrl, // strictly enforce correct audio file path
-                isMmRelease: initSong.isMmRelease,
-                isMix: initSong.isMix,
-                isDownloadable: initSong.isDownloadable !== undefined ? initSong.isDownloadable : true
-              };
-            }
-            return s;
-          });
-          const existingIds = new Set(updated.map((s: Song) => s.id));
-          const missingInitSongs = INITIAL_SONGS.filter((s) => !existingIds.has(s.id));
-          const finalSongs = [...updated, ...missingInitSongs];
-          localStorage.setItem('mm_songs', JSON.stringify(finalSongs));
-          return finalSongs;
-        }
-      } catch {
-        // fallback
-      }
-    }
+    // Strictly synchronize 100% authentic database songs & mixes from INITIAL_SONGS
+    localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
     return INITIAL_SONGS;
   });
 
@@ -116,8 +75,8 @@ export function App() {
   });
 
   const [referralCodes, setReferralCodes] = useState<ReferralCode[]>(() => {
-    const saved = localStorage.getItem('mm_referral_codes');
-    return saved ? JSON.parse(saved) : INITIAL_REFERRAL_CODES;
+    localStorage.setItem('mm_referral_codes', JSON.stringify(INITIAL_REFERRAL_CODES));
+    return INITIAL_REFERRAL_CODES;
   });
 
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
@@ -215,8 +174,8 @@ export function App() {
   }, [parameters]);
 
   const [flyers, setFlyers] = useState<EventFlyer[]>(() => {
-    const saved = localStorage.getItem('mm_flyers');
-    return saved ? JSON.parse(saved) : INITIAL_FLYERS;
+    localStorage.setItem('mm_flyers', JSON.stringify(INITIAL_FLYERS));
+    return INITIAL_FLYERS;
   });
 
   const [supportTickets, setSupportTickets] = useState<SupportTicket[]>(() => {

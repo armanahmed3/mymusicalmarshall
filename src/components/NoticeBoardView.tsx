@@ -96,6 +96,9 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                   src={flyer.flyerUrl || '/mm_banner.png'}
                   alt={flyer.title}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/mm_banner.png';
+                  }}
                 />
                 <div
                   style={{

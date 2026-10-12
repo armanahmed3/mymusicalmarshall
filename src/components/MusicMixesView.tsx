@@ -61,9 +61,11 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
     if (!matchesSearch) return false;
     if (selectedCategory === 'all') return true;
     if (selectedCategory === 'downloadable') return mix.isDownloadable;
-    if (selectedCategory === 'juggling') return mix.genre.toLowerCase().includes('dancehall') || mix.genre.toLowerCase().includes('juggling');
-    if (selectedCategory === 'tribute') return mix.title.toLowerCase().includes('ellis') || mix.title.toLowerCase().includes('armond');
-    if (selectedCategory === 'afrobeat') return mix.genre.toLowerCase().includes('afro');
+    if (selectedCategory === 'reggae') return mix.genre.toLowerCase().includes('reggae');
+    if (selectedCategory === 'disco') return mix.genre.toLowerCase().includes('disco');
+    if (selectedCategory === 'rocksteady') return mix.genre.toLowerCase().includes('rocksteady');
+    if (selectedCategory === 'soul') return mix.genre.toLowerCase().includes('soul') || mix.genre.toLowerCase().includes('r&b');
+    if (selectedCategory === 'soca') return mix.genre.toLowerCase().includes('soca');
     return true;
   });
 
@@ -75,10 +77,10 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           <div>
             <h2 className="section-title" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <Headphones size={24} color="#00f59b" />
-              <span>Master Music Mixes ({filteredMixes.length})</span>
+              <span>Listen to Music ({filteredMixes.length})</span>
             </h2>
             <p className="section-subtitle">
-              Authentic sound system DJ jugglings, dancehall sessions, Rocksteady tributes, and extended studio mixes.
+              Authentic sound system DJ jugglings, dancehall sessions, Rocksteady tributes, and extended studio mixes from the database.
             </p>
           </div>
         </div>
@@ -98,10 +100,12 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           {[
             { id: 'all', label: `All Mixes (${mixes.length})` },
-            ...(currentUser?.role === 'admin' ? [{ id: 'downloadable', label: '⬇ Downloadable' }] : []),
-            { id: 'juggling', label: 'Dancehall Juggling' },
-            { id: 'tribute', label: 'Tributes & Rocksteady' },
-            { id: 'afrobeat', label: 'Afrobeat Meets R&B' }
+            { id: 'reggae', label: 'Reggae' },
+            { id: 'disco', label: 'Disco' },
+            { id: 'rocksteady', label: 'Rocksteady' },
+            { id: 'soul', label: 'Soul & R&B' },
+            { id: 'soca', label: 'Soca' },
+            ...(currentUser?.role === 'admin' ? [{ id: 'downloadable', label: '⬇ Downloadable' }] : [])
           ].map((cat) => (
             <button
               key={cat.id}
