@@ -159,13 +159,7 @@ export function App() {
 
   // Parameters table state (Feat_MixName & Feat_MixPath)
   const [parameters] = useState<AppParameters>(() => {
-    const saved = localStorage.getItem('mm_parameters');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.Feat_MixName) return parsed;
-      } catch {}
-    }
+    localStorage.setItem('mm_parameters', JSON.stringify(INITIAL_PARAMETERS));
     return INITIAL_PARAMETERS;
   });
 
@@ -294,8 +288,8 @@ export function App() {
   // Check if track is free to stream without authentication
   const isFreeTrack = (song: Song | null) => {
     if (!song) return false;
-    const targetMixName = (parameters.Feat_MixName || 'Easy_Flow_Mix').trim().toLowerCase();
-    const targetMixPath = (parameters.Feat_MixPath || '/AudioFileUpload/Easy_Flow_23v1241026820.mp3').trim().toLowerCase();
+    const targetMixName = (parameters.Feat_MixName || 'Positive Transfusion EP').trim().toLowerCase();
+    const targetMixPath = (parameters.Feat_MixPath || '/AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3').trim().toLowerCase();
     const targetFile = targetMixPath.split('/').pop() || '';
     const songPath = (song.audioUrl || '').toLowerCase();
     const songMix = (song.mixName || '').toLowerCase();

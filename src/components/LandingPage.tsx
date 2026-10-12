@@ -103,9 +103,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   const isPlaybackActive = isPlayingGlobal !== undefined ? isPlayingGlobal : isPlaying;
   const currentPlaybackTrack = currentSong !== undefined ? currentSong : activeTrack;
 
-  // Featured Mix from Parameters Table (Feat_MixName: Easy_Flow_Mix, Feat_MixPath)
-  const targetMixName = parameters?.Feat_MixName || 'Easy_Flow_Mix';
-  const targetMixPath = parameters?.Feat_MixPath || '/AudioFileUpload/Easy_Flow_23v1241026820.mp3';
+  // Featured Mix from Parameters Table (Feat_MixName & Feat_MixPath)
+  const targetMixName = parameters?.Feat_MixName || 'Positive Transfusion EP';
+  const targetMixPath = parameters?.Feat_MixPath || '/AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3';
 
   // 1. Select the designated feature mix from the mix file using the parameters table
   const featuredMix: Song = (() => {
