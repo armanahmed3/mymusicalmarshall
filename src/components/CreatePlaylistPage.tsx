@@ -479,7 +479,7 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
                             {song.title}
                           </div>
                           <div style={{ fontSize: '0.76rem', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {song.artist} • {song.genre}
+                            {song.artist?.trim() ? `${song.artist} • ` : ''}{song.genre}
                           </div>
                         </div>
                       </div>
@@ -745,9 +745,11 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
                               <div style={{ fontSize: '0.9rem', fontWeight: 700, color: isCurrentPlaying ? '#00f59b' : '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                                 {song.title}
                               </div>
-                              <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
-                                {song.artist}
-                              </div>
+                              {song.artist?.trim() ? (
+                                <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
+                                  {song.artist}
+                                </div>
+                              ) : null}
                             </div>
                           </div>
 

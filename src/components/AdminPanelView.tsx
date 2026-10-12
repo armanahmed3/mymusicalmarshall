@@ -1505,7 +1505,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                   >
                     {songs.map((s) => (
                       <option key={s.id} value={s.audioUrl}>
-                        {s.title} ({s.artist})
+                        {s.title}{s.artist?.trim() ? ` (${s.artist})` : ''}
                       </option>
                     ))}
                   </select>
@@ -1686,7 +1686,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                           {song.title}
                         </div>
                         <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-                          {song.artist} • {song.genre} • {formatTime(song.duration)}
+                          {song.artist?.trim() ? `${song.artist} • ` : ''}{song.genre} • {formatTime(song.duration)}
                         </div>
                       </div>
                     </div>

@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Music Marshall — Complete MS SQL Database Viewer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #070a12;
+      --bg-card: rgba(15, 23, 42, 0.75);
+      --bg-card-hover: rgba(30, 41, 59, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --accent-green: #00f59b;
+      --accent-cyan: #00d2ff;
+      --accent-blue: #3b82f6;
+      --accent-yellow: #f59e0b;
+      --accent-purple: #a855f7;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(0, 245, 155, 0.05) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(0, 210, 255, 0.05) 0%, transparent 40%);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 24px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(5, 46, 22, 0.6) 100%);
+      border: 1px solid rgba(0, 245, 155, 0.25);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    .header-left h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff 0%, #00f59b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .header-left p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .badge-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 245, 155, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(0, 245, 155, 0.3);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 20px;
+      backdrop-filter: blur(12px);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(0, 245, 155, 0.4);
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-desc {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-top: 4px;
+    }
+
+    /* Tab navigation */
+    .tabs-bar {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .tab-btn {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+    }
+
+    .tab-btn.active {
+      background: var(--accent-green);
+      color: #052e16;
+      border-color: var(--accent-green);
+      font-weight: 800;
+      box-shadow: 0 0 20px rgba(0, 245, 155, 0.3);
+    }
+
+    /* Content Area */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      backdrop-filter: blur(12px);
+    }
+
+    .toolbar {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.5);
+    }
+
+    .toolbar-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .search-box {
+      position: relative;
+      min-width: 260px;
+    }
+
+    .search-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 8px 14px 8px 34px;
+      color: #fff;
+      font-size: 0.84rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-green);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+    }
+
+    /* Table styling */
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 70vh;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.86rem;
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background: #0f172a;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.6px;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      z-index: 10;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #e2e8f0;
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .badge-release {
+      background: rgba(0, 245, 155, 0.15);
+      color: var(--accent-green);
+      border: 1px solid rgba(0, 245, 155, 0.3);
+    }
+
+    .badge-mix {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .badge-genre {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .badge-admin {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-yellow);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .badge-active {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+    }
+
+    .audio-link {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .audio-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-action {
+      background: rgba(0, 245, 155, 0.12);
+      border: 1px solid rgba(0, 245, 155, 0.3);
+      color: var(--accent-green);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-action:hover {
+      background: var(--accent-green);
+      color: #052e16;
+    }
+
+    .footer {
+      margin-top: 32px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="badge-source">DATABASE: ebayjaco_mmarshalldb (MS SQL)</div>
+        <h1>Music Marshall Complete Database Viewer</h1>
+        <p>100% authentic tables, columns, and records parsed directly from the production MS SQL Server binary backup file.</p>
+      </div>
+      <div>
+        <button class="btn-action" style="padding: 10px 18px; font-size: 0.84rem;" onclick="window.print()">🖨️ Print / Save PDF</button>
+      </div>
+    </header>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Total Tables</div>
+        <div class="stat-value" style="color: var(--accent-green);">6</div>
+        <div class="stat-desc">mixes, Users, notices, Parameters, Referralcodes, Playlists</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Tracks (Mixes)</div>
+        <div class="stat-value" style="color: var(--accent-cyan);">34</div>
+        <div class="stat-desc">16 Releases + 18 Continuous Mixes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Registered Users</div>
+        <div class="stat-value" style="color: var(--accent-yellow);">45</div>
+        <div class="stat-desc">Orville Marshall (Admin) + 44 Listeners</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Notice Board Events</div>
+        <div class="stat-value" style="color: var(--accent-purple);">9</div>
+        <div class="stat-desc">Authentic Concert & Party Flyers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Referral Codes</div>
+        <div class="stat-value" style="color: #38bdf8;">7</div>
+        <div class="stat-desc">buju, latus, industry, patrick...</div>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-bar">
+      <button class="tab-btn active" onclick="switchTab('tab-mixes')">🎵 Table: mixes (34)</button>
+      <button class="tab-btn" onclick="switchTab('tab-users')">👥 Table: Users (45)</button>
+      <button class="tab-btn" onclick="switchTab('tab-notices')">📢 Table: notices (9)</button>
+      <button class="tab-btn" onclick="switchTab('tab-parameters')">⚙️ Table: Parameters (1)</button>
+      <button class="tab-btn" onclick="switchTab('tab-referrals')">🎟️ Table: Referralcodes (7)</button>
+      <button class="tab-btn" onclick="switchTab('tab-playlists')">📑 Table: Playlists (1)</button>
+    </div>
+
+    <!-- TAB 1: MIXES -->
+    <div id="tab-mixes" class="tab-pane active">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>🎵 Table: dbo.mixes</span>
+            <span class="badge badge-release">34 Records Total</span>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-mixes" class="search-input" placeholder="Search mixes by song title, genre..." onkeyup="filterTable('table-mixes', this.value)">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="table-mixes">
+            <thead>
+              <tr>
+                <th>mixId</th>
+                <th>Song Title</th>
+                <th>Category</th>
+                <th>Genre</th>
+                <th>Duration</th>
+                <th>Status</th>
+                <th>Audio File</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1</td>
+                <td style="font-weight: 700; color: #fff;">Disco Mix</td>
+                <td><span class="badge badge-mix">RetroDisco</span></td>
+                <td><span class="badge badge-genre">Disco</span></td>
+                <td class="mono">404.49 min (404:29)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Disco_MixV01_Branded1194021647.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Disco_MixV01_Branded1194021647.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2</td>
+                <td style="font-weight: 700; color: #fff;">Classic Vintage R&B</td>
+                <td><span class="badge badge-mix">Vintage</span></td>
+                <td><span class="badge badge-genre">R&B Vintage</span></td>
+                <td class="mono">445.45 min (445:27)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/ClassicVintage_V01.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/ClassicVintage_V01.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">4</td>
+                <td style="font-weight: 700; color: #fff;">Rocksteady Love Pt 1</td>
+                <td><span class="badge badge-mix">Rocksteady Love</span></td>
+                <td><span class="badge badge-genre">Rocksteady</span></td>
+                <td class="mono">87.05 min (87:03)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/RocksteadyLovePt1.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/RocksteadyLovePt1.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">5</td>
+                <td style="font-weight: 700; color: #fff;">Old_Bounce Reggae</td>
+                <td><span class="badge badge-mix">Reggae</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">230.41 min (230:24)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Old_Bounce_V01.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Old_Bounce_V01.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">6</td>
+                <td style="font-weight: 700; color: #fff;">Retro Soul Vol 1</td>
+                <td><span class="badge badge-mix">Bad Soul</span></td>
+                <td><span class="badge badge-genre">Soul</span></td>
+                <td class="mono">296.97 min (296:58)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Bad_Soul_V01.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Bad_Soul_V01.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">7</td>
+                <td style="font-weight: 700; color: #fff;">Disco around the 90s</td>
+                <td><span class="badge badge-mix">Party Disco</span></td>
+                <td><span class="badge badge-genre">Disco</span></td>
+                <td class="mono">340.49 min (340:29)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Disco_90s_V01192748095.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Disco_90s_V01192748095.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">8</td>
+                <td style="font-weight: 700; color: #fff;">Reggae/Dance Mix</td>
+                <td><span class="badge badge-mix">Rhythm Mix</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">337.93 min (337:55)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Dwalli_Salsa_SexyLady190910023.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Dwalli_Salsa_SexyLady190910023.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1002</td>
+                <td style="font-weight: 700; color: #fff;">Reggae Mix - Bandelero Rhythm with MM Dub</td>
+                <td><span class="badge badge-mix">Reggae Rhythm Mix</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">261.13 min (261:07)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/BandeleroMix192124723.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/BandeleroMix192124723.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1003</td>
+                <td style="font-weight: 700; color: #fff;">Smooth Lovers Rock Singles</td>
+                <td><span class="badge badge-mix">Lovers Rock Singles</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">87.05 min (87:03)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/LoversRock_Smooth_V01190150535.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/LoversRock_Smooth_V01190150535.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1005</td>
+                <td style="font-weight: 700; color: #fff;">Soca Dancehall Blend</td>
+                <td><span class="badge badge-mix">Party Mix</span></td>
+                <td><span class="badge badge-genre">Soca</span></td>
+                <td class="mono">133.13 min (133:07)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Soca_Blend_V01192137629.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Soca_Blend_V01192137629.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1006</td>
+                <td style="font-weight: 700; color: #fff;">Loversrock Rhythm Mix</td>
+                <td><span class="badge badge-mix">Rhythm Mix</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">133.13 min (133:07)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/LoversRock_RV01192758459.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/LoversRock_RV01192758459.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1007</td>
+                <td style="font-weight: 700; color: #fff;">90s Dancehall Party Mix</td>
+                <td><span class="badge badge-mix">Dancehall Party Mix</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">133.13 min (133:07)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Dancehall_90s_V02190942052.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Dancehall_90s_V02190942052.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">1008</td>
+                <td style="font-weight: 700; color: #fff;">Culture Mix Vol I</td>
+                <td><span class="badge badge-mix">Culture</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">358.41 min (358:24)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Culture_V01191203580.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Culture_V01191203580.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2002</td>
+                <td style="font-weight: 700; color: #fff;">MM Mix</td>
+                <td><span class="badge badge-mix">Juggling on Riddim</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">296.97 min (296:58)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Luciano_MM01X222931331.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Luciano_MM01X222931331.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2006</td>
+                <td style="font-weight: 700; color: #fff;">What Will Be</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">368.65 min (368:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/WhatWillBe222604854.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/WhatWillBe222604854.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2007</td>
+                <td style="font-weight: 700; color: #fff;">Don't Trust Dem</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">496.65 min (496:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Dont_Trust_Them220406320.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Dont_Trust_Them220406320.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2008</td>
+                <td style="font-weight: 700; color: #fff;">War A Gwaan</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">368.65 min (368:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/War_A_Gwaan220459279.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/War_A_Gwaan220459279.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2010</td>
+                <td style="font-weight: 700; color: #fff;">Tennessee Whiskey</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">368.65 min (368:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/TENNESSEE_WHISKEY220827858.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/TENNESSEE_WHISKEY220827858.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2011</td>
+                <td style="font-weight: 700; color: #fff;">Righteous People</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">R&B</span></td>
+                <td class="mono">368.65 min (368:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Righteous_People223901125.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Righteous_People223901125.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2012</td>
+                <td style="font-weight: 700; color: #fff;">Picks on Alton Ellis</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">506.89 min (506:53)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Wayne_Alton_Full_Mixx220453461.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Wayne_Alton_Full_Mixx220453461.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2014</td>
+                <td style="font-weight: 700; color: #fff;">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
+                <td><span class="badge badge-mix">regular</span></td>
+                <td><span class="badge badge-genre">Various</span></td>
+                <td class="mono">112.65 min (112:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Party_Mix_Pt1222950815.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Party_Mix_Pt1222950815.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">2015</td>
+                <td style="font-weight: 700; color: #fff;">Reggae & Dancehall Vocals</td>
+                <td><span class="badge badge-mix">Juggling on Riddim</span></td>
+                <td><span class="badge badge-genre">reggae</span></td>
+                <td class="mono">286.73 min (286:43)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/vocals_Mixx_01222201457.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/vocals_Mixx_01222201457.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3015</td>
+                <td style="font-weight: 700; color: #fff;">Afrobeat Meets R&B</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Afrobeat</span></td>
+                <td class="mono">591.37 min (591:22)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Afrobeat_Medley221610074.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Afrobeat_Medley221610074.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3017</td>
+                <td style="font-weight: 700; color: #fff;">Positive Transfusion EP Juggling</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">471.05 min (471:03)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3023</td>
+                <td style="font-weight: 700; color: #fff;">Test</td>
+                <td><span class="badge badge-mix">Test</span></td>
+                <td><span class="badge badge-genre">Test</span></td>
+                <td class="mono">368.65 min (368:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/BUJU243133596.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/BUJU243133596.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3024</td>
+                <td style="font-weight: 700; color: #fff;">Lover's rock and conscious reggae music</td>
+                <td><span class="badge badge-mix">Riddim_Mix</span></td>
+                <td><span class="badge badge-genre">reggae</span></td>
+                <td class="mono">634.89 min (634:53)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Easy_Flow_23v1241026820.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Easy_Flow_23v1241026820.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3025</td>
+                <td style="font-weight: 700; color: #fff;">Kush</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">284.17 min (284:10)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Kush-WayneArmond255935568.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Kush-WayneArmond255935568.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3026</td>
+                <td style="font-weight: 700; color: #fff;">Chances Are</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">560.65 min (560:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/CHANCES_ARE-Yishka251130187.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/CHANCES_ARE-Yishka251130187.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3027</td>
+                <td style="font-weight: 700; color: #fff;">Hello Africa</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">112.65 min (112:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Hello_Africa-StevieMalekuu252025093.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Hello_Africa-StevieMalekuu252025093.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3028</td>
+                <td style="font-weight: 700; color: #fff;">Groovy Reggae</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">112.65 min (112:39)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Groovy_Reggae_Sax-Yishka252426431.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Groovy_Reggae_Sax-Yishka252426431.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3029</td>
+                <td style="font-weight: 700; color: #fff;">Your Eyes</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">424.97 min (424:58)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Your_Eyes-TeachaBarnes252816585.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Your_Eyes-TeachaBarnes252816585.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3030</td>
+                <td style="font-weight: 700; color: #fff;">Who's Loving You</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">79.37 min (79:22)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Who's_Loving_You-WayneArmond253149479.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Who's_Loving_You-WayneArmond253149479.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3031</td>
+                <td style="font-weight: 700; color: #fff;">Heart Attack</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">232.97 min (232:58)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Heart_Attack-TeachaBarnes250526382.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Heart_Attack-TeachaBarnes250526382.mp3</a></td>
+              </tr>
+              <tr>
+                <td class="mono" style="color: var(--accent-green); font-weight: bold;">3032</td>
+                <td style="font-weight: 700; color: #fff;">Take A Chance</td>
+                <td><span class="badge badge-release">release</span></td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+                <td class="mono">296.97 min (296:58)</td>
+                <td><span class="badge badge-active">active</span></td>
+                <td class="mono"><a href="./AudioFileUpload/Take_a_Chance-TheGreavesBrothers250853064.mp3" target="_blank" class="audio-link">🎧 /AudioFileUpload/Take_a_Chance-TheGreavesBrothers250853064.mp3</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: USERS -->
+    <div id="tab-users" class="tab-pane">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>👥 Table: dbo.Users</span>
+            <span class="badge badge-admin">45 Accounts Total</span>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-users" class="search-input" placeholder="Search users by email, name, role..." onkeyup="filterTable('table-users', this.value)">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="table-users">
+            <thead>
+              <tr>
+                <th>userId</th>
+                <th>Email Address</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Role</th>
+                <th>Referral Code</th>
+                <th>User Type</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">1</td>
+                <td style="font-weight: 600; color: #fff;">orville4444@gmail.com</td>
+                <td>Orville</td>
+                <td>Marshall</td>
+                <td><span class="badge badge-admin">admin</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">2</td>
+                <td style="font-weight: 600; color: #fff;">sfyfe2012@gmail.com</td>
+                <td>Sandra</td>
+                <td>Fyfe</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">3</td>
+                <td style="font-weight: 600; color: #fff;">marshall.d.kareem@gmail.com</td>
+                <td>Kareem</td>
+                <td>Marshall</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">4</td>
+                <td style="font-weight: 600; color: #fff;">ecallpace@gmail.com</td>
+                <td>Elvis</td>
+                <td>Clarke</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">5</td>
+                <td style="font-weight: 600; color: #fff;">feistyness@gmail.com</td>
+                <td>Ann</td>
+                <td>McKoy</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">6</td>
+                <td style="font-weight: 600; color: #fff;">djdcchangez@gmail.com</td>
+                <td>Dennis</td>
+                <td>Chambers</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>industry</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">7</td>
+                <td style="font-weight: 600; color: #fff;">kimraq@yahoo.com</td>
+                <td>Barbara</td>
+                <td>Wellington Sampson</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">8</td>
+                <td style="font-weight: 600; color: #fff;">princeferg@yahoo.com</td>
+                <td>Franklin</td>
+                <td>Ferguson</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">9</td>
+                <td style="font-weight: 600; color: #fff;">msmithja@gmail.com</td>
+                <td>Michael</td>
+                <td>Smith</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">10</td>
+                <td style="font-weight: 600; color: #fff;">email4orville@yahoo.com</td>
+                <td>Orville</td>
+                <td>Email</td>
+                <td><span class="badge badge-admin">admin</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>industry</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">11</td>
+                <td style="font-weight: 600; color: #fff;">delanieclarke@outlook.com</td>
+                <td>Althea</td>
+                <td>Clarke</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">12</td>
+                <td style="font-weight: 600; color: #fff;">kamccarthy827@yahoo.com</td>
+                <td>Kirk</td>
+                <td>McCarthy</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">13</td>
+                <td style="font-weight: 600; color: #fff;">noel.athias@yahoo.com</td>
+                <td>Noel</td>
+                <td>Athias</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">14</td>
+                <td style="font-weight: 600; color: #fff;">donnymartin@hotmail.com</td>
+                <td>Donavan</td>
+                <td>Martin</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">15</td>
+                <td style="font-weight: 600; color: #fff;">kmdwayne0@gmail.com</td>
+                <td>Korey</td>
+                <td>Marshall</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">16</td>
+                <td style="font-weight: 600; color: #fff;">richiebena@gmail.com</td>
+                <td>Richard</td>
+                <td>Mair</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">17</td>
+                <td style="font-weight: 600; color: #fff;">cmbkjs@gmail.com</td>
+                <td>Karlene</td>
+                <td>Morris</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">18</td>
+                <td style="font-weight: 600; color: #fff;">michwall@gmail.com</td>
+                <td>MICHAEL</td>
+                <td>WALLACE</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">19</td>
+                <td style="font-weight: 600; color: #fff;">beverlydoyley@gmail.com</td>
+                <td>Lady</td>
+                <td>B</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">20</td>
+                <td style="font-weight: 600; color: #fff;">dssmith7151@gmail.com</td>
+                <td>Dagieann</td>
+                <td>Smith</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">21</td>
+                <td style="font-weight: 600; color: #fff;">sfyfe2019@outlook.com</td>
+                <td>Sandy</td>
+                <td>Fyfe</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">22</td>
+                <td style="font-weight: 600; color: #fff;">judith.bloomfield@gmail.com</td>
+                <td>Judith</td>
+                <td>Bloomfield</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">23</td>
+                <td style="font-weight: 600; color: #fff;">skedwards22@yahoo.com</td>
+                <td>Sheldon</td>
+                <td>Edwards</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">24</td>
+                <td style="font-weight: 600; color: #fff;">lbeechtomlinson@yahoo.com</td>
+                <td>Lorna</td>
+                <td>Beech Tomlinson</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">25</td>
+                <td style="font-weight: 600; color: #fff;">jeanp1040@gmail.com</td>
+                <td>Jean</td>
+                <td>Gayle</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">26</td>
+                <td style="font-weight: 600; color: #fff;">jeanp1404@gmail.com</td>
+                <td>Jean</td>
+                <td>Gayle</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">27</td>
+                <td style="font-weight: 600; color: #fff;">lienb29@gmail.com</td>
+                <td>Neil</td>
+                <td>Budham</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">28</td>
+                <td style="font-weight: 600; color: #fff;">sheltarock@gmail.com</td>
+                <td>Shelly</td>
+                <td>J</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">29</td>
+                <td style="font-weight: 600; color: #fff;">warburton126@gmail.com</td>
+                <td>franklin</td>
+                <td>warburton</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">30</td>
+                <td style="font-weight: 600; color: #fff;">donovangb@gmail.com</td>
+                <td>DONOVAN</td>
+                <td>BROWN</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">31</td>
+                <td style="font-weight: 600; color: #fff;">ruffness@hotmail.com</td>
+                <td>Bradley</td>
+                <td>Johnson</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">32</td>
+                <td style="font-weight: 600; color: #fff;">waynearmond@gmail.com</td>
+                <td>George</td>
+                <td>Armond</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">elvis</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">33</td>
+                <td style="font-weight: 600; color: #fff;">browndanae15@hotmail.com</td>
+                <td>Danae</td>
+                <td>Brown</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Elvis</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">34</td>
+                <td style="font-weight: 600; color: #fff;">livingstonwilliams@ymail.com</td>
+                <td>Livingston</td>
+                <td>Williams</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Elvis</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">35</td>
+                <td style="font-weight: 600; color: #fff;">djbadjoe@gmail.com</td>
+                <td>DJ</td>
+                <td>Badjoe</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">36</td>
+                <td style="font-weight: 600; color: #fff;">tgrobertson@caribcast.tv</td>
+                <td>Tyrone</td>
+                <td>Robertson</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">37</td>
+                <td style="font-weight: 600; color: #fff;">upstairsmusic@aol.com</td>
+                <td>Danny</td>
+                <td>Breakenridge</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>industry</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">38</td>
+                <td style="font-weight: 600; color: #fff;">allenrufus@yahoo.com</td>
+                <td>Winston</td>
+                <td>Allen</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">39</td>
+                <td style="font-weight: 600; color: #fff;">awayne33@gmail.com</td>
+                <td>Aldwyn</td>
+                <td>Wanye</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">40</td>
+                <td style="font-weight: 600; color: #fff;">jhonagre@hotmail.com</td>
+                <td>Gregory</td>
+                <td>Cole</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">41</td>
+                <td style="font-weight: 600; color: #fff;">dwightingray@gmail.com</td>
+                <td>Dwight</td>
+                <td>Gray</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">industry</td>
+                <td>industry</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">42</td>
+                <td style="font-weight: 600; color: #fff;">taylortamara54@yahoo.com</td>
+                <td>Tamara</td>
+                <td>Taylor</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">creating</span></td>
+              </tr>
+              <tr>
+                <td class="mono">43</td>
+                <td style="font-weight: 600; color: #fff;">cecuavers@gmail.com</td>
+                <td>Cecelia</td>
+                <td>Cuavers</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">44</td>
+                <td style="font-weight: 600; color: #fff;">ggmck1970@msn.com</td>
+                <td>Glenda</td>
+                <td>McKoy</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">Buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">45</td>
+                <td style="font-weight: 600; color: #fff;">texaswebcoders@gmail.com</td>
+                <td>Ryan</td>
+                <td>Noname</td>
+                <td><span class="badge badge-mix">user</span></td>
+                <td class="mono" style="color: var(--accent-cyan);">buju</td>
+                <td>regular</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: NOTICES -->
+    <div id="tab-notices" class="tab-pane">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>📢 Table: dbo.notices</span>
+            <span class="badge badge-genre">9 Notices Total</span>
+          </div>
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="search-notices" class="search-input" placeholder="Search notices..." onkeyup="filterTable('table-notices', this.value)">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="table-notices">
+            <thead>
+              <tr>
+                <th>noticeId</th>
+                <th>Event Title</th>
+                <th>Location</th>
+                <th>Details / Phone</th>
+                <th>Image Path</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">1</td>
+                <td style="font-weight: 700; color: #fff;">Retro Party</td>
+                <td style="color: var(--accent-yellow);">Pembroke Pines</td>
+                <td>Every 3rd Friday</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/E690A2AB-5D96-47C2-9726-996F3B45BA8F190510558.jpeg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">2</td>
+                <td style="font-weight: 700; color: #fff;">Party</td>
+                <td style="color: var(--accent-yellow);">Hollywood</td>
+                <td>Event ends at 2AM</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/HomeFeature.jpg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">3</td>
+                <td style="font-weight: 700; color: #fff;">Dance Party</td>
+                <td style="color: var(--accent-yellow);">Cooper City, Florida</td>
+                <td>For tickets: 786 295-3619.</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/image192157396.jpg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">4</td>
+                <td style="font-weight: 700; color: #fff;">Retro Party</td>
+                <td style="color: var(--accent-yellow);">Hialeah/Miami</td>
+                <td>Labor Day Weekend</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/image193709453.jpg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">5</td>
+                <td style="font-weight: 700; color: #fff;">Party</td>
+                <td style="color: var(--accent-yellow);">Lauderhill</td>
+                <td>Until 4AM</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/image191009909.jpg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">1001</td>
+                <td style="font-weight: 700; color: #fff;">Party with Fab 5</td>
+                <td style="color: var(--accent-yellow);">Dania Beach</td>
+                <td>Call: 305-794-8782 or 561-333-8853</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/Fab 5 Independence Jam222928559.jpg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">1002</td>
+                <td style="font-weight: 700; color: #fff;">Special Event</td>
+                <td style="color: var(--accent-yellow);">Margate</td>
+                <td>Jamaica Independence Tribute</td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/E908FF55-20D7-45BD-9046-6398265DB53A220234462.jpeg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">1003</td>
+                <td style="font-weight: 700; color: #fff;">Live Show</td>
+                <td style="color: var(--accent-yellow);">Miami</td>
+                <td></td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/874420B1-1289-4EBE-924E-D7D6ED9FCC0C224407400.jpeg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">1004</td>
+                <td style="font-weight: 700; color: #fff;">Live Reggae Concert</td>
+                <td style="color: var(--accent-yellow);">Miami</td>
+                <td></td>
+                <td class="mono" style="color: var(--accent-cyan);">/Notices/1EC98F82-D487-478E-AA9C-BD664AB3EB89225246152.jpeg</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 4: PARAMETERS -->
+    <div id="tab-parameters" class="tab-pane">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>⚙️ Table: dbo.Parameters</span>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>paramId</th>
+                <th>Announcement Notice</th>
+                <th>Featured Mix</th>
+                <th>Featured Genre</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">1</td>
+                <td style="font-weight: 700; color: #fff;">New Music Mix added.  Check out the new look screen and win a prize !!</td>
+                <td style="color: var(--accent-green); font-weight: 600;">Culture_V01 and Dancehall_90s_V02</td>
+                <td><span class="badge badge-genre">Reggae</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 5: REFERRALS -->
+    <div id="tab-referrals" class="tab-pane">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>🎟️ Table: dbo.Referralcodes</span>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Referral Code</th>
+                <th>Description</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">1</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">buju</td>
+                <td>Official Database Referral Code (buju)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">2</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">latus</td>
+                <td>Official Database Referral Code (latus)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">3</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">industry</td>
+                <td>Official Database Referral Code (industry)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">4</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">patrick</td>
+                <td>Official Database Referral Code (patrick)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">5</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">musicmarshall</td>
+                <td>Official Database Referral Code (musicmarshall)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">6</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">mymm</td>
+                <td>Official Database Referral Code (mymm)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+              <tr>
+                <td class="mono">7</td>
+                <td class="mono" style="font-weight: 700; color: var(--accent-cyan); font-size: 0.95rem;">mwm</td>
+                <td>Official Database Referral Code (mwm)</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 6: PLAYLISTS -->
+    <div id="tab-playlists" class="tab-pane">
+      <div class="table-container">
+        <div class="toolbar">
+          <div class="toolbar-title">
+            <span>📑 Table: dbo.Playlists</span>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>playlistId</th>
+                <th>Playlist Name</th>
+                <th>Created By</th>
+                <th>Included Songs</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="mono">1</td>
+                <td style="font-weight: 700; color: #fff;">Culture Mix Vol I</td>
+                <td>Orville Marshall (Admin)</td>
+                <td style="color: var(--text-muted);">Culture_V01, Easy_Flow_Mix, What Will Be</td>
+                <td><span class="badge badge-active">active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>Music Marshall • MS SQL Database (ebayjaco_mmarshalldb_2026-10-08_17-54-39) • Generated Automatically</p>
+    </footer>
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetPane = document.getElementById(tabId);
+      if (targetPane) targetPane.classList.add('active');
+      
+      event.currentTarget.classList.add('active');
+    }
+
+    function filterTable(tableId, query) {
+      const q = query.toLowerCase().trim();
+      const rows = document.querySelectorAll('#' + tableId + ' tbody tr');
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        row.style.display = text.includes(q) ? '' : 'none';
+      });
+    }
+  </script>
+</body>
+</html>

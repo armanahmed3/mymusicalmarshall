@@ -462,7 +462,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             {mix.title} {mix.isMix ? '🔥 (Mix)' : ''}
                           </div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
-                            {mix.artist} • {formatDuration(mix.duration)} • {mix.genre}
+                            {mix.artist?.trim() ? `${mix.artist} • ` : ''}{formatDuration(mix.duration)} • {mix.genre}
                           </div>
                         </div>
                       </div>

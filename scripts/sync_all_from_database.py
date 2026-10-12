@@ -1,4 +1,4 @@
-import struct, json, os, sys
+import struct, json, os, sys, re
 
 with open('ebayjaco_mmarshalldb_2026-10-08_17-54-39', 'rb') as f:
     buf = f.read()
@@ -23,32 +23,37 @@ for r in mixes_raw:
     
     is_release = (cat.lower() == 'release')
     
-    # Extract artist from desc if available
-    artist = ''
-    if ' - ' in desc:
-        parts = desc.split(' - ')
-        artist = parts[-1].strip()
-    elif ' by ' in desc:
-        parts = desc.split(' by ')
-        artist = parts[-1].strip()
-    elif is_release:
-        artist = desc
-    else:
-        artist = 'Music Marshall'
+    # User requirement: singer ka name hatado, title = description without singer name
+    artists_patterns = [
+        r'\s*-\s*Stevie Malekuu',
+        r'\s*by\s+Stevie Malekuu',
+        r'\s*-\s*Wayne Armond',
+        r'\s*by\s+Wayne Armond',
+        r'^Wayne Armond\s+',
+        r'\s*by\s+Luciano',
+        r'^Luciano\s+',
+        r'\s*-\s*Sax by Yishka',
+        r'\s*by\s+Teacha Barnes',
+        r'\s*by\s+The Greaves Brothers',
+    ]
+    cleaned_title = desc
+    for pat in artists_patterns:
+        cleaned_title = re.sub(pat, '', cleaned_title, flags=re.IGNORECASE).strip()
+    if not cleaned_title or cleaned_title.lower() == 'yishka':
+        cleaned_title = name
 
     # calculate duration in seconds
     duration_secs = int(mix_len_val * 60) if mix_len_val > 0 else 240
     
     # Ensure audio URL format matches public folder
     audio_fname = os.path.basename(audio)
-    # Both /audio/ and /AudioFileUpload/ work, let's use /AudioFileUpload/ or /audio/
     audio_url = f"/AudioFileUpload/{audio_fname}"
 
     songs.append({
         'id': f"song-db-{mix_id}",
         'db_id': mix_id,
-        'title': name,
-        'artist': artist,
+        'title': cleaned_title,
+        'artist': '',
         'album': cat,
         'duration': duration_secs,
         'audioUrl': audio_url,
@@ -59,7 +64,7 @@ for r in mixes_raw:
         'isMmRelease': is_release,
         'isMix': not is_release,
         'isDownloadable': True,
-        'description': desc
+        'description': cleaned_title
     })
 
 # 2. USERS

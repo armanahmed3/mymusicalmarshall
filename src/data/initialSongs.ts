@@ -6,8 +6,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1",
     "db_id": 1,
-    "title": "Disco_MixV01_Branded",
-    "artist": "Music Marshall",
+    "title": "Disco Mix",
+    "artist": "",
     "album": "RetroDisco",
     "duration": 24269,
     "audioUrl": "/AudioFileUpload/Disco_MixV01_Branded1194021647.mp3",
@@ -23,8 +23,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2",
     "db_id": 2,
-    "title": "Classic Vintage_V01",
-    "artist": "Music Marshall",
+    "title": "Classic Vintage R&B",
+    "artist": "",
     "album": "Vintage",
     "duration": 26727,
     "audioUrl": "/AudioFileUpload/ClassicVintage_V01.mp3",
@@ -41,7 +41,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-4",
     "db_id": 4,
     "title": "Rocksteady Love Pt 1",
-    "artist": "Music Marshall",
+    "artist": "",
     "album": "Rocksteady Love",
     "duration": 5223,
     "audioUrl": "/AudioFileUpload/RocksteadyLovePt1.mp3",
@@ -57,8 +57,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-5",
     "db_id": 5,
-    "title": "Old_Bounce_V01",
-    "artist": "Music Marshall",
+    "title": "Old_Bounce Reggae",
+    "artist": "",
     "album": "Reggae",
     "duration": 13824,
     "audioUrl": "/AudioFileUpload/Old_Bounce_V01.mp3",
@@ -74,8 +74,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-6",
     "db_id": 6,
-    "title": "Bad_Soul_V01",
-    "artist": "Music Marshall",
+    "title": "Retro Soul Vol 1",
+    "artist": "",
     "album": "Bad Soul",
     "duration": 17818,
     "audioUrl": "/AudioFileUpload/Bad_Soul_V01.mp3",
@@ -91,8 +91,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-7",
     "db_id": 7,
-    "title": "Disco_90s_V01",
-    "artist": "Music Marshall",
+    "title": "Disco around the 90s",
+    "artist": "",
     "album": "Party Disco",
     "duration": 20429,
     "audioUrl": "/AudioFileUpload/Disco_90s_V01192748095.mp3",
@@ -108,8 +108,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-8",
     "db_id": 8,
-    "title": "Dwalli_Salsa_SexyLady",
-    "artist": "Music Marshall",
+    "title": "Reggae/Dance Mix",
+    "artist": "",
     "album": "Rhythm Mix",
     "duration": 20275,
     "audioUrl": "/AudioFileUpload/Dwalli_Salsa_SexyLady190910023.mp3",
@@ -125,8 +125,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1002",
     "db_id": 1002,
-    "title": "Bandelero Mix",
-    "artist": "Bandelero Rhythm with MM Dub",
+    "title": "Reggae Mix - Bandelero Rhythm with MM Dub",
+    "artist": "",
     "album": "Reggae Rhythm Mix",
     "duration": 15667,
     "audioUrl": "/AudioFileUpload/BandeleroMix192124723.mp3",
@@ -142,8 +142,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1003",
     "db_id": 1003,
-    "title": "LR_Smooth_Singles_V01",
-    "artist": "Music Marshall",
+    "title": "Smooth Lovers Rock Singles",
+    "artist": "",
     "album": "Lovers Rock Singles",
     "duration": 5223,
     "audioUrl": "/AudioFileUpload/LoversRock_Smooth_V01190150535.mp3",
@@ -159,8 +159,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1005",
     "db_id": 1005,
-    "title": "soca_blend_V01",
-    "artist": "Music Marshall",
+    "title": "Soca Dancehall Blend",
+    "artist": "",
     "album": "Party Mix",
     "duration": 7987,
     "audioUrl": "/AudioFileUpload/Soca_Blend_V01192137629.mp3",
@@ -176,8 +176,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1006",
     "db_id": 1006,
-    "title": "loversrock_RV01",
-    "artist": "Music Marshall",
+    "title": "Loversrock Rhythm Mix",
+    "artist": "",
     "album": "Rhythm Mix",
     "duration": 7987,
     "audioUrl": "/AudioFileUpload/LoversRock_RV01192758459.mp3",
@@ -193,8 +193,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1007",
     "db_id": 1007,
-    "title": "Dancehall_90s_V02",
-    "artist": "Music Marshall",
+    "title": "90s Dancehall Party Mix",
+    "artist": "",
     "album": "Dancehall Party Mix",
     "duration": 7987,
     "audioUrl": "/AudioFileUpload/Dancehall_90s_V02190942052.mp3",
@@ -210,8 +210,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1008",
     "db_id": 1008,
-    "title": "Culture_V01",
-    "artist": "Music Marshall",
+    "title": "Culture Mix Vol I",
+    "artist": "",
     "album": "Culture",
     "duration": 21504,
     "audioUrl": "/AudioFileUpload/Culture_V01191203580.mp3",
@@ -227,8 +227,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2002",
     "db_id": 2002,
-    "title": "Luciano_Dub_Mix",
-    "artist": "Music Marshall",
+    "title": "MM Mix",
+    "artist": "",
     "album": "Juggling on Riddim",
     "duration": 17818,
     "audioUrl": "/AudioFileUpload/Luciano_MM01X222931331.mp3",
@@ -239,13 +239,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Luciano MM Mix"
+    "description": "MM Mix"
   },
   {
     "id": "song-db-2006",
     "db_id": 2006,
     "title": "What Will Be",
-    "artist": "Stevie Malekuu",
+    "artist": "",
     "album": "release",
     "duration": 22119,
     "audioUrl": "/AudioFileUpload/WhatWillBe222604854.mp3",
@@ -256,13 +256,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "What Will Be - Stevie Malekuu"
+    "description": "What Will Be"
   },
   {
     "id": "song-db-2007",
     "db_id": 2007,
     "title": "Don't Trust Dem",
-    "artist": "Stevie Malekuu",
+    "artist": "",
     "album": "release",
     "duration": 29799,
     "audioUrl": "/AudioFileUpload/Dont_Trust_Them220406320.mp3",
@@ -273,13 +273,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Don't Trust Dem - Stevie Malekuu"
+    "description": "Don't Trust Dem"
   },
   {
     "id": "song-db-2008",
     "db_id": 2008,
     "title": "War A Gwaan",
-    "artist": "Luciano",
+    "artist": "",
     "album": "release",
     "duration": 22119,
     "audioUrl": "/AudioFileUpload/War_A_Gwaan220459279.mp3",
@@ -290,13 +290,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "War A Gwaan by Luciano"
+    "description": "War A Gwaan"
   },
   {
     "id": "song-db-2010",
     "db_id": 2010,
     "title": "Tennessee Whiskey",
-    "artist": "Wayne Armond",
+    "artist": "",
     "album": "release",
     "duration": 22119,
     "audioUrl": "/AudioFileUpload/TENNESSEE_WHISKEY220827858.mp3",
@@ -307,13 +307,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Tennessee Whiskey - Wayne Armond"
+    "description": "Tennessee Whiskey"
   },
   {
     "id": "song-db-2011",
     "db_id": 2011,
     "title": "Righteous People",
-    "artist": "Wayne Armond",
+    "artist": "",
     "album": "release",
     "duration": 22119,
     "audioUrl": "/AudioFileUpload/Righteous_People223901125.mp3",
@@ -324,13 +324,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Righteous People - Wayne Armond"
+    "description": "Righteous People"
   },
   {
     "id": "song-db-2012",
     "db_id": 2012,
-    "title": "Wayne_Alton",
-    "artist": "Wayne Armond Picks on Alton Ellis",
+    "title": "Picks on Alton Ellis",
+    "artist": "",
     "album": "release",
     "duration": 30413,
     "audioUrl": "/AudioFileUpload/Wayne_Alton_Full_Mixx220453461.mp3",
@@ -341,13 +341,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Wayne Armond Picks on Alton Ellis"
+    "description": "Picks on Alton Ellis"
   },
   {
     "id": "song-db-2014",
     "db_id": 2014,
-    "title": "Party Mix Part 1",
-    "artist": "Music Marshall",
+    "title": "Reggae, Dancehall, Afrobeat, Soca & Disco",
+    "artist": "",
     "album": "regular",
     "duration": 6759,
     "audioUrl": "/AudioFileUpload/Party_Mix_Pt1222950815.mp3",
@@ -363,8 +363,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2015",
     "db_id": 2015,
-    "title": "Party_Vocals_Mixx_V1",
-    "artist": "Music Marshall",
+    "title": "Reggae & Dancehall Vocals",
+    "artist": "",
     "album": "Juggling on Riddim",
     "duration": 17203,
     "audioUrl": "/AudioFileUpload/vocals_Mixx_01222201457.mp3",
@@ -380,8 +380,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3015",
     "db_id": 3015,
-    "title": "Afrobeat Medley",
-    "artist": "Afrobeat Meets R&B",
+    "title": "Afrobeat Meets R&B",
+    "artist": "",
     "album": "release",
     "duration": 35482,
     "audioUrl": "/AudioFileUpload/Afrobeat_Medley221610074.mp3",
@@ -397,8 +397,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3017",
     "db_id": 3017,
-    "title": "Positive Transfusion EP",
-    "artist": "Positive Transfusion EP Juggling",
+    "title": "Positive Transfusion EP Juggling",
+    "artist": "",
     "album": "release",
     "duration": 28263,
     "audioUrl": "/AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3",
@@ -415,7 +415,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-3023",
     "db_id": 3023,
     "title": "Test",
-    "artist": "Music Marshall",
+    "artist": "",
     "album": "Test",
     "duration": 22119,
     "audioUrl": "/AudioFileUpload/BUJU243133596.mp3",
@@ -431,8 +431,8 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3024",
     "db_id": 3024,
-    "title": "Easy_Flow_Mix",
-    "artist": "Music Marshall",
+    "title": "Lover's rock and conscious reggae music",
+    "artist": "",
     "album": "Riddim_Mix",
     "duration": 38093,
     "audioUrl": "/AudioFileUpload/Easy_Flow_23v1241026820.mp3",
@@ -449,7 +449,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-3025",
     "db_id": 3025,
     "title": "Kush",
-    "artist": "Wayne Armond",
+    "artist": "",
     "album": "release",
     "duration": 17050,
     "audioUrl": "/AudioFileUpload/Kush-WayneArmond255935568.mp3",
@@ -460,13 +460,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Kush by Wayne Armond"
+    "description": "Kush"
   },
   {
     "id": "song-db-3026",
     "db_id": 3026,
     "title": "Chances Are",
-    "artist": "Yishka",
+    "artist": "",
     "album": "release",
     "duration": 33639,
     "audioUrl": "/AudioFileUpload/CHANCES_ARE-Yishka251130187.mp3",
@@ -477,13 +477,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Yishka"
+    "description": "Chances Are"
   },
   {
     "id": "song-db-3027",
     "db_id": 3027,
     "title": "Hello Africa",
-    "artist": "Stevie Malekuu",
+    "artist": "",
     "album": "release",
     "duration": 6759,
     "audioUrl": "/AudioFileUpload/Hello_Africa-StevieMalekuu252025093.mp3",
@@ -494,13 +494,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Hello Africa by Stevie Malekuu"
+    "description": "Hello Africa"
   },
   {
     "id": "song-db-3028",
     "db_id": 3028,
     "title": "Groovy Reggae",
-    "artist": "Sax by Yishka",
+    "artist": "",
     "album": "release",
     "duration": 6759,
     "audioUrl": "/AudioFileUpload/Groovy_Reggae_Sax-Yishka252426431.mp3",
@@ -511,13 +511,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Groovy Reggae - Sax by Yishka"
+    "description": "Groovy Reggae"
   },
   {
     "id": "song-db-3029",
     "db_id": 3029,
     "title": "Your Eyes",
-    "artist": "Teacha Barnes",
+    "artist": "",
     "album": "release",
     "duration": 25498,
     "audioUrl": "/AudioFileUpload/Your_Eyes-TeachaBarnes252816585.mp3",
@@ -528,13 +528,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Your Eyes by Teacha Barnes"
+    "description": "Your Eyes"
   },
   {
     "id": "song-db-3030",
     "db_id": 3030,
     "title": "Who's Loving You",
-    "artist": "Wayne Armond",
+    "artist": "",
     "album": "release",
     "duration": 4762,
     "audioUrl": "/AudioFileUpload/Who's_Loving_You-WayneArmond253149479.mp3",
@@ -545,13 +545,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Who's Loving You by Wayne Armond"
+    "description": "Who's Loving You"
   },
   {
     "id": "song-db-3031",
     "db_id": 3031,
     "title": "Heart Attack",
-    "artist": "Teacha Barnes",
+    "artist": "",
     "album": "release",
     "duration": 13978,
     "audioUrl": "/AudioFileUpload/Heart_Attack-TeachaBarnes250526382.mp3",
@@ -562,13 +562,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Heart Attack by Teacha Barnes"
+    "description": "Heart Attack"
   },
   {
     "id": "song-db-3032",
     "db_id": 3032,
     "title": "Take A Chance",
-    "artist": "The Greaves Brothers",
+    "artist": "",
     "album": "release",
     "duration": 17818,
     "audioUrl": "/AudioFileUpload/Take_a_Chance-TheGreavesBrothers250853064.mp3",
@@ -579,7 +579,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Take A Chance by The Greaves Brothers"
+    "description": "Take A Chance"
   }
 ];
 
