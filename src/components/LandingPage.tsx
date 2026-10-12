@@ -614,8 +614,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               color: '#94a3b8'
             }}>
               <div style={{ width: '44px', textAlign: 'center' }}>Cover</div>
-              <div style={{ flex: 1 }}>Song Title</div>
-              <div style={{ width: '150px' }}>Genre</div>
+              <div style={{ flex: 1.1 }}>Song Title</div>
+              <div style={{ flex: 1.4, color: '#94a3b8' }}>Description</div>
+              <div style={{ width: '130px' }}>Genre</div>
               <div style={{ width: '55px', textAlign: 'right' }}>Duration</div>
               <div style={{ width: '140px', textAlign: 'right' }}>Stream & Actions</div>
             </div>
@@ -640,12 +641,16 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                       </div>
                     )}
                   </div>
-                  <div className="release-info">
+                  <div className="release-info" style={{ flex: 1.1 }}>
                     <span className="release-title">{song.title}</span>
                   </div>
 
+                  <div className="release-desc" style={{ flex: 1.4, color: '#cbd5e1', fontSize: '0.85rem' }}>
+                    {song.description || song.title}
+                  </div>
+
                   {/* Note 5: Display Genre from Table */}
-                  <div className="release-genre">
+                  <div className="release-genre" style={{ width: '130px' }}>
                     <span className="badge-genre">{song.genre}</span>
                   </div>
 

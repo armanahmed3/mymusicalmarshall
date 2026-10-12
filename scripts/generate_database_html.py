@@ -36,6 +36,31 @@ def clean_title(name, desc):
         
     return cleaned
 
+def extract_singer(name, desc, cat):
+    desc_clean = desc.strip()
+    name_clean = name.strip()
+    
+    if 'Stevie Malekuu' in desc_clean:
+        return 'Stevie Malekuu'
+    elif 'Wayne Armond' in desc_clean:
+        if 'Alton Ellis' in desc_clean:
+            return 'Wayne Armond & Alton Ellis'
+        return 'Wayne Armond'
+    elif 'Luciano' in desc_clean or 'Luciano' in name_clean:
+        return 'Luciano'
+    elif 'Yishka' in desc_clean or 'Yishka' in name_clean:
+        return 'Yishka'
+    elif 'Teacha Barnes' in desc_clean:
+        return 'Teacha Barnes'
+    elif 'The Greaves Brothers' in desc_clean:
+        return 'The Greaves Brothers'
+    elif cat.lower() == 'release':
+        return 'MM Production'
+    elif 'test' in name_clean.lower():
+        return 'Test'
+    else:
+        return 'Music Marshall (DJ)'
+
 mixes_raw = extract_table(219)
 mixes_data = []
 for r in mixes_raw:
@@ -55,6 +80,30 @@ for r in mixes_raw:
     secs = dur_secs % 60
     dur_formatted = f"{mins}:{secs:02d}"
     
+    singer_mapping = {
+        2002: 'Luciano MM Mix by Luciano',
+        2006: 'What Will Be by Stevie Malekuu',
+        2007: "Don't Trust Dem by Stevie Malekuu",
+        2008: 'War A Gwaan by Luciano',
+        2010: 'Tennessee Whiskey by Wayne Armond',
+        2011: 'Righteous People by Wayne Armond',
+        2012: 'Wayne Armond Picks on Alton Ellis by Wayne Armond & Alton Ellis',
+        3023: 'Test by Buju Banton',
+        3025: 'Kush by Wayne Armond',
+        3026: 'Chances Are by Yishka',
+        3027: 'Hello Africa by Stevie Malekuu',
+        3028: 'Groovy Reggae by Yishka',
+        3029: 'Your Eyes by Teacha Barnes',
+        3030: "Who's Loving You by Wayne Armond",
+        3031: 'Heart Attack by Teacha Barnes',
+        3032: 'Take A Chance by The Greaves Brothers',
+    }
+    
+    if mix_id in singer_mapping:
+        proper_desc = singer_mapping[mix_id]
+    else:
+        proper_desc = desc if desc else name
+
     song_title = clean_title(name, desc)
     title_overrides = {
         'Classic Vintage R&B': 'CLASSIC VINTAGE',
@@ -71,6 +120,7 @@ for r in mixes_raw:
         'mixId': mix_id,
         'mixName': name,
         'mixDesc': desc,
+        'properDesc': proper_desc,
         'siteTitle': song_title,
         'mixCategory': cat,
         'genre': genre,
@@ -497,6 +547,12 @@ html_content = f"""<!DOCTYPE html>
       font-size: 0.78rem;
     }}
 
+    .db-desc {{
+      color: #38bdf8;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }}
+
     .audio-link {{
       color: var(--accent-cyan);
       text-decoration: none;
@@ -546,7 +602,8 @@ html_content = f"""<!DOCTYPE html>
         <h1>Music Marshall Complete Database Viewer</h1>
         <p>100% authentic tables, columns, and records parsed directly from the production MS SQL Server binary backup file.</p>
       </div>
-      <div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="MusicMarshall_Complete_Database.xlsx" download class="btn-action" style="padding: 10px 18px; font-size: 0.84rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">📊 Download Excel (.xlsx)</a>
         <button class="btn-action" style="padding: 10px 18px; font-size: 0.84rem;" onclick="window.print()">🖨️ Print / Save PDF</button>
       </div>
     </header>
@@ -608,9 +665,10 @@ html_content = f"""<!DOCTYPE html>
             <thead>
               <tr>
                 <th>mixId</th>
-                <th>mixName (DB Backup)</th>
-                <th>mixDesc (DB Description Backup)</th>
-                <th>Main Site Title (Singer Removed)</th>
+                <th>mixName (Song Title)</th>
+                <th style="color: #38bdf8; background: #0c1e3a;">Description (With Singer: This song is by...)</th>
+                <th>Raw DB mixDesc</th>
+                <th>Main Site Title (Cleaned)</th>
                 <th>Category</th>
                 <th>Genre</th>
                 <th>Duration</th>
@@ -625,9 +683,10 @@ for m in mixes_data:
     cat_badge = 'badge-release' if m['isRelease'] else 'badge-mix'
     html_content += f"""              <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">{m['mixId']}</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">{m['mixName']}</td>
-                <td style="color: #cbd5e1;">{m['mixDesc']}</td>
-                <td style="font-weight: 700; color: #fff;">{m['siteTitle']}</td>
+                <td style="font-weight: 700; color: #fff;">{m['mixName']}</td>
+                <td class="db-desc">{m['properDesc']}</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">{m['mixDesc']}</td>
+                <td style="color: #e2e8f0;">{m['siteTitle']}</td>
                 <td><span class="badge {cat_badge}">{m['mixCategory']}</span></td>
                 <td><span class="badge badge-genre">{m['genre']}</span></td>
                 <td class="mono">{m['mixLength']}</td>

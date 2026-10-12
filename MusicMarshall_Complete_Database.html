@@ -323,6 +323,12 @@
       font-size: 0.78rem;
     }
 
+    .db-desc {
+      color: #38bdf8;
+      font-weight: 600;
+      font-size: 0.88rem;
+    }
+
     .audio-link {
       color: var(--accent-cyan);
       text-decoration: none;
@@ -372,7 +378,8 @@
         <h1>Music Marshall Complete Database Viewer</h1>
         <p>100% authentic tables, columns, and records parsed directly from the production MS SQL Server binary backup file.</p>
       </div>
-      <div>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <a href="MusicMarshall_Complete_Database.xlsx" download class="btn-action" style="padding: 10px 18px; font-size: 0.84rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.4); color: #38bdf8;">📊 Download Excel (.xlsx)</a>
         <button class="btn-action" style="padding: 10px 18px; font-size: 0.84rem;" onclick="window.print()">🖨️ Print / Save PDF</button>
       </div>
     </header>
@@ -434,9 +441,10 @@
             <thead>
               <tr>
                 <th>mixId</th>
-                <th>mixName (DB Backup)</th>
-                <th>mixDesc (DB Description Backup)</th>
-                <th>Main Site Title (Singer Removed)</th>
+                <th>mixName (Song Title)</th>
+                <th style="color: #38bdf8; background: #0c1e3a;">Description (With Singer: This song is by...)</th>
+                <th>Raw DB mixDesc</th>
+                <th>Main Site Title (Cleaned)</th>
                 <th>Category</th>
                 <th>Genre</th>
                 <th>Duration</th>
@@ -447,9 +455,10 @@
             <tbody>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Disco_MixV01_Branded</td>
-                <td style="color: #cbd5e1;">Disco Mix</td>
-                <td style="font-weight: 700; color: #fff;">Disco Mix</td>
+                <td style="font-weight: 700; color: #fff;">Disco_MixV01_Branded</td>
+                <td class="db-desc">Disco Mix</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Disco Mix</td>
+                <td style="color: #e2e8f0;">Disco Mix</td>
                 <td><span class="badge badge-mix">RetroDisco</span></td>
                 <td><span class="badge badge-genre">Disco</span></td>
                 <td class="mono">404.49 min (404:29)</td>
@@ -458,9 +467,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Classic Vintage_V01</td>
-                <td style="color: #cbd5e1;">Classic Vintage R&B</td>
-                <td style="font-weight: 700; color: #fff;">CLASSIC VINTAGE</td>
+                <td style="font-weight: 700; color: #fff;">Classic Vintage_V01</td>
+                <td class="db-desc">Classic Vintage R&B</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Classic Vintage R&B</td>
+                <td style="color: #e2e8f0;">CLASSIC VINTAGE</td>
                 <td><span class="badge badge-mix">Vintage</span></td>
                 <td><span class="badge badge-genre">R&B Vintage</span></td>
                 <td class="mono">445.45 min (445:27)</td>
@@ -469,9 +479,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">4</td>
+                <td style="font-weight: 700; color: #fff;">Rocksteady Love Pt 1</td>
+                <td class="db-desc">Rocksteady Love Pt 1</td>
                 <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Rocksteady Love Pt 1</td>
-                <td style="color: #cbd5e1;">Rocksteady Love Pt 1</td>
-                <td style="font-weight: 700; color: #fff;">ROCK STEADY LOVE</td>
+                <td style="color: #e2e8f0;">ROCK STEADY LOVE</td>
                 <td><span class="badge badge-mix">Rocksteady Love</span></td>
                 <td><span class="badge badge-genre">Rocksteady</span></td>
                 <td class="mono">87.05 min (87:03)</td>
@@ -480,9 +491,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">5</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Old_Bounce_V01</td>
-                <td style="color: #cbd5e1;">Old_Bounce Reggae</td>
-                <td style="font-weight: 700; color: #fff;">Old Bounce Reggae</td>
+                <td style="font-weight: 700; color: #fff;">Old_Bounce_V01</td>
+                <td class="db-desc">Old_Bounce Reggae</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Old_Bounce Reggae</td>
+                <td style="color: #e2e8f0;">Old Bounce Reggae</td>
                 <td><span class="badge badge-mix">Reggae</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">230.41 min (230:24)</td>
@@ -491,9 +503,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">6</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Bad_Soul_V01</td>
-                <td style="color: #cbd5e1;">Retro Soul Vol 1</td>
-                <td style="font-weight: 700; color: #fff;">Retro Soul</td>
+                <td style="font-weight: 700; color: #fff;">Bad_Soul_V01</td>
+                <td class="db-desc">Retro Soul Vol 1</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Retro Soul Vol 1</td>
+                <td style="color: #e2e8f0;">Retro Soul</td>
                 <td><span class="badge badge-mix">Bad Soul</span></td>
                 <td><span class="badge badge-genre">Soul</span></td>
                 <td class="mono">296.97 min (296:58)</td>
@@ -502,9 +515,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">7</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Disco_90s_V01</td>
-                <td style="color: #cbd5e1;">Disco around the 90s</td>
-                <td style="font-weight: 700; color: #fff;">Disco around the 90s</td>
+                <td style="font-weight: 700; color: #fff;">Disco_90s_V01</td>
+                <td class="db-desc">Disco around the 90s</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Disco around the 90s</td>
+                <td style="color: #e2e8f0;">Disco around the 90s</td>
                 <td><span class="badge badge-mix">Party Disco</span></td>
                 <td><span class="badge badge-genre">Disco</span></td>
                 <td class="mono">340.49 min (340:29)</td>
@@ -513,9 +527,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">8</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Dwalli_Salsa_SexyLady</td>
-                <td style="color: #cbd5e1;">Reggae/Dance Mix</td>
-                <td style="font-weight: 700; color: #fff;">Reggae/Dance Mix</td>
+                <td style="font-weight: 700; color: #fff;">Dwalli_Salsa_SexyLady</td>
+                <td class="db-desc">Reggae/Dance Mix</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Reggae/Dance Mix</td>
+                <td style="color: #e2e8f0;">Reggae/Dance Mix</td>
                 <td><span class="badge badge-mix">Rhythm Mix</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">337.93 min (337:55)</td>
@@ -524,9 +539,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1002</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Bandelero Mix</td>
-                <td style="color: #cbd5e1;">Reggae Mix - Bandelero Rhythm with MM Dub</td>
-                <td style="font-weight: 700; color: #fff;">Reggae Mix - Bandelero Rhythm</td>
+                <td style="font-weight: 700; color: #fff;">Bandelero Mix</td>
+                <td class="db-desc">Reggae Mix - Bandelero Rhythm with MM Dub</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Reggae Mix - Bandelero Rhythm with MM Dub</td>
+                <td style="color: #e2e8f0;">Reggae Mix - Bandelero Rhythm</td>
                 <td><span class="badge badge-mix">Reggae Rhythm Mix</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">261.13 min (261:07)</td>
@@ -535,9 +551,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1003</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">LR_Smooth_Singles_V01</td>
-                <td style="color: #cbd5e1;">Smooth Lovers Rock Singles</td>
-                <td style="font-weight: 700; color: #fff;">Smooth Lovers Rock Singles</td>
+                <td style="font-weight: 700; color: #fff;">LR_Smooth_Singles_V01</td>
+                <td class="db-desc">Smooth Lovers Rock Singles</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Smooth Lovers Rock Singles</td>
+                <td style="color: #e2e8f0;">Smooth Lovers Rock Singles</td>
                 <td><span class="badge badge-mix">Lovers Rock Singles</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">87.05 min (87:03)</td>
@@ -546,9 +563,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1005</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">soca_blend_V01</td>
-                <td style="color: #cbd5e1;">Soca Dancehall Blend</td>
-                <td style="font-weight: 700; color: #fff;">Soca Dancehall Blend</td>
+                <td style="font-weight: 700; color: #fff;">soca_blend_V01</td>
+                <td class="db-desc">Soca Dancehall Blend</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Soca Dancehall Blend</td>
+                <td style="color: #e2e8f0;">Soca Dancehall Blend</td>
                 <td><span class="badge badge-mix">Party Mix</span></td>
                 <td><span class="badge badge-genre">Soca</span></td>
                 <td class="mono">133.13 min (133:07)</td>
@@ -557,9 +575,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1006</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">loversrock_RV01</td>
-                <td style="color: #cbd5e1;">Loversrock Rhythm Mix</td>
-                <td style="font-weight: 700; color: #fff;">Loversrock Rhythm Mix</td>
+                <td style="font-weight: 700; color: #fff;">loversrock_RV01</td>
+                <td class="db-desc">Loversrock Rhythm Mix</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Loversrock Rhythm Mix</td>
+                <td style="color: #e2e8f0;">Loversrock Rhythm Mix</td>
                 <td><span class="badge badge-mix">Rhythm Mix</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">133.13 min (133:07)</td>
@@ -568,9 +587,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1007</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Dancehall_90s_V02</td>
-                <td style="color: #cbd5e1;">90s Dancehall Party Mix</td>
-                <td style="font-weight: 700; color: #fff;">90s Dancehall Party Mix</td>
+                <td style="font-weight: 700; color: #fff;">Dancehall_90s_V02</td>
+                <td class="db-desc">90s Dancehall Party Mix</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">90s Dancehall Party Mix</td>
+                <td style="color: #e2e8f0;">90s Dancehall Party Mix</td>
                 <td><span class="badge badge-mix">Dancehall Party Mix</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">133.13 min (133:07)</td>
@@ -579,9 +599,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">1008</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Culture_V01</td>
-                <td style="color: #cbd5e1;">Culture Mix Vol I</td>
-                <td style="font-weight: 700; color: #fff;">Culture Mix</td>
+                <td style="font-weight: 700; color: #fff;">Culture_V01</td>
+                <td class="db-desc">Culture Mix Vol I</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Culture Mix Vol I</td>
+                <td style="color: #e2e8f0;">Culture Mix</td>
                 <td><span class="badge badge-mix">Culture</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">358.41 min (358:24)</td>
@@ -590,9 +611,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2002</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Luciano_Dub_Mix</td>
-                <td style="color: #cbd5e1;">Luciano MM Mix</td>
-                <td style="font-weight: 700; color: #fff;">MM Mix</td>
+                <td style="font-weight: 700; color: #fff;">Luciano_Dub_Mix</td>
+                <td class="db-desc">Luciano MM Mix by Luciano</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Luciano MM Mix</td>
+                <td style="color: #e2e8f0;">MM Mix</td>
                 <td><span class="badge badge-mix">Juggling on Riddim</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">296.97 min (296:58)</td>
@@ -601,9 +623,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2006</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">What Will Be</td>
-                <td style="color: #cbd5e1;">What Will Be - Stevie Malekuu</td>
                 <td style="font-weight: 700; color: #fff;">What Will Be</td>
+                <td class="db-desc">What Will Be by Stevie Malekuu</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">What Will Be - Stevie Malekuu</td>
+                <td style="color: #e2e8f0;">What Will Be</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">368.65 min (368:39)</td>
@@ -612,9 +635,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2007</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Don't Trust Dem</td>
-                <td style="color: #cbd5e1;">Don't Trust Dem - Stevie Malekuu</td>
                 <td style="font-weight: 700; color: #fff;">Don't Trust Dem</td>
+                <td class="db-desc">Don't Trust Dem by Stevie Malekuu</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Don't Trust Dem - Stevie Malekuu</td>
+                <td style="color: #e2e8f0;">Don't Trust Dem</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">496.65 min (496:39)</td>
@@ -623,9 +647,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2008</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">War A Gwaan</td>
-                <td style="color: #cbd5e1;">War A Gwaan by Luciano</td>
                 <td style="font-weight: 700; color: #fff;">War A Gwaan</td>
+                <td class="db-desc">War A Gwaan by Luciano</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">War A Gwaan by Luciano</td>
+                <td style="color: #e2e8f0;">War A Gwaan</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">368.65 min (368:39)</td>
@@ -634,9 +659,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2010</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Tennessee Whiskey</td>
-                <td style="color: #cbd5e1;">Tennessee Whiskey - Wayne Armond</td>
                 <td style="font-weight: 700; color: #fff;">Tennessee Whiskey</td>
+                <td class="db-desc">Tennessee Whiskey by Wayne Armond</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Tennessee Whiskey - Wayne Armond</td>
+                <td style="color: #e2e8f0;">Tennessee Whiskey</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">368.65 min (368:39)</td>
@@ -645,9 +671,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2011</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Righteous People</td>
-                <td style="color: #cbd5e1;">Righteous People - Wayne Armond</td>
                 <td style="font-weight: 700; color: #fff;">Righteous People</td>
+                <td class="db-desc">Righteous People by Wayne Armond</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Righteous People - Wayne Armond</td>
+                <td style="color: #e2e8f0;">Righteous People</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">R&B</span></td>
                 <td class="mono">368.65 min (368:39)</td>
@@ -656,9 +683,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2012</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Wayne_Alton</td>
-                <td style="color: #cbd5e1;">Wayne Armond Picks on Alton Ellis</td>
-                <td style="font-weight: 700; color: #fff;">Picks on Alton Ellis</td>
+                <td style="font-weight: 700; color: #fff;">Wayne_Alton</td>
+                <td class="db-desc">Wayne Armond Picks on Alton Ellis by Wayne Armond & Alton Ellis</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Wayne Armond Picks on Alton Ellis</td>
+                <td style="color: #e2e8f0;">Picks on Alton Ellis</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">506.89 min (506:53)</td>
@@ -667,9 +695,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2014</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Party Mix Part 1</td>
-                <td style="color: #cbd5e1;">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
-                <td style="font-weight: 700; color: #fff;">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
+                <td style="font-weight: 700; color: #fff;">Party Mix Part 1</td>
+                <td class="db-desc">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
+                <td style="color: #e2e8f0;">Reggae, Dancehall, Afrobeat, Soca & Disco</td>
                 <td><span class="badge badge-mix">regular</span></td>
                 <td><span class="badge badge-genre">Various</span></td>
                 <td class="mono">112.65 min (112:39)</td>
@@ -678,9 +707,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">2015</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Party_Vocals_Mixx_V1</td>
-                <td style="color: #cbd5e1;">Reggae & Dancehall Vocals</td>
-                <td style="font-weight: 700; color: #fff;">Reggae & Dancehall Vocals</td>
+                <td style="font-weight: 700; color: #fff;">Party_Vocals_Mixx_V1</td>
+                <td class="db-desc">Reggae & Dancehall Vocals</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Reggae & Dancehall Vocals</td>
+                <td style="color: #e2e8f0;">Reggae & Dancehall Vocals</td>
                 <td><span class="badge badge-mix">Juggling on Riddim</span></td>
                 <td><span class="badge badge-genre">reggae</span></td>
                 <td class="mono">286.73 min (286:43)</td>
@@ -689,9 +719,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3015</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Afrobeat Medley</td>
-                <td style="color: #cbd5e1;">Afrobeat Meets R&B</td>
-                <td style="font-weight: 700; color: #fff;">Afrobeat Meets R&B</td>
+                <td style="font-weight: 700; color: #fff;">Afrobeat Medley</td>
+                <td class="db-desc">Afrobeat Meets R&B</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Afrobeat Meets R&B</td>
+                <td style="color: #e2e8f0;">Afrobeat Meets R&B</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Afrobeat</span></td>
                 <td class="mono">591.37 min (591:22)</td>
@@ -700,9 +731,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3017</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Positive Transfusion EP</td>
-                <td style="color: #cbd5e1;">Positive Transfusion EP Juggling</td>
-                <td style="font-weight: 700; color: #fff;">Positive Transfusion EP Juggling</td>
+                <td style="font-weight: 700; color: #fff;">Positive Transfusion EP</td>
+                <td class="db-desc">Positive Transfusion EP Juggling</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Positive Transfusion EP Juggling</td>
+                <td style="color: #e2e8f0;">Positive Transfusion EP Juggling</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">471.05 min (471:03)</td>
@@ -711,9 +743,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3023</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Test</td>
-                <td style="color: #cbd5e1;">Test</td>
                 <td style="font-weight: 700; color: #fff;">Test</td>
+                <td class="db-desc">Test by Buju Banton</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Test</td>
+                <td style="color: #e2e8f0;">Test</td>
                 <td><span class="badge badge-mix">Test</span></td>
                 <td><span class="badge badge-genre">Test</span></td>
                 <td class="mono">368.65 min (368:39)</td>
@@ -722,9 +755,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3024</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Easy_Flow_Mix</td>
-                <td style="color: #cbd5e1;">Lover's rock and conscious reggae music</td>
-                <td style="font-weight: 700; color: #fff;">Lover's rock and conscious reggae music</td>
+                <td style="font-weight: 700; color: #fff;">Easy_Flow_Mix</td>
+                <td class="db-desc">Lover's rock and conscious reggae music</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Lover's rock and conscious reggae music</td>
+                <td style="color: #e2e8f0;">Lover's rock and conscious reggae music</td>
                 <td><span class="badge badge-mix">Riddim_Mix</span></td>
                 <td><span class="badge badge-genre">reggae</span></td>
                 <td class="mono">634.89 min (634:53)</td>
@@ -733,9 +767,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3025</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Kush</td>
-                <td style="color: #cbd5e1;">Kush by Wayne Armond</td>
                 <td style="font-weight: 700; color: #fff;">Kush</td>
+                <td class="db-desc">Kush by Wayne Armond</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Kush by Wayne Armond</td>
+                <td style="color: #e2e8f0;">Kush</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">284.17 min (284:10)</td>
@@ -744,9 +779,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3026</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Chances Are</td>
-                <td style="color: #cbd5e1;">Yishka</td>
                 <td style="font-weight: 700; color: #fff;">Chances Are</td>
+                <td class="db-desc">Chances Are by Yishka</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Yishka</td>
+                <td style="color: #e2e8f0;">Chances Are</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">560.65 min (560:39)</td>
@@ -755,9 +791,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3027</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Hello Africa</td>
-                <td style="color: #cbd5e1;">Hello Africa by Stevie Malekuu</td>
                 <td style="font-weight: 700; color: #fff;">Hello Africa</td>
+                <td class="db-desc">Hello Africa by Stevie Malekuu</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Hello Africa by Stevie Malekuu</td>
+                <td style="color: #e2e8f0;">Hello Africa</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">112.65 min (112:39)</td>
@@ -766,9 +803,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3028</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Groovy Reggae</td>
-                <td style="color: #cbd5e1;">Groovy Reggae - Sax by Yishka</td>
                 <td style="font-weight: 700; color: #fff;">Groovy Reggae</td>
+                <td class="db-desc">Groovy Reggae by Yishka</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Groovy Reggae - Sax by Yishka</td>
+                <td style="color: #e2e8f0;">Groovy Reggae</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">112.65 min (112:39)</td>
@@ -777,9 +815,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3029</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Your Eyes</td>
-                <td style="color: #cbd5e1;">Your Eyes by Teacha Barnes</td>
                 <td style="font-weight: 700; color: #fff;">Your Eyes</td>
+                <td class="db-desc">Your Eyes by Teacha Barnes</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Your Eyes by Teacha Barnes</td>
+                <td style="color: #e2e8f0;">Your Eyes</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">424.97 min (424:58)</td>
@@ -788,9 +827,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3030</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Who's Loving You</td>
-                <td style="color: #cbd5e1;">Who's Loving You by Wayne Armond</td>
                 <td style="font-weight: 700; color: #fff;">Who's Loving You</td>
+                <td class="db-desc">Who's Loving You by Wayne Armond</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Who's Loving You by Wayne Armond</td>
+                <td style="color: #e2e8f0;">Who's Loving You</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">79.37 min (79:22)</td>
@@ -799,9 +839,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3031</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Heart Attack</td>
-                <td style="color: #cbd5e1;">Heart Attack by Teacha Barnes</td>
                 <td style="font-weight: 700; color: #fff;">Heart Attack</td>
+                <td class="db-desc">Heart Attack by Teacha Barnes</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Heart Attack by Teacha Barnes</td>
+                <td style="color: #e2e8f0;">Heart Attack</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">232.97 min (232:58)</td>
@@ -810,9 +851,10 @@
               </tr>
               <tr>
                 <td class="mono" style="color: var(--accent-green); font-weight: bold;">3032</td>
-                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Take A Chance</td>
-                <td style="color: #cbd5e1;">Take A Chance by The Greaves Brothers</td>
                 <td style="font-weight: 700; color: #fff;">Take A Chance</td>
+                <td class="db-desc">Take A Chance by The Greaves Brothers</td>
+                <td class="mono" style="color: #94a3b8; font-size: 0.78rem;">Take A Chance by The Greaves Brothers</td>
+                <td style="color: #e2e8f0;">Take A Chance</td>
                 <td><span class="badge badge-release">release</span></td>
                 <td><span class="badge badge-genre">Reggae</span></td>
                 <td class="mono">296.97 min (296:58)</td>

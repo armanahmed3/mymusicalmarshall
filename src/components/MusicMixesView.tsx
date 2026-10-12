@@ -151,6 +151,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
             <tr>
               <th className="col-num">#</th>
               <th>Mix Title</th>
+              <th>Description</th>
               <th>Genre</th>
               <th>Duration</th>
               <th style={{ textAlign: 'center' }}>Stream</th>
@@ -211,6 +212,13 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                         <span className="song-title">{mix.title}</span>
                       </div>
                     </div>
+                  </td>
+
+                  {/* Column 3: Description */}
+                  <td>
+                    <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
+                      {mix.description || mix.title}
+                    </span>
                   </td>
 
                   {/* Column 4: Genre Badge */}

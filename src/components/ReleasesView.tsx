@@ -90,6 +90,7 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
             <thead>
               <tr>
                 <th>Song Title</th>
+                <th>Description</th>
                 <th>Genre</th>
                 <th>Duration</th>
                 <th style={{ textAlign: 'center' }}>Stream</th>
@@ -128,6 +129,11 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                           <span className="song-title">{song.title}</span>
                         </div>
                       </div>
+                    </td>
+                    <td>
+                      <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
+                        {song.description || song.title}
+                      </span>
                     </td>
                     <td>
                       <span className="badge badge-genre">{song.genre}</span>

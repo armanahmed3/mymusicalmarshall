@@ -239,7 +239,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Luciano MM Mix"
+    "description": "Luciano MM Mix by Luciano"
   },
   {
     "id": "song-db-2006",
@@ -256,7 +256,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "What Will Be - Stevie Malekuu"
+    "description": "What Will Be by Stevie Malekuu"
   },
   {
     "id": "song-db-2007",
@@ -273,7 +273,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Don't Trust Dem - Stevie Malekuu"
+    "description": "Don't Trust Dem by Stevie Malekuu"
   },
   {
     "id": "song-db-2008",
@@ -307,7 +307,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Tennessee Whiskey - Wayne Armond"
+    "description": "Tennessee Whiskey by Wayne Armond"
   },
   {
     "id": "song-db-2011",
@@ -324,7 +324,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Righteous People - Wayne Armond"
+    "description": "Righteous People by Wayne Armond"
   },
   {
     "id": "song-db-2012",
@@ -341,7 +341,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Wayne Armond Picks on Alton Ellis"
+    "description": "Wayne Armond Picks on Alton Ellis by Wayne Armond & Alton Ellis"
   },
   {
     "id": "song-db-2014",
@@ -460,7 +460,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Yishka"
+    "description": "Chances Are by Yishka"
   },
   {
     "id": "song-db-3027",
@@ -494,7 +494,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Groovy Reggae - Sax by Yishka"
+    "description": "Groovy Reggae by Yishka"
   },
   {
     "id": "song-db-3029",
