@@ -294,16 +294,24 @@ export function App() {
   // Check if track is free to stream without authentication
   const isFreeTrack = (song: Song | null) => {
     if (!song) return false;
-    const targetMix = (parameters.Feat_MixName || 'Easy_Flow_Mix').toLowerCase();
-    const targetPath = parameters.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
-    return (
-      Boolean(song.isMmRelease) ||
+    const targetMixName = (parameters.Feat_MixName || 'Easy_Flow_Mix').trim().toLowerCase();
+    const targetMixPath = (parameters.Feat_MixPath || '/AudioFileUpload/Easy_Flow_23v1241026820.mp3').trim().toLowerCase();
+    const targetFile = targetMixPath.split('/').pop() || '';
+    const songPath = (song.audioUrl || '').toLowerCase();
+    const songMix = (song.mixName || '').toLowerCase();
+    const songTitle = (song.title || '').toLowerCase();
+
+    const isDesignatedFeatureMix = Boolean(
+      (songMix && (songMix === targetMixName || songMix.replace(/_/g, ' ') === targetMixName.replace(/_/g, ' '))) ||
+      (songPath && (songPath === targetMixPath || (targetFile !== '' && songPath.includes(targetFile)))) ||
+      (songTitle && (songTitle === targetMixName || songTitle.replace(/_/g, ' ') === targetMixName.replace(/_/g, ' '))) ||
+      songTitle.includes('easy_flow') ||
+      songPath.includes('easy_flow') ||
       song.id === 'song-mm-easy-flow' ||
-      song.title.toLowerCase() === targetMix ||
-      song.title.toLowerCase().replace(/_/g, ' ') === targetMix.replace(/_/g, ' ') ||
-      song.audioUrl === targetPath ||
-      song.title.toLowerCase().includes('easy_flow')
+      song.id === 'song-db-3024'
     );
+
+    return Boolean(song.isMmRelease) || isDesignatedFeatureMix;
   };
 
   // Playback Handlers

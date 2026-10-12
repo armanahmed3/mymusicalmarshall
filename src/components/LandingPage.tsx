@@ -19,6 +19,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import type { Song, User, EventFlyer, SupportTicket, AppParameters } from '../types';
+import { INITIAL_SONGS } from '../data/initialSongs';
 
 interface LandingPageProps {
   parameters?: AppParameters;
@@ -104,24 +105,53 @@ export const LandingPage: React.FC<LandingPageProps> = ({
 
   // Featured Mix from Parameters Table (Feat_MixName: Easy_Flow_Mix, Feat_MixPath)
   const targetMixName = parameters?.Feat_MixName || 'Easy_Flow_Mix';
-  const targetMixPath = parameters?.Feat_MixPath || '/audio/Easy_Flow_23v1241026820.mp3';
+  const targetMixPath = parameters?.Feat_MixPath || '/AudioFileUpload/Easy_Flow_23v1241026820.mp3';
 
-  const featuredMix: Song = allMixes.find(
-    (s) => s.title.toLowerCase() === targetMixName.toLowerCase() || s.audioUrl.toLowerCase().includes('easy_flow') || s.title.toLowerCase().includes('easy_flow')
-  ) || allMixes[0];
+  // 1. Select the designated feature mix from the mix file using the parameters table
+  const featuredMix: Song = (() => {
+    const tName = targetMixName.trim().toLowerCase();
+    const tPath = targetMixPath.trim().toLowerCase();
+    const tFile = tPath.split('/').pop() || '';
+    const searchPool: Song[] = [...(allMixes || []), ...(mmReleases || []), ...INITIAL_SONGS];
+
+    // Step A: Search in searchPool by exact audio path / filename stored in parameters table
+    const matchPath = searchPool.find((s) => {
+      const u = (s.audioUrl || '').toLowerCase();
+      return u === tPath || (tFile !== '' && u.includes(tFile));
+    });
+    if (matchPath) return matchPath;
+
+    // Step B: Search by mixName stored in parameters table
+    const matchMixName = searchPool.find((s) => {
+      const m = (s.mixName || '').toLowerCase();
+      return m && (m === tName || m.replace(/_/g, ' ') === tName.replace(/_/g, ' '));
+    });
+    if (matchMixName) return matchMixName;
+
+    // Step C: Search by title or description
+    const matchTitle = searchPool.find((s) => {
+      const t = (s.title || '').toLowerCase();
+      const d = (s.description || '').toLowerCase();
+      return t === tName || t.replace(/_/g, ' ') === tName.replace(/_/g, ' ') || d.includes(tName);
+    });
+    if (matchTitle) return matchTitle;
+
+    // Step D: Fallback to easy_flow or first mix
+    const fallback = searchPool.find((s) => (s.audioUrl || '').toLowerCase().includes('easy_flow') || (s.title || '').toLowerCase().includes('easy_flow'));
+    return fallback || searchPool[0];
+  })();
 
   const isPlayingFeaturedMix = isPlaybackActive && Boolean(
     currentPlaybackTrack?.id === featuredMix?.id ||
-    currentPlaybackTrack?.title.toLowerCase() === targetMixName.toLowerCase() ||
-    currentPlaybackTrack?.title.toLowerCase().replace(/_/g, ' ') === targetMixName.toLowerCase().replace(/_/g, ' ') ||
-    currentPlaybackTrack?.audioUrl === targetMixPath ||
-    currentPlaybackTrack?.title.toLowerCase().includes('easy_flow')
+    currentPlaybackTrack?.audioUrl === featuredMix?.audioUrl
   );
 
   const handleToggleFeaturedMix = () => {
     if (!featuredMix) return;
     if (onPlaySong) {
       onPlaySong(featuredMix);
+    } else {
+      handleSelectRelease(featuredMix);
     }
   };
 
@@ -483,19 +513,47 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   Music Marshall Featured Mix - {featuredMix?.title || targetMixName}
                 </div>
                 <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
-                  Stream Free Without Login
+                  Stream Free Without Login {featuredMix?.genre ? `• ${featuredMix.genre.toUpperCase()}` : ''} {featuredMix?.duration ? `• ${formatTime(featuredMix.duration)}` : ''}
                 </div>
               </div>
             </div>
 
             <button
               type="button"
-              className="btn btn-accent btn-md"
+              className="btn btn-accent btn-md featured-mix-button"
               onClick={handleToggleFeaturedMix}
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 22px', fontWeight: 800, borderRadius: '9999px' }}
+              title={isPlayingFeaturedMix ? `Pause ${featuredMix?.title || targetMixName}` : `Play ${featuredMix?.title || targetMixName}`}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '12px',
+                padding: '12px 24px',
+                borderRadius: '9999px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                textAlign: 'left',
+                border: 'none',
+                boxShadow: isPlayingFeaturedMix
+                  ? '0 0 20px rgba(0, 245, 155, 0.6)'
+                  : '0 4px 18px rgba(0, 245, 155, 0.35)',
+                transition: 'all 0.2s ease-in-out'
+              }}
             >
-              {isPlayingFeaturedMix ? <Pause size={17} fill="white" /> : <Play size={17} fill="white" />}
-              <span>{isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}</span>
+              {isPlayingFeaturedMix ? (
+                <Pause size={19} fill="currentColor" />
+              ) : (
+                <Play size={19} fill="currentColor" />
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', lineHeight: 1.25 }}>
+                <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#052e16', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                  {isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}
+                </span>
+                <span style={{ fontSize: '0.81rem', fontWeight: 700, color: '#0f172a' }}>
+                  {featuredMix?.title || targetMixName}
+                  {featuredMix?.genre ? ` • ${featuredMix.genre}` : ''}
+                  {featuredMix?.duration ? ` (${formatTime(featuredMix.duration)})` : ''}
+                </span>
+              </div>
             </button>
           </div>
         </div>

@@ -6,6 +6,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1",
     "db_id": 1,
+    "mixName": "Disco_MixV01_Branded",
     "title": "Disco Mix",
     "artist": "",
     "album": "RetroDisco",
@@ -23,6 +24,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2",
     "db_id": 2,
+    "mixName": "Classic Vintage_V01",
     "title": "CLASSIC VINTAGE",
     "artist": "",
     "album": "Vintage",
@@ -40,6 +42,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-4",
     "db_id": 4,
+    "mixName": "Rocksteady Love Pt 1",
     "title": "ROCK STEADY LOVE",
     "artist": "",
     "album": "Rocksteady Love",
@@ -57,6 +60,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-5",
     "db_id": 5,
+    "mixName": "Old_Bounce_V01",
     "title": "Old Bounce Reggae",
     "artist": "",
     "album": "Reggae",
@@ -74,6 +78,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-6",
     "db_id": 6,
+    "mixName": "Bad_Soul_V01",
     "title": "Retro Soul",
     "artist": "",
     "album": "Bad Soul",
@@ -91,6 +96,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-7",
     "db_id": 7,
+    "mixName": "Disco_90s_V01",
     "title": "Disco around the 90s",
     "artist": "",
     "album": "Party Disco",
@@ -108,6 +114,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-8",
     "db_id": 8,
+    "mixName": "Dwalli_Salsa_SexyLady",
     "title": "Reggae/Dance Mix",
     "artist": "",
     "album": "Rhythm Mix",
@@ -125,6 +132,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1002",
     "db_id": 1002,
+    "mixName": "Bandelero Mix",
     "title": "Reggae Mix - Bandelero Rhythm",
     "artist": "",
     "album": "Reggae Rhythm Mix",
@@ -142,6 +150,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1003",
     "db_id": 1003,
+    "mixName": "LR_Smooth_Singles_V01",
     "title": "Smooth Lovers Rock Singles",
     "artist": "",
     "album": "Lovers Rock Singles",
@@ -159,6 +168,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1005",
     "db_id": 1005,
+    "mixName": "soca_blend_V01",
     "title": "Soca Dancehall Blend",
     "artist": "",
     "album": "Party Mix",
@@ -176,6 +186,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1006",
     "db_id": 1006,
+    "mixName": "loversrock_RV01",
     "title": "Loversrock Rhythm Mix",
     "artist": "",
     "album": "Rhythm Mix",
@@ -193,6 +204,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1007",
     "db_id": 1007,
+    "mixName": "Dancehall_90s_V02",
     "title": "90s Dancehall Party Mix",
     "artist": "",
     "album": "Dancehall Party Mix",
@@ -210,6 +222,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1008",
     "db_id": 1008,
+    "mixName": "Culture_V01",
     "title": "Culture Mix",
     "artist": "",
     "album": "Culture",
@@ -227,6 +240,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2002",
     "db_id": 2002,
+    "mixName": "Luciano_Dub_Mix",
     "title": "MM Mix",
     "artist": "",
     "album": "Juggling on Riddim",
@@ -244,6 +258,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2006",
     "db_id": 2006,
+    "mixName": "What Will Be",
     "title": "What Will Be",
     "artist": "",
     "album": "release",
@@ -261,6 +276,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2007",
     "db_id": 2007,
+    "mixName": "Don't Trust Dem",
     "title": "Don't Trust Dem",
     "artist": "",
     "album": "release",
@@ -278,6 +294,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2008",
     "db_id": 2008,
+    "mixName": "War A Gwaan",
     "title": "War A Gwaan",
     "artist": "",
     "album": "release",
@@ -295,6 +312,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2010",
     "db_id": 2010,
+    "mixName": "Tennessee Whiskey",
     "title": "Tennessee Whiskey",
     "artist": "",
     "album": "release",
@@ -312,6 +330,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2011",
     "db_id": 2011,
+    "mixName": "Righteous People",
     "title": "Righteous People",
     "artist": "",
     "album": "release",
@@ -329,6 +348,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2012",
     "db_id": 2012,
+    "mixName": "Wayne_Alton",
     "title": "Picks on Alton Ellis",
     "artist": "",
     "album": "release",
@@ -346,6 +366,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2014",
     "db_id": 2014,
+    "mixName": "Party Mix Part 1",
     "title": "Reggae, Dancehall, Afrobeat, Soca & Disco",
     "artist": "",
     "album": "regular",
@@ -363,6 +384,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2015",
     "db_id": 2015,
+    "mixName": "Party_Vocals_Mixx_V1",
     "title": "Reggae & Dancehall Vocals",
     "artist": "",
     "album": "Juggling on Riddim",
@@ -380,6 +402,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3015",
     "db_id": 3015,
+    "mixName": "Afrobeat Medley",
     "title": "Afrobeat Meets R&B",
     "artist": "",
     "album": "release",
@@ -397,6 +420,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3017",
     "db_id": 3017,
+    "mixName": "Positive Transfusion EP",
     "title": "Positive Transfusion EP Juggling",
     "artist": "",
     "album": "release",
@@ -414,6 +438,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3024",
     "db_id": 3024,
+    "mixName": "Easy_Flow_Mix",
     "title": "Lover's rock and conscious reggae music",
     "artist": "",
     "album": "Riddim_Mix",
@@ -431,6 +456,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3025",
     "db_id": 3025,
+    "mixName": "Kush",
     "title": "Kush",
     "artist": "",
     "album": "release",
@@ -448,6 +474,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3026",
     "db_id": 3026,
+    "mixName": "Chances Are",
     "title": "Chances Are",
     "artist": "",
     "album": "release",
@@ -465,6 +492,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3027",
     "db_id": 3027,
+    "mixName": "Hello Africa",
     "title": "Hello Africa",
     "artist": "",
     "album": "release",
@@ -482,6 +510,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3028",
     "db_id": 3028,
+    "mixName": "Groovy Reggae",
     "title": "Groovy Reggae",
     "artist": "",
     "album": "release",
@@ -499,6 +528,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3029",
     "db_id": 3029,
+    "mixName": "Your Eyes",
     "title": "Your Eyes",
     "artist": "",
     "album": "release",
@@ -516,6 +546,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3030",
     "db_id": 3030,
+    "mixName": "Who's Loving You",
     "title": "Who's Loving You",
     "artist": "",
     "album": "release",
@@ -533,6 +564,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3031",
     "db_id": 3031,
+    "mixName": "Heart Attack",
     "title": "Heart Attack",
     "artist": "",
     "album": "release",
@@ -550,6 +582,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-3032",
     "db_id": 3032,
+    "mixName": "Take A Chance",
     "title": "Take A Chance",
     "artist": "",
     "album": "release",

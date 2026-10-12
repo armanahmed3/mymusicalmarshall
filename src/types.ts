@@ -14,6 +14,7 @@ export interface Song {
   isMix?: boolean; // Tag for music mixes / DJ juggling sets
   isDownloadable?: boolean; // Tag for downloadable songs/mixes
   db_id?: number; // Authentic database ID (mixId) from MS SQL
+  mixName?: string; // Authentic MS SQL mixName (e.g. Easy_Flow_Mix)
   uploadedAt?: string;
 }
 
