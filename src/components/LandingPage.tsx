@@ -480,7 +480,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
-                  Music Marshall Featured Mix - {targetMixName}
+                  Music Marshall Featured Mix - {featuredMix?.title || targetMixName}
                 </div>
                 <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
                   Stream Free Without Login
@@ -600,6 +600,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
           </div>
 
           <div className="releases-list-box">
+            <div className="releases-table-header" style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '12px 20px',
+              borderBottom: '1px solid rgba(255, 255, 255, 0.1)',
+              background: 'rgba(15, 23, 42, 0.7)',
+              gap: '18px',
+              fontSize: '0.74rem',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              letterSpacing: '0.6px',
+              color: '#94a3b8'
+            }}>
+              <div style={{ width: '44px', textAlign: 'center' }}>Cover</div>
+              <div style={{ flex: 1 }}>Song Title</div>
+              <div style={{ width: '150px' }}>Genre</div>
+              <div style={{ width: '55px', textAlign: 'right' }}>Duration</div>
+              <div style={{ width: '140px', textAlign: 'right' }}>Stream & Actions</div>
+            </div>
             {mmReleases.map((song) => {
               const isSelected = currentPlaybackTrack?.id === song.id || currentPlaybackTrack?.audioUrl === song.audioUrl;
               const isSongPlaying = isSelected && isPlaybackActive;

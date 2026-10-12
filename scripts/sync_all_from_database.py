@@ -5,6 +5,7 @@ with open('ebayjaco_mmarshalldb_2026-10-08_17-54-39', 'rb') as f:
 
 sys.path.insert(0, os.path.dirname(__file__))
 from dump_all_database_tables import extract_table
+from compute_mp3_durations import get_mp3_duration
 
 # 1. MIXES
 mixes_raw = extract_table(219)
@@ -58,12 +59,18 @@ for r in mixes_raw:
     if mix_id == 3023 or name.strip().lower() == 'test':
         continue
 
-    # calculate duration in seconds
-    duration_secs = int(mix_len_val * 60) if mix_len_val > 0 else 240
-    
-    # Ensure audio URL format matches public folder
+    # Calculate real, accurate duration in seconds from the actual audio file
     audio_fname = os.path.basename(audio)
     audio_url = f"/AudioFileUpload/{audio_fname}"
+    duration_secs = 240
+    p1 = os.path.join('public', 'AudioFileUpload', audio_fname)
+    p2 = os.path.join('public', 'audio', audio_fname)
+    if os.path.exists(p1):
+        duration_secs = get_mp3_duration(p1)
+    elif os.path.exists(p2):
+        duration_secs = get_mp3_duration(p2)
+    elif mix_len_val > 0:
+        duration_secs = int(mix_len_val * 60)
 
     songs.append({
         'id': f"song-db-{mix_id}",
@@ -130,27 +137,8 @@ for u_list in [users_230, users_212]: # 230 has admin first
 users_final = list(unique_users_dict.values())
 
 # 3. NOTICES
-notices_raw = extract_table(222)
+# User requested: remove notice and flyers that are showing already, admin can post new
 event_flyers = []
-for r in notices_raw:
-    fixed = r['fixed']
-    n_id = struct.unpack('<I', fixed[0:4])[0]
-    cols = r['var_cols']
-    img = cols[0].strip() if len(cols) > 0 else ''
-    location = cols[2].strip() if len(cols) > 2 else ''
-    title = cols[3].strip() if len(cols) > 3 else ''
-    details = cols[4].strip() if len(cols) > 4 else ''
-    
-    event_flyers.append({
-        'id': f"flyer-db-{n_id}",
-        'title': f"{title} — {location}" if location else title,
-        'eventDate': 'Upcoming Event',
-        'location': location,
-        'description': details if details else f"{title} taking place in {location}.",
-        'flyerUrl': img if img else '/mm_banner.png',
-        'postedBy': 'Music Marshall Admin',
-        'createdAt': '2026-03-01'
-    })
 
 # 4. REFERRAL CODES
 refs_raw = extract_table(229)
