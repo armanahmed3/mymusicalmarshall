@@ -42,6 +42,22 @@ for r in mixes_raw:
     if not cleaned_title or cleaned_title.lower() == 'yishka':
         cleaned_title = name
 
+    # User requested title normalizations for main site
+    title_overrides = {
+        'Classic Vintage R&B': 'CLASSIC VINTAGE',
+        'Rocksteady Love Pt 1': 'ROCK STEADY LOVE',
+        'Old_Bounce Reggae': 'Old Bounce Reggae',
+        'Retro Soul Vol 1': 'Retro Soul',
+        'Reggae Mix - Bandelero Rhythm with MM Dub': 'Reggae Mix - Bandelero Rhythm',
+        'Culture Mix Vol I': 'Culture Mix',
+    }
+    if cleaned_title in title_overrides:
+        cleaned_title = title_overrides[cleaned_title]
+
+    # User requested: REMOVE TEST SONG from main site
+    if mix_id == 3023 or name.strip().lower() == 'test':
+        continue
+
     # calculate duration in seconds
     duration_secs = int(mix_len_val * 60) if mix_len_val > 0 else 240
     

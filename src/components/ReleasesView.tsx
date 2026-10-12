@@ -89,11 +89,11 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
           <table className="song-table" style={{ margin: 0 }}>
             <thead>
               <tr>
-                <th>Title & Artist</th>
-                <th>Album / Description</th>
+                <th>Song Title</th>
                 <th>Genre</th>
                 <th>Duration</th>
                 <th style={{ textAlign: 'center' }}>Stream</th>
+                <th style={{ textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -126,12 +126,8 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                         </div>
                         <div className="song-title-meta">
                           <span className="song-title">{song.title}</span>
-                          {song.artist?.trim() ? <span className="song-artist">{song.artist}</span> : null}
                         </div>
                       </div>
-                    </td>
-                    <td style={{ color: '#64748b', fontSize: '0.86rem' }}>
-                      {song.description || song.album}
                     </td>
                     <td>
                       <span className="badge badge-genre">{song.genre}</span>
@@ -140,36 +136,36 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                       {formatTime(song.duration)}
                     </td>
                     <td style={{ textAlign: 'center' }}>
-                      <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-                        {song.isDownloadable && (
-                          <a
-                            href={song.audioUrl}
-                            download={song.artist?.trim() ? `${song.title} - ${song.artist}.mp3` : `${song.title}.mp3`}
-                            className="btn btn-outline btn-sm"
-                            style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', fontSize: '0.78rem', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
-                            title={`Download ${song.title}`}
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Download size={13} />
-                            <span>Download</span>
-                          </a>
+                      <button
+                        type="button"
+                        className="btn-play-table"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onPlaySong(song);
+                        }}
+                        title="Play Free (No Login Needed)"
+                      >
+                        {isCurrent && isPlaying ? (
+                          <Pause size={18} fill="white" />
+                        ) : (
+                          <Play size={18} fill="white" />
                         )}
-                        <button
-                          type="button"
-                          className="btn-play-table"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onPlaySong(song);
-                          }}
-                          title="Play Free (No Login Needed)"
+                      </button>
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      {song.isDownloadable && (
+                        <a
+                          href={song.audioUrl}
+                          download={`${song.title}.mp3`}
+                          className="btn btn-outline btn-sm"
+                          style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', fontSize: '0.78rem', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
+                          title={`Download ${song.title}`}
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          {isCurrent && isPlaying ? (
-                            <Pause size={18} fill="white" />
-                          ) : (
-                            <Play size={18} fill="white" />
-                          )}
-                        </button>
-                      </div>
+                          <Download size={13} />
+                          <span>Download</span>
+                        </a>
+                      )}
                     </td>
                   </tr>
                 );

@@ -56,6 +56,16 @@ for r in mixes_raw:
     dur_formatted = f"{mins}:{secs:02d}"
     
     song_title = clean_title(name, desc)
+    title_overrides = {
+        'Classic Vintage R&B': 'CLASSIC VINTAGE',
+        'Rocksteady Love Pt 1': 'ROCK STEADY LOVE',
+        'Old_Bounce Reggae': 'Old Bounce Reggae',
+        'Retro Soul Vol 1': 'Retro Soul',
+        'Reggae Mix - Bandelero Rhythm with MM Dub': 'Reggae Mix - Bandelero Rhythm',
+        'Culture Mix Vol I': 'Culture Mix',
+    }
+    if song_title in title_overrides:
+        song_title = title_overrides[song_title]
     
     mixes_data.append({
         'mixId': mix_id,

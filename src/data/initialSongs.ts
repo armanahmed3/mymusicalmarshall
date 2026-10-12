@@ -23,7 +23,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-2",
     "db_id": 2,
-    "title": "Classic Vintage R&B",
+    "title": "CLASSIC VINTAGE",
     "artist": "",
     "album": "Vintage",
     "duration": 26727,
@@ -40,7 +40,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-4",
     "db_id": 4,
-    "title": "Rocksteady Love Pt 1",
+    "title": "ROCK STEADY LOVE",
     "artist": "",
     "album": "Rocksteady Love",
     "duration": 5223,
@@ -57,7 +57,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-5",
     "db_id": 5,
-    "title": "Old_Bounce Reggae",
+    "title": "Old Bounce Reggae",
     "artist": "",
     "album": "Reggae",
     "duration": 13824,
@@ -74,7 +74,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-6",
     "db_id": 6,
-    "title": "Retro Soul Vol 1",
+    "title": "Retro Soul",
     "artist": "",
     "album": "Bad Soul",
     "duration": 17818,
@@ -125,7 +125,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1002",
     "db_id": 1002,
-    "title": "Reggae Mix - Bandelero Rhythm with MM Dub",
+    "title": "Reggae Mix - Bandelero Rhythm",
     "artist": "",
     "album": "Reggae Rhythm Mix",
     "duration": 15667,
@@ -210,7 +210,7 @@ export const INITIAL_SONGS: Song[] = [
   {
     "id": "song-db-1008",
     "db_id": 1008,
-    "title": "Culture Mix Vol I",
+    "title": "Culture Mix",
     "artist": "",
     "album": "Culture",
     "duration": 21504,
@@ -410,23 +410,6 @@ export const INITIAL_SONGS: Song[] = [
     "isMix": false,
     "isDownloadable": true,
     "description": "Positive Transfusion EP Juggling"
-  },
-  {
-    "id": "song-db-3023",
-    "db_id": 3023,
-    "title": "Test",
-    "artist": "",
-    "album": "Test",
-    "duration": 22119,
-    "audioUrl": "/AudioFileUpload/BUJU243133596.mp3",
-    "coverUrl": "/headphone_logo.png",
-    "genre": "Test",
-    "mood": "chill",
-    "bpm": 90,
-    "isMmRelease": false,
-    "isMix": true,
-    "isDownloadable": true,
-    "description": "Test"
   },
   {
     "id": "song-db-3024",

@@ -150,8 +150,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           <thead>
             <tr>
               <th className="col-num">#</th>
-              <th>Mix Title & DJ</th>
-              <th>Album / Session Info</th>
+              <th>Mix Title</th>
               <th>Genre</th>
               <th>Duration</th>
               <th style={{ textAlign: 'center' }}>Stream</th>
@@ -182,7 +181,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                     )}
                   </td>
 
-                  {/* Column 2: Mix Cover, Title and Artist */}
+                  {/* Column 2: Mix Cover and Title */}
                   <td>
                     <div className="song-title-group">
                       <div style={{ position: 'relative', width: '42px', height: '42px', flexShrink: 0 }}>
@@ -210,19 +209,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                       </div>
                       <div className="song-title-meta">
                         <span className="song-title">{mix.title}</span>
-                        {mix.artist?.trim() ? (
-                          <span className="song-artist">{mix.artist}</span>
-                        ) : (
-                          <span className="song-artist" style={{ color: '#64748b' }}>Music Marshall Sound</span>
-                        )}
                       </div>
-                    </div>
-                  </td>
-
-                  {/* Column 3: Description / Album */}
-                  <td style={{ color: '#94a3b8', fontSize: '0.84rem', maxWidth: '280px' }}>
-                    <div style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                      {mix.description || mix.album || 'Master Studio Session'}
                     </div>
                   </td>
 

@@ -1011,7 +1011,7 @@ export function App() {
             {currentSong?.isDownloadable && (
               <a
                 href={currentSong.audioUrl}
-                download={currentSong.artist?.trim() ? `${currentSong.title} - ${currentSong.artist}.mp3` : `${currentSong.title}.mp3`}
+                download={`${currentSong.title}.mp3`}
                 className="ctrl-btn"
                 style={{ color: '#16a34a', display: 'flex', alignItems: 'center' }}
                 title="Download this audio track"
