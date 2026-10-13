@@ -36,14 +36,13 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   currentUser
 }) => {
   // Filter mixes: strictly tracks designated for Listen to Music (continuous mixes & jugglings)
-  // Strict deduplication by unique ID and audioUrl to guarantee ZERO DUPLICATION
+  // Deduplicate by song id — all ids in INITIAL_SONGS are unique, so this is the safest approach
   const mixes = useMemo(() => {
     const seen = new Set<string>();
     return songs.filter((s) => {
       if (!s.isMix) return false;
-      const key = `${s.db_id || s.id}_${(s.audioUrl || '').toLowerCase()}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
+      if (seen.has(s.id)) return false;
+      seen.add(s.id);
       return true;
     });
   }, [songs]);
