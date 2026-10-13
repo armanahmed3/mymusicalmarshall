@@ -1692,7 +1692,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                           {song.title}
                         </div>
                         <div style={{ fontSize: '0.74rem', color: '#94a3b8' }}>
-                          {song.artist?.trim() ? `${song.artist} • ` : ''}{song.genre} • {formatTime(song.duration)}
+                          {song.artist?.trim() ? `${song.artist} • ` : ''}{song.genre} • <span style={{ color: '#00f59b', fontFamily: 'monospace', fontWeight: 700 }}>{song.durationFormatted || formatTime(song.duration)}</span> • <span style={{ fontFamily: 'monospace' }}>{song.audioUrl}</span>
                         </div>
                       </div>
                     </div>

@@ -133,6 +133,9 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                         </div>
                         <div className="song-title-meta">
                           <span className="song-title">{song.title}</span>
+                          <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
+                            {song.audioUrl}
+                          </span>
                         </div>
                       </div>
                     </td>
@@ -144,8 +147,8 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                     <td>
                       <span className="badge badge-genre">{song.genre}</span>
                     </td>
-                    <td style={{ color: '#64748b', fontSize: '0.86rem' }}>
-                      {formatTime(song.duration)}
+                    <td style={{ color: '#00f59b', fontSize: '0.88rem', fontFamily: 'monospace', fontWeight: 700 }}>
+                      {song.durationFormatted || formatTime(song.duration)}
                     </td>
                     <td style={{ textAlign: 'center' }}>
                       <button

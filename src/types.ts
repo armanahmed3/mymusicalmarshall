@@ -4,6 +4,9 @@ export interface Song {
   artist: string;
   album: string;
   duration: number; // in seconds
+  durationFormatted?: string; // Exact MM:SS duration from MS SQL database (e.g. 404:29)
+  audioPath?: string; // Exact database audio path (e.g. /AudioFileUpload/Disco_MixV01_Branded1194021647.mp3)
+  mixLength?: string; // Exact database mixLength (e.g. 404.49)
   audioUrl: string;
   coverUrl: string;
   genre: string;

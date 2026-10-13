@@ -225,6 +225,9 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                       </div>
                       <div className="song-title-meta">
                         <span className="song-title">{mix.mixName || mix.title}</span>
+                        <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
+                          {mix.audioUrl}
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -248,11 +251,11 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                     <span className="badge badge-genre">{mix.genre}</span>
                   </td>
 
-                  {/* Column 6: Duration */}
-                  <td style={{ color: '#94a3b8', fontSize: '0.86rem', whiteSpace: 'nowrap' }}>
+                  {/* Column 6: Duration (Exact from Database) */}
+                  <td style={{ color: '#00f59b', fontSize: '0.88rem', whiteSpace: 'nowrap', fontFamily: 'monospace', fontWeight: 700 }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                      <Clock size={12} color="#64748b" />
-                      {formatDuration(mix.duration)}
+                      <Clock size={12} color="#00f59b" />
+                      {mix.durationFormatted || formatDuration(mix.duration)}
                     </span>
                   </td>
 

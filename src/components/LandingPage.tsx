@@ -707,6 +707,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   </div>
                   <div className="release-info" style={{ flex: 1.1 }}>
                     <span className="release-title">{song.title}</span>
+                    <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
+                      {song.audioUrl}
+                    </span>
                   </div>
 
                   <div className="release-desc" style={{ flex: 1.4, color: '#cbd5e1', fontSize: '0.85rem' }}>
@@ -718,8 +721,8 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     <span className="badge-genre">{song.genre}</span>
                   </div>
 
-                  <div className="release-duration">
-                    {formatTime(song.duration)}
+                  <div className="release-duration" style={{ color: '#00f59b', fontFamily: 'monospace', fontWeight: 700 }}>
+                    {song.durationFormatted || formatTime(song.duration)}
                   </div>
 
                   {/* Note 6: Add Download functionality for MY MM Releases */}
