@@ -99,6 +99,10 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           {[
             { id: 'all', label: `All Mixes (${mixes.length})` },
             { id: 'reggae', label: 'Reggae' },
+            { id: 'disco', label: 'Disco' },
+            { id: 'rocksteady', label: 'Rocksteady' },
+            { id: 'soul', label: 'Soul & R&B' },
+            { id: 'soca', label: 'Soca' },
             ...(currentUser?.role === 'admin' ? [{ id: 'downloadable', label: '⬇ Downloadable' }] : [])
           ].map((cat) => (
             <button
