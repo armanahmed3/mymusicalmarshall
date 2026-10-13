@@ -20,6 +20,12 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
 }) => {
   const formatTime = (secs: number) => {
     if (isNaN(secs) || secs < 0) return '0:00';
+    if (secs >= 3600) {
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = Math.floor(secs % 60);
+      return `${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
     const m = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;

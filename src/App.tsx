@@ -384,6 +384,12 @@ export function App() {
 
   const formatTime = (secs: number) => {
     if (isNaN(secs) || secs < 0) return '0:00';
+    if (secs >= 3600) {
+      const h = Math.floor(secs / 3600);
+      const m = Math.floor((secs % 3600) / 60);
+      const s = Math.floor(secs % 60);
+      return `${h}:${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+    }
     const m = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
     return `${m}:${s < 10 ? '0' : ''}${s}`;
@@ -997,13 +1003,13 @@ export function App() {
               <input
                 type="range"
                 min="0"
-                max={duration || 100}
+                max={duration || currentSong?.duration || 100}
                 step="0.5"
                 value={currentTime}
                 onChange={handleSeek}
                 className="scrubber-slider"
               />
-              <span className="time-label">{formatTime(duration)}</span>
+              <span className="time-label">{formatTime(duration || currentSong?.duration || 0)}</span>
             </div>
           </div>
 
