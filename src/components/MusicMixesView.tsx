@@ -35,8 +35,10 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   playlists,
   currentUser
 }) => {
-  // Filter mixes: strictly tracks marked as isMix (continuous mixes & jugglings)
-  const mixes = songs.filter((s) => s.isMix);
+  // In MusicMixesView (Listen to Music), provide full access to all verified database tracks
+  // with tabs to switch between All Tracks, Continuous Mixes, MM Releases, and Genres
+  const continuousMixes = songs.filter((s) => s.isMix);
+  const mmReleases = songs.filter((s) => s.isMmRelease);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchMixQuery, setSearchMixQuery] = useState<string>('');
   const [playlistDropdownMixId, setPlaylistDropdownMixId] = useState<string | null>(null);
@@ -52,14 +54,19 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
     return `${mins}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  const filteredMixes = mixes.filter((mix) => {
+  const filteredMixes = songs.filter((mix) => {
+    const q = searchMixQuery.toLowerCase();
     const matchesSearch =
-      mix.title.toLowerCase().includes(searchMixQuery.toLowerCase()) ||
-      mix.artist.toLowerCase().includes(searchMixQuery.toLowerCase()) ||
-      mix.genre.toLowerCase().includes(searchMixQuery.toLowerCase());
+      mix.title.toLowerCase().includes(q) ||
+      (mix.mixName && mix.mixName.toLowerCase().includes(q)) ||
+      (mix.description && mix.description.toLowerCase().includes(q)) ||
+      mix.artist.toLowerCase().includes(q) ||
+      mix.genre.toLowerCase().includes(q);
 
     if (!matchesSearch) return false;
     if (selectedCategory === 'all') return true;
+    if (selectedCategory === 'mixes') return mix.isMix;
+    if (selectedCategory === 'releases') return mix.isMmRelease;
     if (selectedCategory === 'downloadable') return mix.isDownloadable;
     if (selectedCategory === 'reggae') return mix.genre.toLowerCase().includes('reggae');
     if (selectedCategory === 'disco') return mix.genre.toLowerCase().includes('disco');
@@ -80,7 +87,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
               <span>Listen to Music ({filteredMixes.length})</span>
             </h2>
             <p className="section-subtitle">
-              Authentic sound system DJ jugglings, dancehall sessions, Rocksteady tributes, and extended studio mixes from the database.
+              Authentic sound system DJ jugglings, continuous mixes, and official releases from the database with verified audio.
             </p>
           </div>
         </div>
@@ -99,7 +106,9 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
       >
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           {[
-            { id: 'all', label: `All Mixes (${mixes.length})` },
+            { id: 'all', label: `All Songs (${songs.length})` },
+            { id: 'mixes', label: `Continuous Mixes (${continuousMixes.length})` },
+            { id: 'releases', label: `MM Releases (${mmReleases.length})` },
             { id: 'reggae', label: 'Reggae' },
             { id: 'disco', label: 'Disco' },
             { id: 'rocksteady', label: 'Rocksteady' },
@@ -122,7 +131,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           <input
             type="text"
             className="form-control"
-            placeholder="Search mixes by title, DJ or genre..."
+            placeholder="Search by title, mix name, artist or genre..."
             value={searchMixQuery}
             onChange={(e) => setSearchMixQuery(e.target.value)}
             style={{ fontSize: '0.84rem', padding: '8px 14px 8px 34px' }}
@@ -150,8 +159,9 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           <thead>
             <tr>
               <th className="col-num">#</th>
-              <th>Mix Title</th>
-              <th>Description</th>
+              <th>Mix Name (Song Title)</th>
+              <th>Description (With Singer)</th>
+              <th>Category</th>
               <th>Genre</th>
               <th>Duration</th>
               <th style={{ textAlign: 'center' }}>Stream</th>
@@ -182,13 +192,13 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                     )}
                   </td>
 
-                  {/* Column 2: Mix Cover and Title */}
+                  {/* Column 2: Mix Cover and Name / Song Title */}
                   <td>
                     <div className="song-title-group">
                       <div style={{ position: 'relative', width: '42px', height: '42px', flexShrink: 0 }}>
                         <img
-                          src={mix.coverUrl || '/mm_logo.jpg'}
-                          alt={mix.title}
+                          src={mix.coverUrl || '/headphone_logo.png'}
+                          alt={mix.mixName || mix.title}
                           className="song-cover-thumb"
                           style={{ width: '100%', height: '100%', borderRadius: '8px', margin: 0, objectFit: 'cover' }}
                         />
@@ -209,24 +219,34 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                         )}
                       </div>
                       <div className="song-title-meta">
-                        <span className="song-title">{mix.title}</span>
+                        <span className="song-title">{mix.mixName || mix.title}</span>
+                        {mix.title && mix.title !== mix.mixName && (
+                          <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{mix.title}</span>
+                        )}
                       </div>
                     </div>
                   </td>
 
-                  {/* Column 3: Description */}
+                  {/* Column 3: Description (With Singer) */}
                   <td>
                     <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
                       {mix.description || mix.title}
                     </span>
                   </td>
 
-                  {/* Column 4: Genre Badge */}
+                  {/* Column 4: Category */}
+                  <td>
+                    <span className="badge-pill" style={{ background: 'rgba(255,255,255,0.06)', color: '#94a3b8', fontSize: '0.78rem' }}>
+                      {mix.album || (mix.isMix ? 'Continuous Mix' : 'Release')}
+                    </span>
+                  </td>
+
+                  {/* Column 5: Genre Badge */}
                   <td>
                     <span className="badge badge-genre">{mix.genre}</span>
                   </td>
 
-                  {/* Column 5: Duration */}
+                  {/* Column 6: Duration */}
                   <td style={{ color: '#94a3b8', fontSize: '0.86rem', whiteSpace: 'nowrap' }}>
                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                       <Clock size={12} color="#64748b" />
