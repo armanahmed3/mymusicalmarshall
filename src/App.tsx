@@ -1302,14 +1302,11 @@ export function App() {
                       type="text"
                       required
                       className="form-control"
-                      placeholder="e.g. MARSHALL-2026"
+                      placeholder="Referral Code"
                       value={regReferralCode}
                       onChange={(e) => setRegReferralCode(e.target.value.toUpperCase())}
                       style={{ textTransform: 'uppercase', fontWeight: 800, letterSpacing: '0.05em' }}
                     />
-                    <small style={{ color: '#94a3b8', fontSize: '0.74rem', marginTop: '4px', display: 'block' }}>
-                      (Active Referral Code: <strong style={{ color: '#00f59b' }}>{referralCodes[0]?.code || 'MARSHALL-2026'}</strong>)
-                    </small>
                   </div>
 
                   <button
