@@ -35,10 +35,8 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   playlists,
   currentUser
 }) => {
-  // In MusicMixesView (Listen to Music), provide full access to all verified database tracks
-  // with tabs to switch between All Tracks, Continuous Mixes, MM Releases, and Genres
-  const continuousMixes = songs.filter((s) => s.isMix);
-  const mmReleases = songs.filter((s) => s.isMmRelease);
+  // Filter mixes: strictly tracks designated for Listen to Music (continuous mixes & jugglings)
+  const mixes = songs.filter((s) => s.isMix);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchMixQuery, setSearchMixQuery] = useState<string>('');
   const [playlistDropdownMixId, setPlaylistDropdownMixId] = useState<string | null>(null);
@@ -46,15 +44,10 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   const formatDuration = (secs: number) => {
     const mins = Math.floor(secs / 60);
     const s = Math.floor(secs % 60);
-    if (mins >= 60) {
-      const hrs = Math.floor(mins / 60);
-      const remainingMins = mins % 60;
-      return `${hrs}h ${remainingMins}m`;
-    }
     return `${mins}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  const filteredMixes = songs.filter((mix) => {
+  const filteredMixes = mixes.filter((mix) => {
     const q = searchMixQuery.toLowerCase();
     const matchesSearch =
       mix.title.toLowerCase().includes(q) ||
@@ -65,8 +58,6 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
 
     if (!matchesSearch) return false;
     if (selectedCategory === 'all') return true;
-    if (selectedCategory === 'mixes') return mix.isMix;
-    if (selectedCategory === 'releases') return mix.isMmRelease;
     if (selectedCategory === 'downloadable') return mix.isDownloadable;
     if (selectedCategory === 'reggae') return mix.genre.toLowerCase().includes('reggae');
     if (selectedCategory === 'disco') return mix.genre.toLowerCase().includes('disco');
@@ -87,7 +78,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
               <span>Listen to Music ({filteredMixes.length})</span>
             </h2>
             <p className="section-subtitle">
-              Authentic sound system DJ jugglings, continuous mixes, and official releases from the database with verified audio.
+              Authentic sound system DJ jugglings, continuous mixes, and studio sessions from the database with verified audio.
             </p>
           </div>
         </div>
@@ -106,14 +97,8 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
       >
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
           {[
-            { id: 'all', label: `All Songs (${songs.length})` },
-            { id: 'mixes', label: `Continuous Mixes (${continuousMixes.length})` },
-            { id: 'releases', label: `MM Releases (${mmReleases.length})` },
+            { id: 'all', label: `All Mixes (${mixes.length})` },
             { id: 'reggae', label: 'Reggae' },
-            { id: 'disco', label: 'Disco' },
-            { id: 'rocksteady', label: 'Rocksteady' },
-            { id: 'soul', label: 'Soul & R&B' },
-            { id: 'soca', label: 'Soca' },
             ...(currentUser?.role === 'admin' ? [{ id: 'downloadable', label: '⬇ Downloadable' }] : [])
           ].map((cat) => (
             <button
@@ -131,7 +116,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
           <input
             type="text"
             className="form-control"
-            placeholder="Search by title, mix name, artist or genre..."
+            placeholder="Search mixes by title, DJ or genre..."
             value={searchMixQuery}
             onChange={(e) => setSearchMixQuery(e.target.value)}
             style={{ fontSize: '0.84rem', padding: '8px 14px 8px 34px' }}
