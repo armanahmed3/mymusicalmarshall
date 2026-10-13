@@ -7,7 +7,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1",
     "db_id": 1,
     "mixName": "Disco_MixV01_Branded",
-    "title": "Disco Mix",
+    "title": "Disco Mix Vol 01",
     "artist": "Music Marshall",
     "album": "RetroDisco",
     "duration": 3603,
@@ -19,7 +19,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Disco Mix"
+    "description": "Disco Mix by Music Marshall"
   },
   {
     "id": "song-db-2",
@@ -37,7 +37,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Classic Vintage R&B"
+    "description": "Classic Vintage R&B by Music Marshall"
   },
   {
     "id": "song-db-4",
@@ -55,7 +55,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Rocksteady Love Pt 1"
+    "description": "Rocksteady Love Pt 1 by Music Marshall"
   },
   {
     "id": "song-db-5",
@@ -73,7 +73,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Old_Bounce Reggae"
+    "description": "Old_Bounce Reggae by Music Marshall"
   },
   {
     "id": "song-db-6",
@@ -91,7 +91,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Retro Soul Vol 1"
+    "description": "Retro Soul Vol 1 by Music Marshall"
   },
   {
     "id": "song-db-7",
@@ -109,13 +109,13 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Disco around the 90s"
+    "description": "Disco around the 90s by Music Marshall"
   },
   {
     "id": "song-db-8",
     "db_id": 8,
     "mixName": "Dwalli_Salsa_SexyLady",
-    "title": "Reggae/Dance Mix",
+    "title": "Reggae & Dancehall Rhythm Mix",
     "artist": "Music Marshall",
     "album": "Rhythm Mix",
     "duration": 816,
@@ -127,7 +127,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Reggae/Dance Mix"
+    "description": "Reggae/Dance Mix by Music Marshall"
   },
   {
     "id": "song-db-1002",
@@ -145,7 +145,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Reggae Mix - Bandelero Rhythm with MM Dub"
+    "description": "Reggae Mix - Bandelero Rhythm with MM Dub by Music Marshall"
   },
   {
     "id": "song-db-1003",
@@ -163,7 +163,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Smooth Lovers Rock Singles"
+    "description": "Smooth Lovers Rock Singles by Music Marshall"
   },
   {
     "id": "song-db-1005",
@@ -181,7 +181,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Soca Dancehall Blend"
+    "description": "Soca Dancehall Blend by Music Marshall"
   },
   {
     "id": "song-db-1006",
@@ -199,7 +199,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Loversrock Rhythm Mix"
+    "description": "Loversrock Rhythm Mix by Music Marshall"
   },
   {
     "id": "song-db-1007",
@@ -217,7 +217,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "90s Dancehall Party Mix"
+    "description": "90s Dancehall Party Mix by Music Marshall"
   },
   {
     "id": "song-db-1008",
@@ -235,7 +235,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Culture Mix Vol I"
+    "description": "Culture Mix Vol I by Music Marshall"
   },
   {
     "id": "song-db-2002",
@@ -379,7 +379,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Reggae, Dancehall, Afrobeat, Soca & Disco"
+    "description": "Reggae, Dancehall, Afrobeat, Soca & Disco by Music Marshall"
   },
   {
     "id": "song-db-2015",
@@ -397,7 +397,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Reggae & Dancehall Vocals"
+    "description": "Reggae & Dancehall Vocals by Music Marshall"
   },
   {
     "id": "song-db-3015",
@@ -415,7 +415,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Afrobeat Meets R&B"
+    "description": "Afrobeat Medley by Music Marshall"
   },
   {
     "id": "song-db-3017",
@@ -433,7 +433,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": true,
     "isMix": false,
     "isDownloadable": true,
-    "description": "Positive Transfusion EP Juggling"
+    "description": "Positive Transfusion EP by Music Marshall"
   },
   {
     "id": "song-db-3024",
@@ -451,7 +451,7 @@ export const INITIAL_SONGS: Song[] = [
     "isMmRelease": false,
     "isMix": true,
     "isDownloadable": true,
-    "description": "Lover's rock and conscious reggae music"
+    "description": "Lover's rock and conscious reggae music by Music Marshall"
   },
   {
     "id": "song-db-3025",

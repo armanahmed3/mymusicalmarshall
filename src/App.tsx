@@ -51,6 +51,12 @@ export function App() {
     return INITIAL_SONGS;
   });
 
+  useEffect(() => {
+    // Wipe any stale browser cache and force 100% clean sync with database songs
+    setSongs(INITIAL_SONGS);
+    localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
+  }, []);
+
   const [users, setUsers] = useState<User[]>(() => {
     const saved = localStorage.getItem('mm_users');
     if (saved) {

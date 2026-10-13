@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Play,
   Pause,
@@ -36,7 +36,17 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
   currentUser
 }) => {
   // Filter mixes: strictly tracks designated for Listen to Music (continuous mixes & jugglings)
-  const mixes = songs.filter((s) => s.isMix);
+  // Strict deduplication by unique ID and audioUrl to guarantee ZERO DUPLICATION
+  const mixes = useMemo(() => {
+    const seen = new Set<string>();
+    return songs.filter((s) => {
+      if (!s.isMix) return false;
+      const key = `${s.db_id || s.id}_${(s.audioUrl || '').toLowerCase()}`;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
+  }, [songs]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchMixQuery, setSearchMixQuery] = useState<string>('');
   const [playlistDropdownMixId, setPlaylistDropdownMixId] = useState<string | null>(null);
@@ -216,17 +226,14 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                       </div>
                       <div className="song-title-meta">
                         <span className="song-title">{mix.mixName || mix.title}</span>
-                        {mix.title && mix.title !== mix.mixName && (
-                          <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>{mix.title}</span>
-                        )}
                       </div>
                     </div>
                   </td>
 
-                  {/* Column 3: Description (With Singer) */}
+                  {/* Column 3: Description (With Singer / Sound System) */}
                   <td>
                     <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
-                      {mix.description || mix.title}
+                      {mix.description}
                     </span>
                   </td>
 

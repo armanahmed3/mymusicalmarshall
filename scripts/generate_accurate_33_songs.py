@@ -28,15 +28,15 @@ singer_map = {
     2002: "Luciano"
 }
 
-# Clean clean titles for releases
+# Clean titles for releases and mixes
 title_map = {
-    1: "Disco Mix",
+    1: "Disco Mix Vol 01",
     2: "Classic Vintage R&B",
     4: "Rocksteady Love Pt 1",
     5: "Old Bounce Reggae",
     6: "Retro Soul Vol 1",
     7: "Disco around the 90s",
-    8: "Reggae/Dance Mix",
+    8: "Reggae & Dancehall Rhythm Mix",
     1002: "Bandelero Mix",
     1003: "Smooth Lovers Rock Singles",
     1005: "Soca Dancehall Blend",
@@ -84,13 +84,21 @@ for i, row in enumerate(ws.iter_rows(values_only=True)):
     # Title assignment
     clean_title = title_map.get(m_id, mix_name.replace('_', ' '))
     
-    # Description assignment: make sure it has the proper singer format
-    if is_release and m_id in singer_map and singer_map[m_id] != "Music Marshall":
-        desc = f"{clean_title} by {singer_map[m_id]}"
-    elif m_id == 2002:
-        desc = "Luciano MM Mix by Luciano"
-    else:
-        desc = proper_desc if proper_desc else clean_title
+    # Description assignment: make sure it has the proper singer/DJ format and is NEVER the same as title
+    if is_release:
+        if m_id in singer_map and singer_map[m_id] != "Music Marshall":
+            desc = f"{clean_title} by {singer_map[m_id]}"
+        else:
+            desc = f"{clean_title} by Music Marshall"
+    elif is_mix:
+        if m_id == 2002:
+            desc = "Luciano MM Mix by Luciano"
+        else:
+            desc_base = raw_desc if raw_desc else clean_title
+            if "by " in desc_base:
+                desc = desc_base
+            else:
+                desc = f"{desc_base} by Music Marshall"
 
     song_obj = {
         "id": f"song-db-{m_id}",
