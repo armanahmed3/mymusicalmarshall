@@ -3,6 +3,22 @@ import type { User } from '../types';
 // 100% authentic production users extracted from MS SQL Database: ebayjaco_mmarshalldb
 export const MSSQL_DATABASE_USERS: User[] = [
   {
+    "id": "usr-admin-core",
+    "email": "admin@marshall.com",
+    "username": "Admin Marshall",
+    "firstName": "Admin",
+    "lastName": "Marshall",
+    "role": "admin",
+    "referralCode": "ADMIN-CORE",
+    "referredBy": "PLATFORM",
+    "createdAt": "2026-01-01",
+    "isEmailVerified": true,
+    "accountStatus": "approved",
+    "isLoyaltyEnrolled": true,
+    "loyaltyTier": "Platinum Marshall",
+    "loyaltyPoints": 9999
+  },
+  {
     "id": "usr-mssql-1",
     "email": "orville4444@gmail.com",
     "username": "Orville Marshall",

@@ -55,34 +55,18 @@ export function App() {
   });
 
   useEffect(() => {
-    // Wipe any stale browser cache and force 100% clean sync with database songs
+    // Wipe any stale browser cache and force 100% clean sync with database songs and users
     try {
       localStorage.removeItem('mm_songs');
       localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
+      localStorage.removeItem('mm_users');
+      localStorage.setItem('mm_users', JSON.stringify(INITIAL_USERS));
     } catch {}
     setSongs(INITIAL_SONGS);
+    setUsers(INITIAL_USERS);
   }, []);
 
   const [users, setUsers] = useState<User[]>(() => {
-    const saved = localStorage.getItem('mm_users');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        const cleaned = parsed.filter((u: User) => u.email !== 'marcus@reggae.com' && u.email !== 'sarah.t@sound.fm');
-        const updated = cleaned.map((u: User) => {
-          const isAdm = u.role === 'admin';
-          return {
-            ...u,
-            isEmailVerified: isAdm ? true : (u.isEmailVerified ?? true),
-            accountStatus: 'approved' as const,
-            verifiedAt: isAdm ? (u.verifiedAt || '2026-01-01') : u.verifiedAt
-          };
-        });
-        if (updated.length > 0) return updated;
-      } catch {
-        // fallback
-      }
-    }
     return INITIAL_USERS;
   });
 
@@ -259,7 +243,9 @@ export function App() {
 
     const handleTimeUpdate = () => setCurrentTime(audio.currentTime);
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
+      if (!currentSong?.duration) {
+        setDuration(audio.duration);
+      }
       if (isPlaying) {
         audio.play().catch((err) => console.log('Audio auto-resume notice:', err));
       }
@@ -1015,13 +1001,13 @@ export function App() {
               <input
                 type="range"
                 min="0"
-                max={duration || currentSong?.duration || 100}
+                max={currentSong?.duration || duration || 100}
                 step="0.5"
                 value={currentTime}
                 onChange={handleSeek}
                 className="scrubber-slider"
               />
-              <span className="time-label">{formatTime(duration || currentSong?.duration || 0)}</span>
+              <span className="time-label">{currentSong?.durationFormatted || formatTime(currentSong?.duration || duration || 0)}</span>
             </div>
           </div>
 
