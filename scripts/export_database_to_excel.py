@@ -32,7 +32,7 @@ singer_mapping = {
 for r in mixes_raw:
     fixed = r['fixed']
     mix_id = struct.unpack('<I', fixed[0:4])[0]
-    mix_len_val = struct.unpack('<H', fixed[4:6])[0] / 100.0 if len(fixed) >= 6 else 0.0
+    mix_len_val = struct.unpack('<I', fixed[5:9])[0] / 100.0 if len(fixed) >= 9 else 0.0
     cols = r['var_cols']
     name = cols[0].strip() if len(cols) > 0 else ''
     raw_desc = cols[1].strip() if len(cols) > 1 else ''
@@ -41,10 +41,16 @@ for r in mixes_raw:
     cat = cols[4].strip() if len(cols) > 4 else ''
     genre = cols[5].strip() if len(cols) > 5 else ''
     
-    dur_secs = int(mix_len_val * 60) if mix_len_val > 0 else 240
-    mins = dur_secs // 60
-    secs = dur_secs % 60
-    dur_formatted = f"{mins}:{secs:02d}"
+    dur_secs = int(round(mix_len_val * 60)) if mix_len_val > 0 else 240
+    if dur_secs >= 3600:
+        hrs = dur_secs // 3600
+        mins = (dur_secs % 3600) // 60
+        secs = dur_secs % 60
+        dur_formatted = f"{hrs}:{mins:02d}:{secs:02d}"
+    else:
+        mins = dur_secs // 60
+        secs = dur_secs % 60
+        dur_formatted = f"{mins:02d}:{secs:02d}"
     
     if mix_id in singer_mapping:
         proper_desc = singer_mapping[mix_id]

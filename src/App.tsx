@@ -47,14 +47,20 @@ export function App() {
   // --- Persistent Storage State ---
   const [songs, setSongs] = useState<Song[]>(() => {
     // Strictly synchronize 100% authentic database songs & mixes from INITIAL_SONGS
-    localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
+    try {
+      localStorage.removeItem('mm_songs');
+      localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
+    } catch {}
     return INITIAL_SONGS;
   });
 
   useEffect(() => {
     // Wipe any stale browser cache and force 100% clean sync with database songs
+    try {
+      localStorage.removeItem('mm_songs');
+      localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
+    } catch {}
     setSongs(INITIAL_SONGS);
-    localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
   }, []);
 
   const [users, setUsers] = useState<User[]>(() => {
