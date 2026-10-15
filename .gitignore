@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 *.zip
+*.exe
 .env
 .env.*
 
