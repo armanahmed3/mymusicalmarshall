@@ -311,8 +311,8 @@ export function App() {
   // Check if track is free to stream without authentication
   const isFreeTrack = (song: Song | null) => {
     if (!song) return false;
-    const targetMixName = (parameters.Feat_MixName || 'Positive Transfusion EP').trim().toLowerCase();
-    const targetMixPath = (parameters.Feat_MixPath || '/AudioFileUpload/Positive_Transfusion_Juggling_v2222755873.mp3').trim().toLowerCase();
+    const targetMixName = (parameters.Feat_MixName || 'Easy Flow Mix').trim().toLowerCase();
+    const targetMixPath = (parameters.Feat_MixPath || '/AudioFileUpload/Easy_Flow_23v1241026820.mp3').trim().toLowerCase();
     const targetFile = targetMixPath.split('/').pop() || '';
     const songPath = (song.audioUrl || '').toLowerCase();
     const songMix = (song.mixName || '').toLowerCase();

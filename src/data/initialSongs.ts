@@ -553,7 +553,7 @@ export const INITIAL_SONGS: Song[] = [
     "audioPath": "/AudioFileUpload/Easy_Flow_23v1241026820.mp3",
     "audioUrl": "/AudioFileUpload/Easy_Flow_23v1241026820.mp3",
     "coverUrl": "/headphone_logo.png",
-    "genre": "reggae",
+    "genre": "Reggae",
     "mood": "chill",
     "bpm": 90,
     "isMmRelease": false,
@@ -732,8 +732,8 @@ export const INITIAL_SONGS: Song[] = [
 ];
 
 export const INITIAL_PARAMETERS: AppParameters = {
-  Feat_MixName: 'Party_Vocals_Mixx_V1',
-  Feat_MixPath: '/AudioFileUpload/vocals_Mixx_01222201457.mp3'
+  Feat_MixName: 'Easy_Flow_Mix',
+  Feat_MixPath: '/AudioFileUpload/Easy_Flow_23v1241026820.mp3'
 };
 
 // 100% authentic referral codes from MS SQL Database: ebayjaco_mmarshalldb (Referralcodes table)
