@@ -1,6 +1,18 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig, type Plugin } from 'vite';
 import nodemailer from 'nodemailer';
+import {
+  getMssqlUsers,
+  authenticateMssqlUser,
+  createMssqlUser,
+  updateMssqlUserStatus,
+  updateMssqlUserProfile,
+  deleteMssqlUser,
+  getMssqlMixes,
+  getMssqlReferralCodes,
+  createMssqlReferralCode,
+  testConnection
+} from './server/mssqlDb.ts';
 
 // Official Gmail SMTP configuration provided by user
 const transporter = nodemailer.createTransport({
@@ -367,6 +379,175 @@ function smtpApiPlugin(): Plugin {
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ success: false, error: error.message }));
           }
+          return;
+        }
+
+        // Endpoint: Hosting Database Status
+        if (req.method === 'GET' && req.url === '/api/db-status') {
+          const result = await testConnection();
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify(result));
+          return;
+        }
+
+        // Endpoint: Get Users from Hosting Database
+        if (req.method === 'GET' && req.url === '/api/users') {
+          try {
+            const users = await getMssqlUsers();
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, count: users.length, users }));
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, error: err.message }));
+          }
+          return;
+        }
+
+        // Endpoint: Authenticate / Login against Hosting Database
+        if (req.method === 'POST' && req.url === '/api/auth/login') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const { email, password } = JSON.parse(body || '{}');
+              const user = await authenticateMssqlUser(email, password);
+              if (!user) {
+                res.statusCode = 401;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ success: false, error: 'Invalid credentials in hosting database.' }));
+                return;
+              }
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true, user }));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
+        // Endpoint: Register into Hosting Database
+        if (req.method === 'POST' && req.url === '/api/auth/register') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const userData = JSON.parse(body || '{}');
+              const newUser = await createMssqlUser(userData);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true, user: newUser }));
+            } catch (err: any) {
+              res.statusCode = 400;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
+        // Endpoint: Update User Status in Hosting Database
+        if (req.method === 'POST' && req.url === '/api/users/update-status') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const { userId, email, status } = JSON.parse(body || '{}');
+              await updateMssqlUserStatus(userId || email, status);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true }));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
+        // Endpoint: Update User Profile in Hosting Database
+        if (req.method === 'POST' && req.url === '/api/users/update-profile') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const { userId, userEmail, firstName, lastName, phone } = JSON.parse(body || '{}');
+              await updateMssqlUserProfile(userId || userEmail, { firstName, lastName, phone });
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true }));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
+        // Endpoint: Delete User in Hosting Database
+        if (req.method === 'POST' && req.url === '/api/users/delete') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const { userId, email } = JSON.parse(body || '{}');
+              await deleteMssqlUser(userId || email);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true }));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
+          return;
+        }
+
+        // Endpoint: Mixes from Hosting Database
+        if (req.method === 'GET' && req.url === '/api/mixes') {
+          try {
+            const mixes = await getMssqlMixes();
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, count: mixes.length, mixes }));
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, error: err.message }));
+          }
+          return;
+        }
+
+        // Endpoint: Referral Codes from Hosting Database
+        if (req.method === 'GET' && req.url === '/api/referral-codes') {
+          try {
+            const referralCodes = await getMssqlReferralCodes();
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: true, referralCodes }));
+          } catch (err: any) {
+            res.statusCode = 500;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, error: err.message }));
+          }
+          return;
+        }
+
+        if (req.method === 'POST' && req.url === '/api/referral-codes') {
+          let body = '';
+          req.on('data', (c) => (body += c));
+          req.on('end', async () => {
+            try {
+              const { code, description } = JSON.parse(body || '{}');
+              const resObj = await createMssqlReferralCode(code, description);
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: true, ...resObj }));
+            } catch (err: any) {
+              res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
+              res.end(JSON.stringify({ success: false, error: err.message }));
+            }
+          });
           return;
         }
 

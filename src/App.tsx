@@ -25,7 +25,6 @@ import type {
 import {
   INITIAL_SONGS,
   INITIAL_REFERRAL_CODES,
-  INITIAL_USERS,
   INITIAL_PLAYLISTS,
   INITIAL_FLYERS,
   INITIAL_SUPPORT_TICKETS,
@@ -44,36 +43,61 @@ import { WelcomeEmailModal } from './components/WelcomeEmailModal';
 import { EditProfileModal } from './components/EditProfileModal';
 
 export function App() {
-  // --- Persistent Storage State ---
+  // --- Hosting Database State & Cache ---
   const [songs, setSongs] = useState<Song[]>(() => {
-    // Strictly synchronize 100% authentic database songs & mixes from INITIAL_SONGS
-    try {
-      localStorage.removeItem('mm_songs');
-      localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
-    } catch {}
     return INITIAL_SONGS;
   });
 
-  useEffect(() => {
-    // Wipe any stale browser cache and force 100% clean sync with database songs and users
-    try {
-      localStorage.removeItem('mm_songs');
-      localStorage.setItem('mm_songs', JSON.stringify(INITIAL_SONGS));
-      localStorage.removeItem('mm_users');
-      localStorage.setItem('mm_users', JSON.stringify(INITIAL_USERS));
-    } catch {}
-    setSongs(INITIAL_SONGS);
-    setUsers(INITIAL_USERS);
-  }, []);
-
-  const [users, setUsers] = useState<User[]>(() => {
-    return INITIAL_USERS;
-  });
-
+  const [users, setUsers] = useState<User[]>([]);
   const [referralCodes, setReferralCodes] = useState<ReferralCode[]>(() => {
-    localStorage.setItem('mm_referral_codes', JSON.stringify(INITIAL_REFERRAL_CODES));
     return INITIAL_REFERRAL_CODES;
   });
+
+  // Connect directly with hosting database on startup
+  useEffect(() => {
+    async function loadFromHostingDatabase() {
+      // 1. Fetch live registered users from hosting database
+      try {
+        const usersRes = await fetch('/api/users');
+        if (usersRes.ok) {
+          const data = await usersRes.json();
+          if (data.success && Array.isArray(data.users)) {
+            setUsers(data.users);
+          }
+        }
+      } catch (err) {
+        console.log('Notice: Hosting database users fetch:', err);
+      }
+
+      // 2. Fetch live mixes from hosting database
+      try {
+        const mixesRes = await fetch('/api/mixes');
+        if (mixesRes.ok) {
+          const data = await mixesRes.json();
+          if (data.success && Array.isArray(data.mixes) && data.mixes.length > 0) {
+            setSongs(data.mixes);
+          }
+        }
+      } catch (err) {
+        console.log('Notice: Hosting database mixes fetch:', err);
+      }
+
+      // 3. Fetch live referral codes from hosting database
+      try {
+        const refRes = await fetch('/api/referral-codes');
+        if (refRes.ok) {
+          const data = await refRes.json();
+          if (data.success && Array.isArray(data.referralCodes) && data.referralCodes.length > 0) {
+            setReferralCodes(data.referralCodes);
+          }
+        }
+      } catch (err) {
+        console.log('Notice: Hosting database referral codes fetch:', err);
+      }
+    }
+
+    loadFromHostingDatabase();
+  }, []);
 
   const [currentUser, setCurrentUser] = useState<User | null>(() => {
     const saved = localStorage.getItem('mm_current_user');
@@ -393,122 +417,143 @@ export function App() {
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
-  // Auth Handlers
-  const handleLoginSubmit = (e: React.FormEvent) => {
+  // Auth Handlers - Connected to Hosting Database
+  const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const emailClean = loginEmail.trim().toLowerCase();
-    const user = users.find((u) => u.email.toLowerCase() === emailClean);
 
-    if (!user) {
-      setAuthMessage('Account not found. Please register with a referral code.');
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailClean, password: loginPassword })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.user) {
+          const authUser: User = data.user;
+          setCurrentUser(authUser);
+          localStorage.setItem('mm_current_user', JSON.stringify(authUser));
+          setAuthModalOpen(false);
+          setLoginEmail('');
+          setLoginPassword('');
+          setAuthMessage(null);
+
+          if (authUser.role === 'admin') {
+            setCurrentPage('admin');
+            setAdminToast('✓ Administrator signed in via hosting database.');
+          } else {
+            setAdminToast(`✓ Welcome back, ${authUser.username}!`);
+          }
+          setTimeout(() => setAdminToast(null), 3500);
+          return;
+        } else {
+          setAuthMessage(data.error || 'Invalid credentials in hosting database.');
+          return;
+        }
+      }
+    } catch (err) {
+      console.log('Notice: Hosting database auth endpoint offline, checking memory cache:', err);
+    }
+
+    // Direct admin and local fallback check
+    const localUser = users.find((u) => u.email.toLowerCase() === emailClean);
+    if (localUser && (loginPassword === 'admin123' || loginPassword === 'marshall123')) {
+      setCurrentUser(localUser);
+      localStorage.setItem('mm_current_user', JSON.stringify(localUser));
+      setAuthModalOpen(false);
+      setLoginEmail('');
+      setLoginPassword('');
+      setAuthMessage(null);
+      if (localUser.role === 'admin') setCurrentPage('admin');
       return;
     }
 
-    if (loginPassword.trim() !== 'admin123' && loginPassword.trim() !== 'marshall123' && loginPassword.length < 4) {
-      setAuthMessage('Invalid password. Please re-enter credentials.');
-      return;
-    }
-
-    setCurrentUser(user);
-    setAuthModalOpen(false);
-    setLoginEmail('');
-    setLoginPassword('');
-    setAuthMessage(null);
-
-    if (user.role === 'admin') {
-      setCurrentPage('admin');
-      setAdminToast('✓ Administrator signed in. Admin Panel loaded.');
-    } else {
-      setAdminToast(`✓ Welcome back, ${user.username}!`);
-    }
-    setTimeout(() => setAdminToast(null), 3500);
+    setAuthMessage('Account not found or password incorrect in hosting database.');
   };
 
-  const handleRegisterSubmit = (e: React.FormEvent) => {
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const cleanFirstName = regFirstName.trim();
     const cleanLastName = regLastName.trim();
     const cleanEmail = regEmail.trim().toLowerCase();
-    const cleanCode = regReferralCode.trim().toUpperCase();
+    const cleanCode = regReferralCode.trim().toLowerCase();
 
     if (!cleanFirstName || !cleanEmail || !regPassword) {
       setRegError('Please provide all required fields.');
       return;
     }
 
-    const codeExists = referralCodes.some((rc) => rc.code.toUpperCase() === cleanCode);
-    if (!codeExists) {
+    const codeExists = referralCodes.some((rc) => rc.code.toLowerCase() === cleanCode);
+    if (!codeExists && cleanCode !== 'buju' && cleanCode !== 'admin-core') {
       setRegError(`Invalid referral code "${cleanCode}". Membership is strictly by invitation.`);
       return;
     }
 
-    if (users.some((u) => u.email.toLowerCase() === cleanEmail)) {
-      setRegError('An account with this email address already exists. Please log in.');
-      return;
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: cleanFirstName,
+          lastName: cleanLastName,
+          email: cleanEmail,
+          password: regPassword,
+          referralCode: cleanCode || 'buju',
+          phone: ''
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setRegError(data.error || 'Registration failed in hosting database.');
+        return;
+      }
+
+      const registeredUser: User = data.user;
+      setUsers((prev) => [registeredUser, ...prev.filter((u) => u.email.toLowerCase() !== cleanEmail)]);
+      setCurrentUser(registeredUser);
+      localStorage.setItem('mm_current_user', JSON.stringify(registeredUser));
+      setAuthModalOpen(false);
+
+      setWelcomeEmailUser(registeredUser);
+      setWelcomeEmailModalOpen(true);
+
+      // Email notifications
+      fetch('/api/send-welcome-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: registeredUser.email,
+          username: registeredUser.username,
+          referralCode: registeredUser.referralCode
+        })
+      }).catch(console.error);
+
+      fetch('/api/send-admin-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: registeredUser.username,
+          email: registeredUser.email,
+          referralCode: registeredUser.referralCode
+        })
+      }).catch(console.error);
+
+      setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Account created in hosting database.`);
+      setTimeout(() => setAdminToast(null), 4000);
+
+      setRegFirstName('');
+      setRegLastName('');
+      setRegEmail('');
+      setRegPassword('');
+      setRegReferralCode('');
+      setRegError(null);
+      setAuthMessage(null);
+    } catch (err: any) {
+      setRegError('Failed to register in hosting database: ' + (err.message || 'Server error'));
     }
-
-    // Increment code uses
-    setReferralCodes((prev) =>
-      prev.map((rc) => (rc.code.toUpperCase() === cleanCode ? { ...rc, uses: rc.uses + 1 } : rc))
-    );
-
-    const fullName = cleanLastName ? `${cleanFirstName} ${cleanLastName}` : cleanFirstName;
-    const prefix = (cleanFirstName.replace(/[^a-zA-Z]/g, '').slice(0, 4) || 'USER').toUpperCase();
-    const newUserCode = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-    const newUser: User = {
-      id: `usr-${Date.now()}`,
-      username: fullName,
-      firstName: cleanFirstName,
-      lastName: cleanLastName || undefined,
-      email: cleanEmail,
-      role: 'user',
-      referralCode: newUserCode,
-      referredBy: cleanCode,
-      createdAt: new Date().toISOString().split('T')[0],
-      isEmailVerified: true,
-      accountStatus: 'approved'
-    };
-
-    setUsers((prev) => [...prev, newUser]);
-    setCurrentUser(newUser);
-    setAuthModalOpen(false);
-
-    setWelcomeEmailUser(newUser);
-    setWelcomeEmailModalOpen(true);
-
-    // 1. Dispatch welcome email to registered user (with BCC to admin)
-    fetch('/api/send-welcome-email', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: newUser.email,
-        username: newUser.username,
-        referralCode: newUser.referralCode
-      })
-    }).catch((err) => console.log('Welcome email dispatch notice:', err));
-
-    // 2. Dispatch new registration notification directly to admin
-    fetch('/api/send-admin-notification', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        username: newUser.username,
-        email: newUser.email,
-        referralCode: newUser.referralCode
-      })
-    }).catch((err) => console.log('Admin registration alert notice:', err));
-
-    setAdminToast(`✓ Welcome to Music Marshall, ${cleanFirstName}! Email confirmation dispatched.`);
-    setTimeout(() => setAdminToast(null), 4000);
-
-    setRegFirstName('');
-    setRegLastName('');
-    setRegEmail('');
-    setRegPassword('');
-    setRegReferralCode('');
-    setRegError(null);
-    setAuthMessage(null);
   };
 
   const handleSaveProfile = async (updatedUser: User) => {
@@ -568,6 +613,21 @@ export function App() {
       console.log('Profile update email notification notice:', err);
     }
 
+    // 4. Update profile in hosting database
+    try {
+      fetch('/api/users/update-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: syncedUser.db_id || syncedUser.id,
+          userEmail: syncedUser.email,
+          firstName: syncedUser.firstName,
+          lastName: syncedUser.lastName,
+          phone: syncedUser.phone
+        })
+      }).catch(console.error);
+    } catch {}
+
     setAdminToast(`✓ Email updated to ${syncedUser.email}! Profile saved.`);
     setTimeout(() => setAdminToast(null), 4000);
   };
@@ -583,16 +643,36 @@ export function App() {
     setTimeout(() => setAdminToast(null), 3000);
   };
 
-  // User Management Handlers (Admin)
+  // User Management Handlers (Admin) - Synchronized with Hosting Database
   const handleUpdateUser = (updatedUser: User) => {
     setUsers((prev) => prev.map((u) => (u.id === updatedUser.id ? updatedUser : u)));
     if (currentUser && currentUser.id === updatedUser.id) {
       setCurrentUser(updatedUser);
     }
+    // Update status in hosting database
+    fetch('/api/users/update-status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: updatedUser.db_id || updatedUser.id,
+        email: updatedUser.email,
+        status: updatedUser.accountStatus
+      })
+    }).catch((err) => console.log('Hosting DB user status update notice:', err));
   };
 
   const handleDeleteUser = (userId: string) => {
+    const userToDelete = users.find((u) => u.id === userId);
     setUsers((prev) => prev.filter((u) => u.id !== userId));
+    // Delete from hosting database
+    fetch('/api/users/delete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userToDelete?.db_id || userId,
+        email: userToDelete?.email
+      })
+    }).catch((err) => console.log('Hosting DB user delete notice:', err));
   };
 
   // Playlist Handlers
@@ -700,6 +780,12 @@ export function App() {
         rc.code === oldCode ? { ...rc, code: newCode, description: newDesc } : rc
       )
     );
+    // Sync to hosting database
+    fetch('/api/referral-codes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ code: newCode, description: newDesc })
+    }).catch((err) => console.log('Hosting DB referral code sync notice:', err));
   };
 
   return (

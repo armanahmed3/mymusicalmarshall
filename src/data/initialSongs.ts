@@ -1,5 +1,5 @@
 import type { Song, ReferralCode, User, Playlist, EventFlyer, SupportTicket, AppParameters } from '../types';
-import { MSSQL_DATABASE_USERS } from './databaseUsers';
+
 
 // 100% authentic songs verified against MS SQL Database with exact mixName, description, and database duration
 export const INITIAL_SONGS: Song[] = [
@@ -742,9 +742,7 @@ export const INITIAL_REFERRAL_CODES: ReferralCode[] = [
   }
 ];
 
-export const INITIAL_USERS: User[] = [
-  ...MSSQL_DATABASE_USERS
-];
+export const INITIAL_USERS: User[] = [];
 
 export const INITIAL_PLAYLISTS: Playlist[] = [
   {

@@ -28,6 +28,7 @@ export interface UserPreferences {
 
 export interface User {
   id: string;
+  db_id?: number;
   email: string;
   username: string;
   firstName?: string;
