@@ -13,6 +13,7 @@ import {
   Disc3
 } from 'lucide-react';
 import type { Playlist, Song, User } from '../types';
+import { cleanSongTitle } from '../data/initialSongs';
 
 interface CreatePlaylistPageProps {
   playlists: Playlist[];
@@ -476,7 +477,7 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
                         />
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontSize: '0.86rem', fontWeight: 700, color: isSelected ? '#00f59b' : '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            {song.title}
+                            {cleanSongTitle(song.title)}
                           </div>
                           <div style={{ fontSize: '0.76rem', color: '#94a3b8', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             {song.artist?.trim() ? `${song.artist} • ` : ''}{song.genre}
@@ -743,7 +744,7 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
                             />
                             <div style={{ minWidth: 0 }}>
                               <div style={{ fontSize: '0.9rem', fontWeight: 700, color: isCurrentPlaying ? '#00f59b' : '#ffffff', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                {song.title}
+                                {cleanSongTitle(song.title)}
                               </div>
                               {song.artist?.trim() ? (
                                 <div style={{ fontSize: '0.78rem', color: '#94a3b8' }}>
@@ -771,7 +772,7 @@ export const CreatePlaylistPage: React.FC<CreatePlaylistPageProps> = ({
                             {song.isDownloadable && (
                               <a
                                 href={song.audioUrl}
-                                download={`${song.title}.mp3`}
+                                download={`${cleanSongTitle(song.title)}.mp3`}
                                 className="btn btn-outline btn-sm"
                                 style={{ padding: '6px 10px', color: '#16a34a' }}
                                 title="Download Audio"

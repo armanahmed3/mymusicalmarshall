@@ -11,6 +11,7 @@ import {
   Headphones
 } from 'lucide-react';
 import type { Song, Playlist, User } from '../types';
+import { cleanSongTitle } from '../data/initialSongs';
 
 interface MusicMixesViewProps {
   songs: Song[];
@@ -224,10 +225,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                         )}
                       </div>
                       <div className="song-title-meta">
-                        <span className="song-title">{mix.mixName || mix.title}</span>
-                        <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
-                          {mix.audioUrl}
-                        </span>
+                        <span className="song-title">{cleanSongTitle(mix.title || mix.mixName)}</span>
                       </div>
                     </div>
                   </td>
@@ -235,7 +233,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                   {/* Column 3: Description (With Singer / Sound System) */}
                   <td>
                     <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
-                      {mix.description}
+                      {cleanSongTitle(mix.description)}
                     </span>
                   </td>
 
@@ -358,7 +356,7 @@ export const MusicMixesView: React.FC<MusicMixesViewProps> = ({
                       {currentUser?.role === 'admin' && mix.isDownloadable && (
                         <a
                           href={mix.audioUrl}
-                          download={`${mix.title} - ${mix.artist}.mp3`}
+                          download={`${cleanSongTitle(mix.title)} - ${cleanSongTitle(mix.artist)}.mp3`}
                           className="btn btn-outline btn-sm"
                           style={{ padding: '5px 8px', color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.4)' }}
                           title="Download audio mix"

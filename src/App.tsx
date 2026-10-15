@@ -24,6 +24,7 @@ import type {
 } from './types';
 import {
   INITIAL_SONGS,
+  cleanSongTitle,
   INITIAL_REFERRAL_CODES,
   INITIAL_PLAYLISTS,
   INITIAL_FLYERS,
@@ -1049,7 +1050,7 @@ export function App() {
             />
             <div className="player-track-info">
               <span className="player-title" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span>{currentSong.title}</span>
+                <span>{cleanSongTitle(currentSong.title)}</span>
                 {isPlaying && (
                   <span className="mini-equalizer" style={{ transform: 'scale(0.8)' }}>
                     <span className="eq-bar"></span>
@@ -1103,7 +1104,7 @@ export function App() {
             {currentSong?.isDownloadable && (
               <a
                 href={currentSong.audioUrl}
-                download={`${currentSong.title}.mp3`}
+                download={`${cleanSongTitle(currentSong.title)}.mp3`}
                 className="ctrl-btn"
                 style={{ color: '#16a34a', display: 'flex', alignItems: 'center' }}
                 title="Download this audio track"

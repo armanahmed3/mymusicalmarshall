@@ -19,7 +19,7 @@ import {
   CheckCircle2
 } from 'lucide-react';
 import type { Song, User, EventFlyer, SupportTicket, AppParameters } from '../types';
-import { INITIAL_SONGS } from '../data/initialSongs';
+import { INITIAL_SONGS, cleanSongTitle } from '../data/initialSongs';
 
 interface LandingPageProps {
   parameters?: AppParameters;
@@ -516,7 +516,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
-                  Music Marshall Featured Mix - {featuredMix?.title || targetMixName}
+                  Music Marshall Featured Mix - {cleanSongTitle(featuredMix?.title || targetMixName)}
                 </div>
                 <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
                   Stream Free Without Login {featuredMix?.genre ? `• ${featuredMix.genre.toUpperCase()}` : ''} {featuredMix?.duration ? `• ${formatTime(featuredMix.duration)}` : ''}
@@ -528,7 +528,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               type="button"
               className="btn btn-accent btn-md featured-mix-button"
               onClick={handleToggleFeaturedMix}
-              title={isPlayingFeaturedMix ? `Pause ${featuredMix?.title || targetMixName}` : `Play ${featuredMix?.title || targetMixName}`}
+              title={isPlayingFeaturedMix ? `Pause ${cleanSongTitle(featuredMix?.title || targetMixName)}` : `Play ${cleanSongTitle(featuredMix?.title || targetMixName)}`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -555,7 +555,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   {isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}
                 </span>
                 <span style={{ fontSize: '0.81rem', fontWeight: 700, color: '#0f172a' }}>
-                  {featuredMix?.title || targetMixName}
+                  {cleanSongTitle(featuredMix?.title || targetMixName)}
                   {featuredMix?.genre ? ` • ${featuredMix.genre}` : ''}
                   {featuredMix?.duration ? ` (${formatTime(featuredMix.duration)})` : ''}
                 </span>
@@ -706,14 +706,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                     )}
                   </div>
                   <div className="release-info" style={{ flex: 1.1 }}>
-                    <span className="release-title">{song.title}</span>
-                    <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
-                      {song.audioUrl}
-                    </span>
+                    <span className="release-title">{cleanSongTitle(song.title)}</span>
                   </div>
 
                   <div className="release-desc" style={{ flex: 1.4, color: '#cbd5e1', fontSize: '0.85rem' }}>
-                    {song.description || song.title}
+                    {cleanSongTitle(song.description) || cleanSongTitle(song.title)}
                   </div>
 
                   {/* Note 5: Display Genre from Table */}
@@ -729,9 +726,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                   <div className="release-actions" onClick={(e) => e.stopPropagation()}>
                     <a
                       href={song.audioUrl}
-                      download={`${song.title}.mp3`}
+                      download={`${cleanSongTitle(song.title)}.mp3`}
                       className="btn-download-table"
-                      title={`Download ${song.title}`}
+                      title={`Download ${cleanSongTitle(song.title)}`}
                     >
                       <Download size={13} />
                       <span>Download</span>

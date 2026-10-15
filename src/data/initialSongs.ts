@@ -1,3 +1,15 @@
+
+/**
+ * Utility to clean song titles for front site display (removes underscores and dashes)
+ */
+export function cleanSongTitle(title?: string): string {
+  if (!title) return '';
+  return title
+    .replace(/[_-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 import type { Song, ReferralCode, User, Playlist, EventFlyer, SupportTicket, AppParameters } from '../types';
 
 
@@ -7,7 +19,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1",
     "db_id": 1,
     "mixName": "Disco_MixV01_Branded",
-    "title": "Disco_MixV01_Branded",
+    "title": "Disco MixV01 Branded",
     "artist": "Music Marshall",
     "album": "RetroDisco",
     "duration": 1170,
@@ -28,7 +40,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-2",
     "db_id": 2,
     "mixName": "Classic Vintage_V01",
-    "title": "Classic Vintage_V01",
+    "title": "Classic Vintage V01",
     "artist": "Music Marshall",
     "album": "Vintage",
     "duration": 3330,
@@ -70,7 +82,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-5",
     "db_id": 5,
     "mixName": "Old_Bounce_V01",
-    "title": "Old_Bounce_V01",
+    "title": "Old Bounce V01",
     "artist": "Music Marshall",
     "album": "Reggae",
     "duration": 1590,
@@ -91,7 +103,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-6",
     "db_id": 6,
     "mixName": "Bad_Soul_V01",
-    "title": "Bad_Soul_V01",
+    "title": "Bad Soul V01",
     "artist": "Music Marshall",
     "album": "Bad Soul",
     "duration": 6060,
@@ -112,7 +124,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-7",
     "db_id": 7,
     "mixName": "Disco_90s_V01",
-    "title": "Disco_90s_V01",
+    "title": "Disco 90s V01",
     "artist": "Music Marshall",
     "album": "Party Disco",
     "duration": 1155,
@@ -133,7 +145,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-8",
     "db_id": 8,
     "mixName": "Dwalli_Salsa_SexyLady",
-    "title": "Dwalli_Salsa_SexyLady",
+    "title": "Dwalli Salsa SexyLady",
     "artist": "Music Marshall",
     "album": "Rhythm Mix",
     "duration": 540,
@@ -175,7 +187,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1003",
     "db_id": 1003,
     "mixName": "LR_Smooth_Singles_V01",
-    "title": "LR_Smooth_Singles_V01",
+    "title": "LR Smooth Singles V01",
     "artist": "Music Marshall",
     "album": "Lovers Rock Singles",
     "duration": 1710,
@@ -196,7 +208,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1005",
     "db_id": 1005,
     "mixName": "soca_blend_V01",
-    "title": "soca_blend_V01",
+    "title": "soca blend V01",
     "artist": "Music Marshall",
     "album": "Party Mix",
     "duration": 1260,
@@ -217,7 +229,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1006",
     "db_id": 1006,
     "mixName": "loversrock_RV01",
-    "title": "loversrock_RV01",
+    "title": "loversrock RV01",
     "artist": "Music Marshall",
     "album": "Rhythm Mix",
     "duration": 1260,
@@ -238,7 +250,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1007",
     "db_id": 1007,
     "mixName": "Dancehall_90s_V02",
-    "title": "Dancehall_90s_V02",
+    "title": "Dancehall 90s V02",
     "artist": "Music Marshall",
     "album": "Dancehall Party Mix",
     "duration": 1260,
@@ -259,7 +271,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-1008",
     "db_id": 1008,
     "mixName": "Culture_V01",
-    "title": "Culture_V01",
+    "title": "Culture V01",
     "artist": "Music Marshall",
     "album": "Culture",
     "duration": 1620,
@@ -280,7 +292,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-2002",
     "db_id": 2002,
     "mixName": "Luciano_Dub_Mix",
-    "title": "Luciano_Dub_Mix",
+    "title": "Luciano Dub Mix",
     "artist": "Luciano",
     "album": "Juggling on Riddim",
     "duration": 684,
@@ -406,7 +418,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-2012",
     "db_id": 2012,
     "mixName": "Wayne_Alton",
-    "title": "Wayne_Alton",
+    "title": "Wayne Alton",
     "artist": "Wayne Armond & Alton Ellis",
     "album": "release",
     "duration": 2730,
@@ -448,7 +460,7 @@ export const INITIAL_SONGS: Song[] = [
     "id": "song-db-2015",
     "db_id": 2015,
     "mixName": "Party_Vocals_Mixx_V1",
-    "title": "Party_Vocals_Mixx_V1",
+    "title": "Party Vocals Mixx V1",
     "artist": "Music Marshall",
     "album": "Juggling on Riddim",
     "duration": 3600,
@@ -508,10 +520,31 @@ export const INITIAL_SONGS: Song[] = [
     "description": "Positive Transfusion EP Juggling"
   },
   {
+    "id": "song-db-3023",
+    "db_id": 3023,
+    "mixName": "Test",
+    "title": "Buju Banton Test",
+    "artist": "Buju Banton",
+    "album": "Single",
+    "duration": 214,
+    "durationFormatted": "3:34",
+    "mixLength": "3.57",
+    "audioPath": "/AudioFileUpload/BUJU243133596.mp3",
+    "audioUrl": "/AudioFileUpload/BUJU243133596.mp3",
+    "coverUrl": "/headphone_logo.png",
+    "genre": "Reggae",
+    "mood": "chill",
+    "bpm": 90,
+    "isMmRelease": true,
+    "isMix": false,
+    "isDownloadable": true,
+    "description": "Test by Buju Banton"
+  },
+  {
     "id": "song-db-3024",
     "db_id": 3024,
     "mixName": "Easy_Flow_Mix",
-    "title": "Easy_Flow_Mix",
+    "title": "Easy Flow Mix",
     "artist": "Music Marshall",
     "album": "Riddim_Mix",
     "duration": 2760,

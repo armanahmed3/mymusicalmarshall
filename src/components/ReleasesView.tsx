@@ -1,5 +1,6 @@
 import { Play, Pause, Home, Download } from 'lucide-react';
 import type { Song } from '../types';
+import { cleanSongTitle } from '../data/initialSongs';
 
 interface ReleasesViewProps {
   mmReleases: Song[];
@@ -132,16 +133,13 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                           )}
                         </div>
                         <div className="song-title-meta">
-                          <span className="song-title">{song.title}</span>
-                          <span style={{ fontSize: '0.72rem', color: '#64748b', fontFamily: 'monospace', display: 'block' }}>
-                            {song.audioUrl}
-                          </span>
+                          <span className="song-title">{cleanSongTitle(song.title)}</span>
                         </div>
                       </div>
                     </td>
                     <td>
                       <span style={{ color: '#cbd5e1', fontSize: '0.85rem' }}>
-                        {song.description || song.title}
+                        {cleanSongTitle(song.description) || cleanSongTitle(song.title)}
                       </span>
                     </td>
                     <td>
@@ -171,10 +169,10 @@ export const ReleasesView: React.FC<ReleasesViewProps> = ({
                       {song.isDownloadable && (
                         <a
                           href={song.audioUrl}
-                          download={`${song.title}.mp3`}
+                          download={`${cleanSongTitle(song.title)}.mp3`}
                           className="btn btn-outline btn-sm"
                           style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '5px 10px', fontSize: '0.78rem', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
-                          title={`Download ${song.title}`}
+                          title={`Download ${cleanSongTitle(song.title)}`}
                           onClick={(e) => e.stopPropagation()}
                         >
                           <Download size={13} />

@@ -10,6 +10,7 @@ import {
   FolderPlus
 } from 'lucide-react';
 import type { Playlist, Song, User } from '../types';
+import { cleanSongTitle } from '../data/initialSongs';
 
 interface PlaylistsViewProps {
   playlists: Playlist[];
@@ -299,7 +300,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                               style={{ width: '36px', height: '36px', borderRadius: '6px', objectFit: 'cover' }}
                             />
                             <div>
-                              <div style={{ fontWeight: 700, color: '#ffffff' }}>{song.title}</div>
+                              <div style={{ fontWeight: 700, color: '#ffffff' }}>{cleanSongTitle(song.title)}</div>
                             </div>
                           </div>
                         </td>
@@ -318,7 +319,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                             {currentUser?.role === 'admin' && song.isDownloadable && (
                               <a
                                 href={song.audioUrl}
-                                download={`${song.title}.mp3`}
+                                download={`${cleanSongTitle(song.title)}.mp3`}
                                 className="btn btn-outline btn-sm"
                                 style={{ padding: '4px 8px', color: '#00f59b', borderColor: 'rgba(0, 245, 155, 0.4)' }}
                                 title="Download audio mix"
@@ -456,7 +457,7 @@ export const PlaylistsView: React.FC<PlaylistsViewProps> = ({
                         />
                         <div style={{ flex: 1, minWidth: 0 }}>
                           <div style={{ fontWeight: 700, fontSize: '0.84rem', color: '#ffffff' }}>
-                            {mix.title} {mix.isMix ? '🔥 (Mix)' : ''}
+                            {cleanSongTitle(mix.title)} {mix.isMix ? '🔥 (Mix)' : ''}
                           </div>
                           <div style={{ fontSize: '0.72rem', color: '#94a3b8' }}>
                             {mix.artist?.trim() ? `${mix.artist} • ` : ''}{formatDuration(mix.duration)} • {mix.genre}
