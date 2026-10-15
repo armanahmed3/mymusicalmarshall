@@ -521,27 +521,6 @@ export const INITIAL_SONGS: Song[] = [
     "description": "Positive Transfusion EP Juggling"
   },
   {
-    "id": "song-db-3023",
-    "db_id": 3023,
-    "mixName": "Test",
-    "title": "Buju Banton Test",
-    "artist": "Buju Banton",
-    "album": "Single",
-    "duration": 214,
-    "durationFormatted": "3:34",
-    "mixLength": "3.57",
-    "audioPath": "/AudioFileUpload/BUJU243133596.mp3",
-    "audioUrl": "/AudioFileUpload/BUJU243133596.mp3",
-    "coverUrl": "/headphone_logo.png",
-    "genre": "Reggae",
-    "mood": "chill",
-    "bpm": 90,
-    "isMmRelease": true,
-    "isMix": false,
-    "isDownloadable": true,
-    "description": "Test by Buju Banton"
-  },
-  {
     "id": "song-db-3024",
     "db_id": 3024,
     "mixName": "Easy_Flow_Mix",
