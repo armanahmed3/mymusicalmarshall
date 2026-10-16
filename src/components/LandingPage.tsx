@@ -142,16 +142,37 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   })();
 
   const isPlayingFeaturedMix = isPlaybackActive && Boolean(
+    currentPlaybackTrack?.audioUrl === targetMixPath ||
     currentPlaybackTrack?.id === featuredMix?.id ||
     currentPlaybackTrack?.audioUrl === featuredMix?.audioUrl
   );
 
   const handleToggleFeaturedMix = () => {
-    if (!featuredMix) return;
+    // 4. The play button will load and play the file with path [Feat_MixPath]
+    const trackToPlay: Song = {
+      ...(featuredMix || {}),
+      id: featuredMix?.id || (parameters?.Feat_MixId ? `song-feat-${parameters.Feat_MixId}` : 'song-feat-mix'),
+      db_id: featuredMix?.db_id || (typeof parameters?.Feat_MixId === 'number' ? parameters.Feat_MixId : 3024),
+      mixName: parameters?.Feat_MixName || featuredMix?.mixName || 'Easy Flow Mix',
+      title: cleanSongTitle(parameters?.Feat_MixName || featuredMix?.title || targetMixName),
+      artist: featuredMix?.artist || 'Music Marshall',
+      album: featuredMix?.album || 'Featured Mix',
+      duration: featuredMix?.duration || 1200,
+      audioUrl: targetMixPath,
+      audioPath: targetMixPath,
+      coverUrl: featuredMix?.coverUrl || '/headphone_logo.png',
+      genre: featuredMix?.genre || 'Reggae',
+      mood: 'party',
+      bpm: 100,
+      isMmRelease: false,
+      isMix: true,
+      isDownloadable: true
+    };
+
     if (onPlaySong) {
-      onPlaySong(featuredMix);
+      onPlaySong(trackToPlay);
     } else {
-      handleSelectRelease(featuredMix);
+      handleSelectRelease(trackToPlay);
     }
   };
 
@@ -516,10 +537,10 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </div>
               <div>
                 <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.18rem', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.01em' }}>
-                  Music Marshall Featured Mix - {cleanSongTitle(featuredMix?.title || targetMixName)}
+                  Music Marshall Featured Mix:
                 </div>
-                <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '0.94rem' }}>
-                  Stream Free Without Login {featuredMix?.genre ? `• ${featuredMix.genre.toUpperCase()}` : ''} {featuredMix?.duration ? `• ${formatTime(featuredMix.duration)}` : ''}
+                <div style={{ color: '#00f59b', fontWeight: 700, fontSize: '1.02rem', marginTop: '3px' }}>
+                  {cleanSongTitle(parameters?.Feat_MixName || targetMixName)}
                 </div>
               </div>
             </div>
@@ -528,21 +549,23 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               type="button"
               className="btn btn-accent btn-md featured-mix-button"
               onClick={handleToggleFeaturedMix}
-              title={isPlayingFeaturedMix ? `Pause ${cleanSongTitle(featuredMix?.title || targetMixName)}` : `Play ${cleanSongTitle(featuredMix?.title || targetMixName)}`}
+              title={isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '12px',
-                padding: '12px 24px',
+                gap: '10px',
+                padding: '12px 28px',
                 borderRadius: '9999px',
                 fontWeight: 800,
                 cursor: 'pointer',
-                textAlign: 'left',
+                textAlign: 'center',
                 border: 'none',
                 boxShadow: isPlayingFeaturedMix
                   ? '0 0 20px rgba(0, 245, 155, 0.6)'
                   : '0 4px 18px rgba(0, 245, 155, 0.35)',
-                transition: 'all 0.2s ease-in-out'
+                transition: 'all 0.2s ease-in-out',
+                background: '#00f59b',
+                color: '#052e16'
               }}
             >
               {isPlayingFeaturedMix ? (
@@ -550,16 +573,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               ) : (
                 <Play size={19} fill="currentColor" />
               )}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', lineHeight: 1.25 }}>
-                <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#052e16', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-                  {isPlayingFeaturedMix ? 'Pause Featured Mix' : 'Stream Free Without Login'}
-                </span>
-                <span style={{ fontSize: '0.81rem', fontWeight: 700, color: '#0f172a' }}>
-                  {cleanSongTitle(featuredMix?.title || targetMixName)}
-                  {featuredMix?.genre ? ` • ${featuredMix.genre}` : ''}
-                  {featuredMix?.duration ? ` (${formatTime(featuredMix.duration)})` : ''}
-                </span>
-              </div>
+              <span style={{ fontSize: '0.92rem', fontWeight: 800, color: '#052e16', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+                STREAM FREE WITHOUT LOGIN
+              </span>
             </button>
           </div>
         </div>

@@ -712,6 +712,7 @@ export const INITIAL_SONGS: Song[] = [
 ];
 
 export const INITIAL_PARAMETERS: AppParameters = {
+  Feat_MixId: 3024,
   Feat_MixName: 'Easy_Flow_Mix',
   Feat_MixPath: '/AudioFileUpload/Easy_Flow_23v1241026820.mp3'
 };

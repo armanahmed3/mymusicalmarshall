@@ -209,14 +209,26 @@ export function App() {
     return INITIAL_PLAYLISTS;
   });
 
-  // Parameters table state (Feat_MixName & Feat_MixPath)
+  // Parameters table state (Feat_MixName, Feat_MixPath & Feat_MixId stored as global variables)
   const [parameters] = useState<AppParameters>(() => {
     localStorage.setItem('mm_parameters', JSON.stringify(INITIAL_PARAMETERS));
+    if (typeof window !== 'undefined') {
+      (window as any).Feat_MixName = INITIAL_PARAMETERS.Feat_MixName;
+      (window as any).Feat_MixPath = INITIAL_PARAMETERS.Feat_MixPath;
+      (window as any).Feat_MixId = INITIAL_PARAMETERS.Feat_MixId;
+      (window as any).MM_PARAMETERS = INITIAL_PARAMETERS;
+    }
     return INITIAL_PARAMETERS;
   });
 
   useEffect(() => {
     localStorage.setItem('mm_parameters', JSON.stringify(parameters));
+    if (typeof window !== 'undefined') {
+      (window as any).Feat_MixName = parameters.Feat_MixName;
+      (window as any).Feat_MixPath = parameters.Feat_MixPath;
+      (window as any).Feat_MixId = parameters.Feat_MixId;
+      (window as any).MM_PARAMETERS = parameters;
+    }
   }, [parameters]);
 
   const [flyers, setFlyers] = useState<EventFlyer[]>(() => {

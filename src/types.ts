@@ -122,5 +122,6 @@ export type AppMode = 'landing' | 'app';
 export interface AppParameters {
   Feat_MixName: string;
   Feat_MixPath: string;
+  Feat_MixId?: number | string;
 }
 
