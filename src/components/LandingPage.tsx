@@ -60,6 +60,13 @@ export const LandingPage: React.FC<LandingPageProps> = ({
   // Mobile navigation state
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Filter flyers that have not expired (only active flyers whose expiration date is today or in the future)
+  const todayDateStr = new Date().toISOString().split('T')[0];
+  const activeFlyers = flyers.filter((f) => {
+    if (!f.expirationDate) return false; // Any flyer without expiration date or old flyer is hidden
+    return f.expirationDate >= todayDateStr;
+  });
+
   // Landing page support inquiry form state
   const [tktName, setTktName] = useState(currentUser?.username || '');
   const [tktEmail, setTktEmail] = useState(currentUser?.email || '');
@@ -295,7 +302,7 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               </button>
             )}
             <a href="#mm-releases">My MM Productions</a>
-            <a href="#notice-board">Notice Board</a>
+            {activeFlyers.length > 0 && <a href="#notice-board">Notice Board</a>}
             <a href="#contact-us">Contact Us</a>
           </nav>
 
@@ -370,13 +377,15 @@ export const LandingPage: React.FC<LandingPageProps> = ({
               <Disc3 size={18} />
               <span>My MM Productions</span>
             </a>
-            <a
-              href="#notice-board"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <Calendar size={18} />
-              <span>Notice Board</span>
-            </a>
+            {activeFlyers.length > 0 && (
+              <a
+                href="#notice-board"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Calendar size={18} />
+                <span>Notice Board</span>
+              </a>
+            )}
             <a
               href="#contact-us"
               onClick={() => setMobileMenuOpen(false)}
@@ -582,40 +591,25 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       </section>
 
       {/* ==========================================================================
-          SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS (PDF Item 6 & 7)
+          SECTION: NOTICE BOARD & VERIFIED EVENT FLYERS
+          (Only rendered on home page if there are active, unexpired flyers)
           ========================================================================== */}
-      <section id="notice-board" className="landing-section">
-        <div className="section-container">
-          <div className="section-title-wrap">
-            <div className="section-kicker section-kicker-amber">
-              <Calendar size={14} />
-              <span>Verified Notice Board & Events</span>
-            </div>
-            <h2 className="landing-section-h2">Event Flyers & Other Notices</h2>
-            <p className="landing-section-desc">
-              Promoters can upload flyers and they will be posted free. Contact us for more details
-            </p>
-          </div>
-
-          {/* Flyers Grid or Promotional Noticeboard Placeholder */}
-          {flyers.length === 0 ? (
-            <div className="flyers-empty-state" style={{ background: 'rgba(255, 255, 255, 0.02)', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '16px', padding: '36px 20px', textAlign: 'center' }}>
-              <div style={{ display: 'inline-flex', padding: '12px', borderRadius: '50%', background: 'rgba(0, 245, 155, 0.1)', color: '#00f59b', marginBottom: '14px' }}>
-                <Calendar size={28} />
+      {activeFlyers.length > 0 && (
+        <section id="notice-board" className="landing-section">
+          <div className="section-container">
+            <div className="section-title-wrap">
+              <div className="section-kicker section-kicker-amber">
+                <Calendar size={14} />
+                <span>Verified Notice Board & Events</span>
               </div>
-              <h3 className="empty-title" style={{ fontSize: '1.2rem', fontWeight: 800, color: '#ffffff', marginBottom: '8px' }}>
-                Notice Board & Event Feature
-              </h3>
-              <p className="empty-desc" style={{ maxWidth: '520px', margin: '0 auto 16px', color: '#94a3b8', lineHeight: 1.6, fontSize: '0.94rem' }}>
-                Promoters can upload flyers and they will be posted free. Contact us for more details and to get your event listed on Music Marshall.
+              <h2 className="landing-section-h2">Event Flyers & Other Notices</h2>
+              <p className="landing-section-desc">
+                Promoters can upload flyers and they will be posted free. Contact us for more details
               </p>
-              <a href="#contact-us" className="btn btn-outline btn-sm">
-                <span>Contact Us to Post a Flyer</span>
-              </a>
             </div>
-          ) : (
+
             <div className="flyers-grid">
-              {flyers.map((flyer) => (
+              {activeFlyers.map((flyer) => (
                 <div key={flyer.id} className="flyer-card">
                   <div className="flyer-img-wrap">
                     <img
@@ -661,9 +655,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({
                 </div>
               ))}
             </div>
-          )}
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
       {/* ==========================================================================
           SECTION: MY MM PRODUCTIONS (PLACED AT BOTTOM OF HOME PAGE)

@@ -25,6 +25,13 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
   onDeleteFlyer
 }) => {
   const isAdmin = currentUser?.role === 'admin';
+  const todayStr = new Date().toISOString().split('T')[0];
+  // Filter flyers: normal users only see unexpired flyers with expirationDate >= today; admin sees all or unexpired
+  const visibleFlyers = flyers.filter((f) => {
+    if (!f.expirationDate) return false;
+    if (isAdmin) return true; // admin can see all to manage
+    return f.expirationDate >= todayStr;
+  });
 
   return (
     <div className="page-container">
@@ -63,7 +70,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
       </div>
 
       {/* Flyers Grid */}
-      {flyers.length === 0 ? (
+      {visibleFlyers.length === 0 ? (
         <div style={{ background: 'rgba(15, 20, 36, 0.75)', border: '1px dashed rgba(255, 255, 255, 0.15)', borderRadius: '16px', padding: '48px 20px', textAlign: 'center' }}>
           <Calendar size={40} color="#00f59b" style={{ margin: '0 auto 12px' }} />
           <h3 style={{ fontSize: '1.1rem', fontWeight: 800, color: '#ffffff', margin: '0 0 6px 0' }}>
@@ -75,7 +82,7 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(360px, 1fr))', gap: '24px' }}>
-          {flyers.map((flyer) => (
+          {visibleFlyers.map((flyer) => (
             <div
               key={flyer.id}
               style={{
@@ -167,6 +174,11 @@ export const NoticeBoardView: React.FC<NoticeBoardViewProps> = ({
                       <MapPin size={15} color="#fb923c" />
                       <span>{flyer.location}</span>
                     </div>
+                    {flyer.expirationDate && (
+                      <div style={{ fontSize: '0.74rem', color: flyer.expirationDate < todayStr ? '#ef4444' : '#00f59b', fontWeight: 600 }}>
+                        {flyer.expirationDate < todayStr ? `⚠️ Notice Expired (${flyer.expirationDate})` : `Notice active through: ${flyer.expirationDate}`}
+                      </div>
+                    )}
                   </div>
 
                   <p style={{ fontSize: '0.84rem', color: '#94a3b8', margin: '0 0 16px 0', lineHeight: 1.5 }}>

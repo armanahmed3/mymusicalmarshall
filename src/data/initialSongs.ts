@@ -11,7 +11,7 @@ export function cleanSongTitle(title?: string): string {
 }
 
 import type { Song, ReferralCode, User, Playlist, EventFlyer, SupportTicket, AppParameters } from '../types';
-import { MSSQL_DATABASE_USERS, MSSQL_DATABASE_FLYERS } from './databaseUsers';
+import { MSSQL_DATABASE_USERS } from './databaseUsers';
 
 
 // 100% authentic songs verified against MS SQL Database with exact mixName, description, and database duration
@@ -771,8 +771,8 @@ export const INITIAL_PLAYLISTS: Playlist[] = [
   }
 ];
 
-// 100% authentic event flyers from MS SQL Database: ebayjaco_mmarshalldb (notices table)
-export const INITIAL_FLYERS: EventFlyer[] = MSSQL_DATABASE_FLYERS;
+// Event flyers - starting empty as requested, with admin setting expiration dates when creating new flyers
+export const INITIAL_FLYERS: EventFlyer[] = [];
 
 export const INITIAL_SUPPORT_TICKETS: SupportTicket[] = [
   {

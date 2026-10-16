@@ -74,6 +74,7 @@ export interface EventFlyer {
   id: string;
   title: string;
   eventDate: string;
+  expirationDate?: string; // YYYY-MM-DD - flyer auto-expires from home page and bulletin after this date
   location: string;
   description: string;
   flyerUrl: string;

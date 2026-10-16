@@ -135,6 +135,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
   // --- 2. NOTICE BOARD FLYER STATE ---
   const [flyerTitle, setFlyerTitle] = useState('');
   const [flyerDate, setFlyerDate] = useState('');
+  const [flyerExpirationDate, setFlyerExpirationDate] = useState('');
   const [flyerLocation, setFlyerLocation] = useState('');
   const [flyerDesc, setFlyerDesc] = useState('');
   const [flyerImgUrl, setFlyerImgUrl] = useState('');
@@ -155,11 +156,15 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
 
   const handleCreateFlyerSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!flyerTitle.trim() || !flyerDate.trim() || !flyerLocation.trim()) return;
+    if (!flyerTitle.trim() || !flyerDate.trim() || !flyerLocation.trim() || !flyerExpirationDate.trim()) {
+      onToast('⚠️ Please provide Event Title, Date, Expiration Date, and Location.');
+      return;
+    }
 
     onAddFlyer({
       title: flyerTitle.trim(),
       eventDate: flyerDate.trim(),
+      expirationDate: flyerExpirationDate.trim(),
       location: flyerLocation.trim(),
       description: flyerDesc.trim(),
       flyerUrl: flyerImgUrl || '/headphone_logo.png',
@@ -168,11 +173,12 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
 
     setFlyerTitle('');
     setFlyerDate('');
+    setFlyerExpirationDate('');
     setFlyerLocation('');
     setFlyerDesc('');
     setFlyerImgUrl('');
     setFlyerExtLink('');
-    onToast('✓ Event flyer published to Notice Board bulletin!');
+    onToast('✓ Event flyer published with auto-expiration date!');
   };
 
   // --- 3. SUPPORT DESK STATE ---
@@ -1024,7 +1030,7 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                 <div className="form-group">
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Event Date *</label>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Event Date (Display Text) *</label>
                   <input
                     type="text"
                     required
@@ -1036,16 +1042,30 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                 </div>
 
                 <div className="form-group">
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Location / Venue *</label>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#00f59b' }}>
+                    Auto-Expiration Date * (Removes from site)
+                  </label>
                   <input
-                    type="text"
+                    type="date"
                     required
-                    placeholder="e.g. Skyline Drive, Kingston"
-                    value={flyerLocation}
-                    onChange={(e) => setFlyerLocation(e.target.value)}
+                    value={flyerExpirationDate}
+                    onChange={(e) => setFlyerExpirationDate(e.target.value)}
                     className="form-control"
+                    style={{ borderColor: 'rgba(0, 245, 155, 0.4)' }}
                   />
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#cbd5e1' }}>Location / Venue *</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Skyline Drive, Kingston"
+                  value={flyerLocation}
+                  onChange={(e) => setFlyerLocation(e.target.value)}
+                  className="form-control"
+                />
               </div>
 
               <div className="form-group">
@@ -1165,6 +1185,19 @@ export const AdminPanelView: React.FC<AdminPanelViewProps> = ({
                           <MapPin size={11} />
                           <span>{flyer.location}</span>
                         </div>
+                        {flyer.expirationDate && (
+                          <div style={{ marginTop: '4px' }}>
+                            {flyer.expirationDate < new Date().toISOString().split('T')[0] ? (
+                              <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(239, 68, 68, 0.2)', color: '#ef4444', fontWeight: 700 }}>
+                                ⚠️ Expired ({flyer.expirationDate}) - Hidden from home
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: '0.7rem', padding: '2px 6px', borderRadius: '4px', background: 'rgba(0, 245, 155, 0.15)', color: '#00f59b', fontWeight: 700 }}>
+                                ✓ Active until: {flyer.expirationDate}
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
 

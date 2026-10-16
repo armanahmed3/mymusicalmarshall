@@ -232,9 +232,26 @@ export function App() {
   }, [parameters]);
 
   const [flyers, setFlyers] = useState<EventFlyer[]>(() => {
+    const todayStr = new Date().toISOString().split('T')[0];
+    const saved = localStorage.getItem('mm_flyers');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // Keep flyers with a valid future expirationDate (expirationDate >= today)
+          const validFlyers = parsed.filter((f: EventFlyer) => f.expirationDate && f.expirationDate >= todayStr);
+          localStorage.setItem('mm_flyers', JSON.stringify(validFlyers));
+          return validFlyers;
+        }
+      } catch {}
+    }
     localStorage.setItem('mm_flyers', JSON.stringify(INITIAL_FLYERS));
     return INITIAL_FLYERS;
   });
+
+  useEffect(() => {
+    localStorage.setItem('mm_flyers', JSON.stringify(flyers));
+  }, [flyers]);
 
   const [supportTickets, setSupportTickets] = useState<SupportTicket[]>(() => {
     const saved = localStorage.getItem('mm_support_tickets');
